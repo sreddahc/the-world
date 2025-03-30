@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "renderer/renderer.h"
+#include "engine/timer.h"
 
 // Global variables
 // Screen dimensions
@@ -52,7 +53,7 @@ bool init()
     else
     {
         // Create window
-        gWindow = SDL_CreateWindow( "Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+        gWindow = SDL_CreateWindow( "The World", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
         if( gWindow == NULL )
         {
             printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
@@ -128,7 +129,9 @@ int main( int argc, char* args[] )
         SDL_Event e;
 
         // Time
-        Uint32 startTime = 0;
+        TW_Timer mainTimer;
+        TW_Timer_Init( &mainTimer, false );
+        // Uint32 startTime = 0;
         char timeText[50];
         
         // Background
@@ -264,7 +267,19 @@ int main( int argc, char* args[] )
                     
                     // Reset clock
                     case SDLK_RETURN:
-                    startTime = SDL_GetTicks();
+                    TW_Timer_Reset( &mainTimer );
+                    break;
+
+                    // Pause/resume clock
+                    case SDLK_SPACE:
+                    if( mainTimer.paused )
+                    {
+                        TW_Timer_Resume( &mainTimer );
+                    }
+                    else
+                    {
+                        TW_Timer_Pause( &mainTimer );
+                    }
                     break;
 
                     default:
@@ -292,7 +307,7 @@ int main( int argc, char* args[] )
             }
 
             // Update Time
-            snprintf( timeText, 50, "Time since reset: %dms", SDL_GetTicks() - startTime );
+            snprintf( timeText, 50, "Time since reset: %dms", TW_Timer_GetCurrentTime( &mainTimer ) );
             if( !( LTexture_LoadText( &gTimeText, gRenderer, timeText, gFontNormal, textNormalColour ) ) )
             {
                 printf( "Failed to render texture!\n" );
