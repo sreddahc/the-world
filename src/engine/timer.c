@@ -5,6 +5,7 @@
 // Instantiate the TW_Timer object.
 void TW_Timer_Init( TW_Timer* self, bool paused )
 {
+    // Checks should exists here to ensure that SDL has been initiated.
     self->currentTime = SDL_GetTicks();
     self->paused = paused;
     self->pauseTime = self->currentTime;
@@ -48,4 +49,13 @@ Uint64 TW_Timer_GetTime( TW_Timer* self )
     {
         return SDL_GetTicks() - self->currentTime - self->pauseDuration;
     }
+}
+
+// Frees the memory of a TW_Timer object.
+void TW_Timer_Free( TW_Timer* self )
+{
+    self->currentTime = 0;
+    self->paused = false;
+    self->pauseTime = 0;
+    self->pauseDuration = 0;
 }
