@@ -12,6 +12,8 @@
 // Screen dimensions
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 768;
+const int SCREEN_FPS = 60;
+const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
 
 // Key press surface constants
 enum KeyPressSurfaces
@@ -367,7 +369,12 @@ int main( int argc, char* args[] )
             TW_FPSTimer_Update( &fpsTimer );
 
             // Cap framerate at 60fps
-            while( TW_FPSTimer_GetFPS( &fpsTimer ) > 60.0 ) { }
+            int frameTicks = TW_FPSTimer_GetFPS( &fpsTimer );
+
+            if( frameTicks < SCREEN_TICKS_PER_FRAME )
+            {
+                SDL_Delay( SCREEN_TICKS_PER_FRAME - frameTicks );
+            }
         }
 
         // LTexture_Free( &gText );
