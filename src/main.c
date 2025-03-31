@@ -6,6 +6,7 @@
 #include <string.h>
 #include "renderer/renderer.h"
 #include "engine/timer.h"
+#include "engine/fpstimer.h"
 
 // Global variables
 // Screen dimensions
@@ -125,13 +126,19 @@ int main( int argc, char* args[] )
         // Main loop flag
         bool quit = false;
 
+        // Frame counter
+        TW_FPSTimer fpsTimer;
+        TW_FPSTimer_Init( &fpsTimer );
+        
+        int countedFrames = 0;
+        char fpsText[50];
+
         // Event handler
         SDL_Event e;
 
         // Time
         TW_Timer mainTimer;
         TW_Timer_Init( &mainTimer, false );
-        // Uint32 startTime = 0;
         char timeText[50];
         
         // Background
@@ -171,6 +178,13 @@ int main( int argc, char* args[] )
         
         struct LTexture gTimeText;
         if( !( LTexture_LoadText( &gTimeText, gRenderer, "Time since reset: 0ms", gFontNormal, textNormalColour ) ) )
+        {
+            printf( "Failed to render texture!\n" );
+            quit = true;
+        }
+
+        struct LTexture gFPSText;
+        if( !( LTexture_LoadText( &gTimeText, gRenderer, "FPS: 0", gFontNormal, textNormalColour ) ) )
         {
             printf( "Failed to render texture!\n" );
             quit = true;
@@ -286,6 +300,7 @@ int main( int argc, char* args[] )
                         break;
                     }
                 }
+
                 // Mouse Event
                 else if( e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP )
                 {
@@ -306,9 +321,17 @@ int main( int argc, char* args[] )
                 }
             }
 
-            // Update Time
-            snprintf( timeText, 50, "Time since reset: %dms", TW_Timer_GetCurrentTime( &mainTimer ) );
+            // Update time
+            snprintf( timeText, 50, "Time since reset: %dms", TW_Timer_GetTime( &mainTimer ) );
             if( !( LTexture_LoadText( &gTimeText, gRenderer, timeText, gFontNormal, textNormalColour ) ) )
+            {
+                printf( "Failed to render texture!\n" );
+                quit = true;
+            }
+
+            // Update FPS
+            snprintf(fpsText, 50, "FPS: %.2f", TW_FPSTimer_GetFPS( &fpsTimer ) );
+            if( !( LTexture_LoadText( &gFPSText, gRenderer, fpsText, gFontNormal, textNormalColour ) ) )
             {
                 printf( "Failed to render texture!\n" );
                 quit = true;
@@ -317,28 +340,39 @@ int main( int argc, char* args[] )
             // Update the surface
             SDL_RenderClear( gRenderer );
             
-            // Render Background
+            // Render background
             LTexture_Render( &gBackground, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
-            // Render Title Text
+            // Render title text
             LTexture_Render( &gTitleText, gRenderer, ((SCREEN_WIDTH - gTitleText.mWidth) / 2), 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
-            // Render Mouse Text
+            // Render mouse text
             LTexture_Render( &gMouseText, gRenderer, ((SCREEN_WIDTH - gMouseText.mWidth) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
-            // Render Time Text
+            // Render time text
             LTexture_Render( &gTimeText, gRenderer, ((SCREEN_WIDTH - gTimeText.mWidth) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
-            // Render Sprite
+            // Render FPS text
+            LTexture_Render( &gFPSText, gRenderer, ((SCREEN_WIDTH - gFPSText.mWidth) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
+
+            // Render sprite
             SDL_Rect* gSpriteFrame = &gSprite[ frame ];
             LTexture_Render( &gSpriteSheet, gRenderer, 235, 235, gSpriteFrame, degrees, NULL, flipType );
             frame = ( frame + 1 ) % WALKING_ANIMATION_FRAMES;
 
             // Update screen
             SDL_RenderPresent( gRenderer );
+
+            // Update frames counter
+            TW_FPSTimer_Update( &fpsTimer );
+
+            // Cap framerate at 60fps
+            while( TW_FPSTimer_GetFPS( &fpsTimer ) > 60.0 ) { }
         }
 
         // LTexture_Free( &gText );
+        TW_Timer_Free( &fpsTimer );
+        TW_Timer_Free( &mainTimer );
         LTexture_Free( &gSpriteSheet );
         LTexture_Free( &gBackground );
 
