@@ -166,6 +166,8 @@ int main( int argc, char* args[] )
         // Title
         struct TW_Text gTitle;
         TW_Text_FastInit( &gTitle, "My games title :D" );
+        TW_Text_SetFont( &gTitle, gTitle.fontName, 28 );
+        TW_Text_Render_Texture( &gTitle, gRenderer );
         // printf( "what is my font? %s\n", gTitle.fontName );
         // TW_Text_Init( &gTitle, "My new game! YAY!!", "../src/assets/fonts/dejavu/DejaVuSerif.ttf", 16, textNormalColour );
 
@@ -352,7 +354,7 @@ int main( int argc, char* args[] )
             LTexture_Render( &gBackground, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render title text
-            // LTexture_Render( &gTitleText, gRenderer, ((SCREEN_WIDTH - gTitleText.mWidth) / 2), 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            LTexture_Render( &gTitle.renderedText.mTexture, gRenderer, ( SCREEN_WIDTH - gTitle.renderedText.mWidth ) / 2, 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render mouse text
             LTexture_Render( &gMouseText, gRenderer, ((SCREEN_WIDTH - gMouseText.mWidth) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );

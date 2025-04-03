@@ -1,8 +1,5 @@
 #include "text.h"
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-
 
 bool TW_Text_SetFont( TW_Text* self, char* fontName, int fontSize )
 {
@@ -57,3 +54,32 @@ bool TW_Text_FastInit( TW_Text* self, char* textValue )
     return success;
 }
 
+
+bool TW_Text_Render_Texture( TW_Text* self, SDL_Renderer* renderer )
+{
+    bool success = true;
+
+    SDL_Surface* textSurface = TTF_RenderText_Solid( self->fontObject, self->textValue, self->fontColour );
+    if( textSurface == NULL )
+    {
+        printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
+        success = false;
+    }
+    else
+    {
+        self->renderedText.mTexture = SDL_CreateTextureFromSurface( renderer, textSurface );
+        if( self->renderedText.mTexture == NULL )
+        {
+            printf( "Unable to create texture from text. SDL Error: %s\n", SDL_GetError() );
+            success = false;
+        }
+        else
+        {
+            self->renderedText.mWidth = textSurface->w;
+            self->renderedText.mHeight = textSurface->h;
+        }
+        SDL_FreeSurface( textSurface );
+    }
+    
+    return success;
+}

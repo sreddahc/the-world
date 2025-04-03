@@ -14,7 +14,7 @@ typedef struct TW_Text {
     int fontSize;               // Size of the TW_Text object. Default = 16
     SDL_Color fontColour;       // Colour of the TW_Text object Default = Black
     TTF_Font* fontObject;       // Font object for the TW_Text object
-    LTexture* textTexture;      // The TW_Texture of the TW_Text object. Must be rendered before use
+    LTexture renderedText;      // The TW_Texture of the TW_Text object. Must be rendered before use
 } TW_Text;
 
 
@@ -53,3 +53,5 @@ bool TW_Text_Init( TW_Text* self, char* textValue, char* fontName, int fontSize,
  */
 bool TW_Text_FastInit( TW_Text* self, char* textValue );
 
+
+bool TW_Text_Render_Texture( TW_Text* self, SDL_Renderer* renderer );
