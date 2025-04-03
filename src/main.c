@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "renderer/renderer.h"
+#include "renderer/text.h"
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
 
@@ -29,7 +30,7 @@ enum KeyPressSurfaces
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 SDL_Texture* gTexture = NULL;
-TTF_Font* gFontTitle = NULL;
+// TTF_Font* gFontTitle = NULL;
 TTF_Font* gFontNormal = NULL;
 
 typedef struct MousePosition {
@@ -148,23 +149,28 @@ int main( int argc, char* args[] )
         LTexture_LoadImage( &gBackground, gRenderer, "src/images/backgrounds/day.png" );
 
         // Text
-        gFontTitle = TTF_OpenFont( "src/assets/fonts/dejavu/DejaVuSerif.ttf", 28 );
-        if( gFontTitle == NULL )
-        {
-            printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
-            quit = true;
-        }
-        SDL_Color textTitleColour = { 0, 0, 0 };
-        struct LTexture gTitleText;
-        if( !( LTexture_LoadText( &gTitleText, gRenderer, "New game!", gFontTitle, textTitleColour ) ) )
-        {
-            printf( "Failed to render texture!\n" );
-            quit = true;
-        }
+        // gFontTitle = TTF_OpenFont( "src/assets/fonts/dejavu/DejaVuSerif.ttf", 28 );
+        // if( gFontTitle == NULL )
+        // {
+        //     printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
+        //     quit = true;
+        // }
+        // SDL_Color textTitleColour = { 0, 0, 0 };
+        // struct LTexture gTitleText;
+        // if( !( LTexture_LoadText( &gTitleText, gRenderer, "New game!", gFontTitle, textTitleColour ) ) )
+        // {
+        //     printf( "Failed to render texture!\n" );
+        //     quit = true;
+        // }
+        SDL_Color textNormalColour = { 0, 0, 0 };
+        // Title
+        struct TW_Text gTitle;
+        TW_Text_FastInit( &gTitle, "My games title :D" );
+        // printf( "what is my font? %s\n", gTitle.fontName );
+        // TW_Text_Init( &gTitle, "My new game! YAY!!", "../src/assets/fonts/dejavu/DejaVuSerif.ttf", 16, textNormalColour );
 
         // This is now repeatable code and should probably be packaged away in its own special little class - to do
         gFontNormal = TTF_OpenFont( "src/assets/fonts/dejavu/DejaVuSerif.ttf", 16 );
-        SDL_Color textNormalColour = { 0, 0, 0 };
         if( gFontNormal == NULL )
         {
             printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
@@ -346,7 +352,7 @@ int main( int argc, char* args[] )
             LTexture_Render( &gBackground, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render title text
-            LTexture_Render( &gTitleText, gRenderer, ((SCREEN_WIDTH - gTitleText.mWidth) / 2), 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            // LTexture_Render( &gTitleText, gRenderer, ((SCREEN_WIDTH - gTitleText.mWidth) / 2), 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render mouse text
             LTexture_Render( &gMouseText, gRenderer, ((SCREEN_WIDTH - gMouseText.mWidth) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
@@ -382,7 +388,6 @@ int main( int argc, char* args[] )
         TW_Timer_Free( &mainTimer );
         LTexture_Free( &gSpriteSheet );
         LTexture_Free( &gBackground );
-
     }
 
     // Free resources and close SDL
