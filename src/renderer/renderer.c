@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "renderer.h"
 
-
+// TW_Texture_LoadImage
 bool LTexture_LoadImage( struct LTexture* self, SDL_Renderer* renderer, char* path ){
     
     bool success = true;
@@ -40,7 +40,8 @@ bool LTexture_LoadImage( struct LTexture* self, SDL_Renderer* renderer, char* pa
     return success;
 }
 
-bool LTexture_LoadImage( struct TW_Texture* self, SDL_Renderer* renderer, char* path ){
+
+bool TW_Texture_LoadImage( TW_Texture* self, SDL_Renderer* renderer, char* path ){
     
     bool success = true;
     SDL_Texture* newTexture = NULL;
@@ -74,9 +75,9 @@ bool LTexture_LoadImage( struct TW_Texture* self, SDL_Renderer* renderer, char* 
     return success;
 }
 
-
+// See "text.h" / "text.c"
 #if defined(SDL_TTF_MAJOR_VERSION)
-bool LTexture_LoadText( struct LTexture* self, SDL_Renderer* renderer, char* textValue, TTF_Font* font, SDL_Color textColour )
+bool LTexture_LoadText( LTexture* self, SDL_Renderer* renderer, char* textValue, TTF_Font* font, SDL_Color textColour )
 {
     bool success = true;
 
@@ -110,24 +111,46 @@ bool LTexture_LoadText( struct LTexture* self, SDL_Renderer* renderer, char* tex
 #endif
 
 
-void LTexture_SetBlendMode( struct LTexture* self, SDL_BlendMode blending )
+// TW_Texture_SetBlendMode
+void LTexture_SetBlendMode( LTexture* self, SDL_BlendMode blending )
 {
     SDL_SetTextureBlendMode( self->mTexture, blending );
 }
 
 
+void TW_Texture_SetBlendMode( TW_Texture* self, SDL_BlendMode blending )
+{
+    SDL_SetTextureBlendMode( self->texture, blending );
+}
+
+
+// TW_Texture_SetColour
 void LTexture_SetColour( struct LTexture* self, Uint8 red, Uint8 green, Uint8 blue)
 {
     SDL_SetTextureColorMod( self->mTexture, red, green, blue );
 }
 
 
+void TW_Texture_SetColour( TW_Texture* self, Uint8 red, Uint8 green, Uint8 blue)
+{
+    SDL_SetTextureColorMod( self->texture, red, green, blue );
+}
+
+
+// TW_Texture_SetAlpha
 void LTexture_SetAlpha( struct LTexture* self, Uint8 alpha )
 {
     SDL_SetTextureAlphaMod( self->mTexture, alpha );
 }
 
 
+void TW_Texture_SetAlpha( struct TW_Texture* self, Uint8 alpha )
+{
+    SDL_SetTextureAlphaMod( self->texture, alpha );
+}
+
+
+// TW_Texture_Render
 void LTexture_Render( struct LTexture* self, SDL_Renderer* renderer, int x, int y, SDL_Rect* clip, double angle, SDL_Point* centre, SDL_RendererFlip flip )
 {
     // Set rendering space and render to screen
@@ -145,18 +168,50 @@ void LTexture_Render( struct LTexture* self, SDL_Renderer* renderer, int x, int 
 }
 
 
+void TW_Texture_Render( TW_Texture* self, SDL_Renderer* renderer, int x, int y, SDL_Rect* clip, double angle, SDL_Point* centre, SDL_RendererFlip flip )
+{
+    // Set rendering space and render to screen
+    SDL_Rect renderZone = { x, y, self->width, self->height };
+    
+    // Set clip dimensions
+    if( clip != NULL )
+    {
+        renderZone.w = clip->w;
+        renderZone.h = clip->h;
+    }
+
+    // Render to screen
+    SDL_RenderCopyEx( renderer, self->texture, clip, &renderZone, angle, centre, flip );
+}
+
+
+// TW_Texture_GetWidth
 int LTexture_GetWidth( struct LTexture* self )
 {
     return self->mWidth;
 }
 
 
+int TW_Texture_GetWidth( TW_Texture* self )
+{
+    return self->width;
+}
+
+
+// TW_Texture_GetHeight
 int LTexture_GetHeight( struct LTexture* self )
 {
     return self->mHeight;
 }
 
 
+int TW_Texture_GetHeight( struct TW_Texture* self )
+{
+    return self->height;
+}
+
+
+// TW_Texture_Free
 void LTexture_Free( struct LTexture* self )
 {
     if( self->mTexture != NULL )
@@ -167,6 +222,7 @@ void LTexture_Free( struct LTexture* self )
         self->mHeight = 0;
     }
 }
+
 
 void TW_Texture_Free( struct TW_Texture* self )
 {
