@@ -370,8 +370,14 @@ int main( int argc, char* args[] )
             }
         }
 
+
+        // Free resources
         TW_Timer_Free( &fpsTimer );
         TW_Timer_Free( &mainTimer );
+        TW_Texture_Free( &gTitle );
+        TW_Texture_Free( &gMouseText );
+        TW_Texture_Free( &gTimeText );
+        TW_Texture_Free( &gFPSText );
         TW_Texture_Free( &gSpriteSheet );
         TW_Texture_Free( &gBackground );
     }
