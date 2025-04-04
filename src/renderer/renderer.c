@@ -40,6 +40,40 @@ bool LTexture_LoadImage( struct LTexture* self, SDL_Renderer* renderer, char* pa
     return success;
 }
 
+bool LTexture_LoadImage( struct TW_Texture* self, SDL_Renderer* renderer, char* path ){
+    
+    bool success = true;
+    SDL_Texture* newTexture = NULL;
+
+    SDL_Surface* loadedSurface = IMG_Load( path );
+    if( loadedSurface == NULL )
+    {
+        printf( "Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError() );
+        success = false;
+    }
+    else
+    {
+        self->width = loadedSurface->w;
+        self->height = loadedSurface->h;
+
+        // Color key image
+        SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0xFF, 0x00, 0xFF ) );
+        
+        newTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
+        if( newTexture == NULL )
+        {
+            printf( "Unable to create texture from %s! SDL Error: %s\n", path, SDL_GetError() );
+            success = false;
+        }
+
+        SDL_FreeSurface( loadedSurface );
+    }
+
+    self->texture = newTexture;
+
+    return success;
+}
+
 
 #if defined(SDL_TTF_MAJOR_VERSION)
 bool LTexture_LoadText( struct LTexture* self, SDL_Renderer* renderer, char* textValue, TTF_Font* font, SDL_Color textColour )
@@ -131,5 +165,16 @@ void LTexture_Free( struct LTexture* self )
         self->mTexture = NULL;
         self->mWidth = 0;
         self->mHeight = 0;
+    }
+}
+
+void TW_Texture_Free( struct TW_Texture* self )
+{
+    if( self->texture != NULL )
+    {
+        SDL_DestroyTexture(self->texture);
+        self->texture = NULL;
+        self->width = 0;
+        self->height = 0;
     }
 }
