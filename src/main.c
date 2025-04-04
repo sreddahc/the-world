@@ -129,12 +129,15 @@ int main( int argc, char* args[] )
         // Main loop flag
         bool quit = false;
 
+        // Mouse
+        MousePosition mousePosition = { 0, 0 };
+        char mousePositionText[50];
+
         // Frame counter
         TW_FPSTimer fpsTimer;
         TW_FPSTimer_Init( &fpsTimer );
-        
         int countedFrames = 0;
-        char fpsText[50];
+        char fpsText[50] = "FPS: 0.00";
 
         // Event handler
         SDL_Event e;
@@ -183,16 +186,13 @@ int main( int argc, char* args[] )
             quit = true;
         }
 
-        struct LTexture gFPSText;
-        if( !( LTexture_LoadText( &gFPSText, gRenderer, "FPS: 0", gFontNormal, textNormalColour ) ) )
+        TW_Text gFPSText;
+        TW_Text_FastInit( &gFPSText, fpsText );
+        if( ! TW_Text_Render_Texture( &gFPSText, gRenderer ) )
         {
-            printf( "Failed to render texture!\n" );
+            printf( "ERROR: Failed to render texture - FPS Text\n" );
             quit = true;
         }
-
-        // Mouse
-        MousePosition mousePosition = { 0, 0 };
-        char mousePositionText[50];
 
         // Sprite
         const int WALKING_ANIMATION_FRAMES = 4;
@@ -323,13 +323,17 @@ int main( int argc, char* args[] )
 
             // Update time
             snprintf( timeText, 50, "Time since reset: %dms", TW_Timer_GetTime( &mainTimer ) );
-            TW_Text_Render_Texture( &gTimeText, gRenderer );
+            if( ! TW_Text_Render_Texture( &gTimeText, gRenderer ) )
+            {
+                printf( "ERROR: Failed to render texture - Time Text\n" );
+                quit = true;
+            }
 
             // Update FPS
             snprintf(fpsText, 50, "FPS: %.2f", TW_FPSTimer_GetFPS( &fpsTimer ) );
-            if( !( LTexture_LoadText( &gFPSText, gRenderer, fpsText, gFontNormal, textNormalColour ) ) )
+            if( ! TW_Text_Render_Texture( &gFPSText, gRenderer ) )
             {
-                printf( "Failed to render texture!\n" );
+                printf( "ERROR: Failed to render texture - FPS Text\n" );
                 quit = true;
             }
 
@@ -349,7 +353,7 @@ int main( int argc, char* args[] )
             LTexture_Render( &gTimeText.renderedText.mTexture, gRenderer, ((SCREEN_WIDTH - gTimeText.renderedText.mWidth) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render FPS text
-            LTexture_Render( &gFPSText, gRenderer, ((SCREEN_WIDTH - gFPSText.mWidth) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            LTexture_Render( &gFPSText.renderedText.mTexture, gRenderer, ((SCREEN_WIDTH - gFPSText.renderedText.mWidth) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render sprite
             SDL_Rect* gSpriteFrame = &gSprite[ frame ];
