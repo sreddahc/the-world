@@ -149,29 +149,18 @@ int main( int argc, char* args[] )
         LTexture_LoadImage( &gBackground, gRenderer, "src/images/backgrounds/day.png" );
 
         // Text
-        // gFontTitle = TTF_OpenFont( "src/assets/fonts/dejavu/DejaVuSerif.ttf", 28 );
-        // if( gFontTitle == NULL )
-        // {
-        //     printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
-        //     quit = true;
-        // }
-        // SDL_Color textTitleColour = { 0, 0, 0 };
-        // struct LTexture gTitleText;
-        // if( !( LTexture_LoadText( &gTitleText, gRenderer, "New game!", gFontTitle, textTitleColour ) ) )
-        // {
-        //     printf( "Failed to render texture!\n" );
-        //     quit = true;
-        // }
         SDL_Color textNormalColour = { 0, 0, 0 };
+
         // Title
         struct TW_Text gTitle;
         TW_Text_FastInit( &gTitle, "My games title :D" );
         TW_Text_SetFont( &gTitle, gTitle.fontName, 28 );
-        TW_Text_Render_Texture( &gTitle, gRenderer );
-        // printf( "what is my font? %s\n", gTitle.fontName );
-        // TW_Text_Init( &gTitle, "My new game! YAY!!", "../src/assets/fonts/dejavu/DejaVuSerif.ttf", 16, textNormalColour );
+        if ( ! TW_Text_Render_Texture( &gTitle, gRenderer ) )
+        {
+            printf( "ERROR: Failed to render texture - Title\n" );
+            quit = true;
+        }
 
-        // This is now repeatable code and should probably be packaged away in its own special little class - to do
         gFontNormal = TTF_OpenFont( "src/assets/fonts/dejavu/DejaVuSerif.ttf", 16 );
         if( gFontNormal == NULL )
         {
@@ -182,19 +171,17 @@ int main( int argc, char* args[] )
         struct LTexture gMouseText;
         if( !( LTexture_LoadText( &gMouseText, gRenderer, "Mouse Position: X=0, Y=0", gFontNormal, textNormalColour ) ) )
         {
-            printf( "Failed to render texture!\n" );
+            printf( "ERROR: Failed to render texture - Mouse Text\n" );
             quit = true;
         }
         
-        // struct LTexture gTimeText;
-        // if( !( LTexture_LoadText( &gTimeText, gRenderer, "Time since reset: 0ms", gFontNormal, textNormalColour ) ) )
-        // {
-        //     printf( "Failed to render texture!\n" );
-        //     quit = true;
-        // }
         TW_Text gTimeText;
         TW_Text_FastInit( &gTimeText, timeText );
-        TW_Text_Render_Texture( &gTimeText, gRenderer );
+        if( ! TW_Text_Render_Texture( &gTimeText, gRenderer ) )
+        {
+            printf( "ERROR: Failed to render texture - Time Text\n" );
+            quit = true;
+        }
 
         struct LTexture gFPSText;
         if( !( LTexture_LoadText( &gFPSText, gRenderer, "FPS: 0", gFontNormal, textNormalColour ) ) )
