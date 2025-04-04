@@ -67,16 +67,16 @@ bool TW_Text_Render_Texture( TW_Text* self, SDL_Renderer* renderer )
     }
     else
     {
-        self->renderedText.mTexture = SDL_CreateTextureFromSurface( renderer, textSurface );
-        if( self->renderedText.mTexture == NULL )
+        self->renderedText.texture = SDL_CreateTextureFromSurface( renderer, textSurface );
+        if( self->renderedText.texture == NULL )
         {
             printf( "Unable to create texture from text. SDL Error: %s\n", SDL_GetError() );
             success = false;
         }
         else
         {
-            self->renderedText.mWidth = textSurface->w;
-            self->renderedText.mHeight = textSurface->h;
+            self->renderedText.width = textSurface->w;
+            self->renderedText.height = textSurface->h;
         }
         SDL_FreeSurface( textSurface );
     }
