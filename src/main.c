@@ -131,7 +131,7 @@ int main( int argc, char* args[] )
 
         // Mouse
         MousePosition mousePosition = { 0, 0 };
-        char mousePositionText[50];
+        char mousePositionText[50] = "Mouse Position: X=0, Y=0";
 
         // Frame counter
         TW_FPSTimer fpsTimer;
@@ -163,21 +163,17 @@ int main( int argc, char* args[] )
             printf( "ERROR: Failed to render texture - Title\n" );
             quit = true;
         }
-
-        gFontNormal = TTF_OpenFont( "src/assets/fonts/dejavu/DejaVuSerif.ttf", 16 );
-        if( gFontNormal == NULL )
-        {
-            printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
-            quit = true;
-        }
         
-        struct LTexture gMouseText;
-        if( !( LTexture_LoadText( &gMouseText, gRenderer, "Mouse Position: X=0, Y=0", gFontNormal, textNormalColour ) ) )
+        // Mouse Position
+        TW_Text gMouseText;
+        TW_Text_FastInit( &gMouseText, mousePositionText );
+        if( ! TW_Text_Render_Texture( &gMouseText, gRenderer ) )
         {
             printf( "ERROR: Failed to render texture - Mouse Text\n" );
             quit = true;
         }
         
+        // Time
         TW_Text gTimeText;
         TW_Text_FastInit( &gTimeText, timeText );
         if( ! TW_Text_Render_Texture( &gTimeText, gRenderer ) )
@@ -186,6 +182,7 @@ int main( int argc, char* args[] )
             quit = true;
         }
 
+        // FPS
         TW_Text gFPSText;
         TW_Text_FastInit( &gFPSText, fpsText );
         if( ! TW_Text_Render_Texture( &gFPSText, gRenderer ) )
@@ -313,9 +310,14 @@ int main( int argc, char* args[] )
                         strcat(mousePositionText, " - KEYDOWN");
                     }
 
-                    if( !( LTexture_LoadText( &gMouseText, gRenderer, mousePositionText, gFontNormal, textNormalColour ) ) )
+                    // if( !( LTexture_LoadText( &gMouseText, gRenderer, mousePositionText, gFontNormal, textNormalColour ) ) )
+                    // {
+                    //     printf( "Failed to render texture!\n" );
+                    //     quit = true;
+                    // }
+                    if( ! TW_Text_Render_Texture( &gMouseText, gRenderer ) )
                     {
-                        printf( "Failed to render texture!\n" );
+                        printf( "ERROR: Failed to render texture - Mouse Text\n" );
                         quit = true;
                     }
                 }
@@ -347,7 +349,7 @@ int main( int argc, char* args[] )
             LTexture_Render( &gTitle.renderedText.mTexture, gRenderer, ( SCREEN_WIDTH - gTitle.renderedText.mWidth ) / 2, 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render mouse text
-            LTexture_Render( &gMouseText, gRenderer, ((SCREEN_WIDTH - gMouseText.mWidth) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            LTexture_Render( &gMouseText.renderedText.mTexture, gRenderer, ((SCREEN_WIDTH - gMouseText.renderedText.mWidth) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render time text
             LTexture_Render( &gTimeText.renderedText.mTexture, gRenderer, ((SCREEN_WIDTH - gTimeText.renderedText.mWidth) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );
