@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "renderer/renderer.h"
+#include "renderer/text.h"
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
 
@@ -28,9 +29,6 @@ enum KeyPressSurfaces
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
-SDL_Texture* gTexture = NULL;
-TTF_Font* gFontTitle = NULL;
-TTF_Font* gFontNormal = NULL;
 
 typedef struct MousePosition {
     int x;
@@ -101,8 +99,9 @@ bool init()
 void closeAll()
 {
     // Free Loaded Images
-    SDL_DestroyTexture( gTexture );
-    gTexture = NULL;
+    // This is no longer done... should probably be.
+    // SDL_DestroyTexture( gTexture );
+    // gTexture = NULL;
     
     // Destroy Window
     SDL_DestroyRenderer( gRenderer );
@@ -128,12 +127,15 @@ int main( int argc, char* args[] )
         // Main loop flag
         bool quit = false;
 
+        // Mouse
+        MousePosition mousePosition = { 0, 0 };
+        char mousePositionText[50] = "Mouse Position: X=0, Y=0";
+
         // Frame counter
         TW_FPSTimer fpsTimer;
         TW_FPSTimer_Init( &fpsTimer );
-        
         int countedFrames = 0;
-        char fpsText[50];
+        char fpsText[50] = "FPS: 0.00";
 
         // Event handler
         SDL_Event e;
@@ -141,60 +143,51 @@ int main( int argc, char* args[] )
         // Time
         TW_Timer mainTimer;
         TW_Timer_Init( &mainTimer, false );
-        char timeText[50];
+        char timeText[50] = "Time since reset: 0ms";
         
         // Background
         struct LTexture gBackground;
         LTexture_LoadImage( &gBackground, gRenderer, "src/images/backgrounds/day.png" );
 
         // Text
-        gFontTitle = TTF_OpenFont( "src/assets/fonts/dejavu/DejaVuSerif.ttf", 28 );
-        if( gFontTitle == NULL )
-        {
-            printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
-            quit = true;
-        }
-        SDL_Color textTitleColour = { 0, 0, 0 };
-        struct LTexture gTitleText;
-        if( !( LTexture_LoadText( &gTitleText, gRenderer, "New game!", gFontTitle, textTitleColour ) ) )
-        {
-            printf( "Failed to render texture!\n" );
-            quit = true;
-        }
-
-        // This is now repeatable code and should probably be packaged away in its own special little class - to do
-        gFontNormal = TTF_OpenFont( "src/assets/fonts/dejavu/DejaVuSerif.ttf", 16 );
         SDL_Color textNormalColour = { 0, 0, 0 };
-        if( gFontNormal == NULL )
+
+        // Title
+        struct TW_Text gTitle;
+        TW_Text_FastInit( &gTitle, "My games title :D" );
+        TW_Text_SetFont( &gTitle, gTitle.fontName, 28 );
+        if ( ! TW_Text_Render_Texture( &gTitle, gRenderer ) )
         {
-            printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
+            printf( "ERROR: Failed to render texture - Title\n" );
             quit = true;
         }
         
-        struct LTexture gMouseText;
-        if( !( LTexture_LoadText( &gMouseText, gRenderer, "Mouse Position: X=0, Y=0", gFontNormal, textNormalColour ) ) )
+        // Mouse Position
+        TW_Text gMouseText;
+        TW_Text_FastInit( &gMouseText, mousePositionText );
+        if( ! TW_Text_Render_Texture( &gMouseText, gRenderer ) )
         {
-            printf( "Failed to render texture!\n" );
+            printf( "ERROR: Failed to render texture - Mouse Text\n" );
             quit = true;
         }
         
-        struct LTexture gTimeText;
-        if( !( LTexture_LoadText( &gTimeText, gRenderer, "Time since reset: 0ms", gFontNormal, textNormalColour ) ) )
+        // Time
+        TW_Text gTimeText;
+        TW_Text_FastInit( &gTimeText, timeText );
+        if( ! TW_Text_Render_Texture( &gTimeText, gRenderer ) )
         {
-            printf( "Failed to render texture!\n" );
+            printf( "ERROR: Failed to render texture - Time Text\n" );
             quit = true;
         }
 
-        struct LTexture gFPSText;
-        if( !( LTexture_LoadText( &gTimeText, gRenderer, "FPS: 0", gFontNormal, textNormalColour ) ) )
+        // FPS
+        TW_Text gFPSText;
+        TW_Text_FastInit( &gFPSText, fpsText );
+        if( ! TW_Text_Render_Texture( &gFPSText, gRenderer ) )
         {
-            printf( "Failed to render texture!\n" );
+            printf( "ERROR: Failed to render texture - FPS Text\n" );
             quit = true;
         }
-
-        // Mouse
-        MousePosition mousePosition = { 0, 0 };
-        char mousePositionText[50];
 
         // Sprite
         const int WALKING_ANIMATION_FRAMES = 4;
@@ -315,9 +308,14 @@ int main( int argc, char* args[] )
                         strcat(mousePositionText, " - KEYDOWN");
                     }
 
-                    if( !( LTexture_LoadText( &gMouseText, gRenderer, mousePositionText, gFontNormal, textNormalColour ) ) )
+                    // if( !( LTexture_LoadText( &gMouseText, gRenderer, mousePositionText, gFontNormal, textNormalColour ) ) )
+                    // {
+                    //     printf( "Failed to render texture!\n" );
+                    //     quit = true;
+                    // }
+                    if( ! TW_Text_Render_Texture( &gMouseText, gRenderer ) )
                     {
-                        printf( "Failed to render texture!\n" );
+                        printf( "ERROR: Failed to render texture - Mouse Text\n" );
                         quit = true;
                     }
                 }
@@ -325,17 +323,17 @@ int main( int argc, char* args[] )
 
             // Update time
             snprintf( timeText, 50, "Time since reset: %dms", TW_Timer_GetTime( &mainTimer ) );
-            if( !( LTexture_LoadText( &gTimeText, gRenderer, timeText, gFontNormal, textNormalColour ) ) )
+            if( ! TW_Text_Render_Texture( &gTimeText, gRenderer ) )
             {
-                printf( "Failed to render texture!\n" );
+                printf( "ERROR: Failed to render texture - Time Text\n" );
                 quit = true;
             }
 
             // Update FPS
             snprintf(fpsText, 50, "FPS: %.2f", TW_FPSTimer_GetFPS( &fpsTimer ) );
-            if( !( LTexture_LoadText( &gFPSText, gRenderer, fpsText, gFontNormal, textNormalColour ) ) )
+            if( ! TW_Text_Render_Texture( &gFPSText, gRenderer ) )
             {
-                printf( "Failed to render texture!\n" );
+                printf( "ERROR: Failed to render texture - FPS Text\n" );
                 quit = true;
             }
 
@@ -346,16 +344,16 @@ int main( int argc, char* args[] )
             LTexture_Render( &gBackground, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render title text
-            LTexture_Render( &gTitleText, gRenderer, ((SCREEN_WIDTH - gTitleText.mWidth) / 2), 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            LTexture_Render( &gTitle.renderedText.mTexture, gRenderer, ( SCREEN_WIDTH - gTitle.renderedText.mWidth ) / 2, 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render mouse text
-            LTexture_Render( &gMouseText, gRenderer, ((SCREEN_WIDTH - gMouseText.mWidth) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            LTexture_Render( &gMouseText.renderedText.mTexture, gRenderer, ((SCREEN_WIDTH - gMouseText.renderedText.mWidth) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render time text
-            LTexture_Render( &gTimeText, gRenderer, ((SCREEN_WIDTH - gTimeText.mWidth) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            LTexture_Render( &gTimeText.renderedText.mTexture, gRenderer, ((SCREEN_WIDTH - gTimeText.renderedText.mWidth) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render FPS text
-            LTexture_Render( &gFPSText, gRenderer, ((SCREEN_WIDTH - gFPSText.mWidth) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            LTexture_Render( &gFPSText.renderedText.mTexture, gRenderer, ((SCREEN_WIDTH - gFPSText.renderedText.mWidth) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render sprite
             SDL_Rect* gSpriteFrame = &gSprite[ frame ];
@@ -382,7 +380,6 @@ int main( int argc, char* args[] )
         TW_Timer_Free( &mainTimer );
         LTexture_Free( &gSpriteSheet );
         LTexture_Free( &gBackground );
-
     }
 
     // Free resources and close SDL
