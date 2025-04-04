@@ -146,8 +146,8 @@ int main( int argc, char* args[] )
         char timeText[50] = "Time since reset: 0ms";
         
         // Background
-        struct LTexture gBackground;
-        LTexture_LoadImage( &gBackground, gRenderer, "src/images/backgrounds/day.png" );
+        TW_Texture gBackground;
+        TW_Texture_LoadImage( &gBackground, gRenderer, "src/images/backgrounds/day.png" );
 
         // Text
         SDL_Color textNormalColour = { 0, 0, 0 };
@@ -200,8 +200,8 @@ int main( int argc, char* args[] )
         double degrees = 0;
         double angle_increment = 30;
 
-        struct LTexture gSpriteSheet;
-        if( !( LTexture_LoadImage( &gSpriteSheet, gRenderer, "src/images/sprites/player.png" ) ) )
+        TW_Texture gSpriteSheet;
+        if( !( TW_Texture_LoadImage( &gSpriteSheet, gRenderer, "src/images/sprites/player.png" ) ) )
         {
             printf( "Failed to load walking animation texture.\n" );
         }
@@ -308,11 +308,6 @@ int main( int argc, char* args[] )
                         strcat(mousePositionText, " - KEYDOWN");
                     }
 
-                    // if( !( LTexture_LoadText( &gMouseText, gRenderer, mousePositionText, gFontNormal, textNormalColour ) ) )
-                    // {
-                    //     printf( "Failed to render texture!\n" );
-                    //     quit = true;
-                    // }
                     if( ! TW_Text_Render_Texture( &gMouseText, gRenderer ) )
                     {
                         printf( "ERROR: Failed to render texture - Mouse Text\n" );
@@ -341,23 +336,23 @@ int main( int argc, char* args[] )
             SDL_RenderClear( gRenderer );
             
             // Render background
-            LTexture_Render( &gBackground, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            TW_Texture_Render( &gBackground, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render title text
-            LTexture_Render( &gTitle.renderedText.mTexture, gRenderer, ( SCREEN_WIDTH - gTitle.renderedText.mWidth ) / 2, 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            TW_Texture_Render( &gTitle.renderedText.texture, gRenderer, ( SCREEN_WIDTH - gTitle.renderedText.width ) / 2, 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render mouse text
-            LTexture_Render( &gMouseText.renderedText.mTexture, gRenderer, ((SCREEN_WIDTH - gMouseText.renderedText.mWidth) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            TW_Texture_Render( &gMouseText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gMouseText.renderedText.width) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render time text
-            LTexture_Render( &gTimeText.renderedText.mTexture, gRenderer, ((SCREEN_WIDTH - gTimeText.renderedText.mWidth) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            TW_Texture_Render( &gTimeText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gTimeText.renderedText.width) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render FPS text
-            LTexture_Render( &gFPSText.renderedText.mTexture, gRenderer, ((SCREEN_WIDTH - gFPSText.renderedText.mWidth) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            TW_Texture_Render( &gFPSText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gFPSText.renderedText.width) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render sprite
             SDL_Rect* gSpriteFrame = &gSprite[ frame ];
-            LTexture_Render( &gSpriteSheet, gRenderer, 235, 235, gSpriteFrame, degrees, NULL, flipType );
+            TW_Texture_Render( &gSpriteSheet, gRenderer, 235, 235, gSpriteFrame, degrees, NULL, flipType );
             frame = ( frame + 1 ) % WALKING_ANIMATION_FRAMES;
 
             // Update screen
@@ -375,11 +370,16 @@ int main( int argc, char* args[] )
             }
         }
 
-        // LTexture_Free( &gText );
+
+        // Free resources
         TW_Timer_Free( &fpsTimer );
         TW_Timer_Free( &mainTimer );
-        LTexture_Free( &gSpriteSheet );
-        LTexture_Free( &gBackground );
+        TW_Texture_Free( &gTitle );
+        TW_Texture_Free( &gMouseText );
+        TW_Texture_Free( &gTimeText );
+        TW_Texture_Free( &gFPSText );
+        TW_Texture_Free( &gSpriteSheet );
+        TW_Texture_Free( &gBackground );
     }
 
     // Free resources and close SDL
