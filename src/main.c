@@ -29,9 +29,6 @@ enum KeyPressSurfaces
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
-SDL_Texture* gTexture = NULL;
-// TTF_Font* gFontTitle = NULL;
-TTF_Font* gFontNormal = NULL;
 
 typedef struct MousePosition {
     int x;
@@ -102,8 +99,9 @@ bool init()
 void closeAll()
 {
     // Free Loaded Images
-    SDL_DestroyTexture( gTexture );
-    gTexture = NULL;
+    // This is no longer done... should probably be.
+    // SDL_DestroyTexture( gTexture );
+    // gTexture = NULL;
     
     // Destroy Window
     SDL_DestroyRenderer( gRenderer );
