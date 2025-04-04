@@ -142,7 +142,7 @@ int main( int argc, char* args[] )
         // Time
         TW_Timer mainTimer;
         TW_Timer_Init( &mainTimer, false );
-        char timeText[50];
+        char timeText[50] = "Time since reset: 0ms";
         
         // Background
         struct LTexture gBackground;
@@ -186,15 +186,18 @@ int main( int argc, char* args[] )
             quit = true;
         }
         
-        struct LTexture gTimeText;
-        if( !( LTexture_LoadText( &gTimeText, gRenderer, "Time since reset: 0ms", gFontNormal, textNormalColour ) ) )
-        {
-            printf( "Failed to render texture!\n" );
-            quit = true;
-        }
+        // struct LTexture gTimeText;
+        // if( !( LTexture_LoadText( &gTimeText, gRenderer, "Time since reset: 0ms", gFontNormal, textNormalColour ) ) )
+        // {
+        //     printf( "Failed to render texture!\n" );
+        //     quit = true;
+        // }
+        TW_Text gTimeText;
+        TW_Text_FastInit( &gTimeText, timeText );
+        TW_Text_Render_Texture( &gTimeText, gRenderer );
 
         struct LTexture gFPSText;
-        if( !( LTexture_LoadText( &gTimeText, gRenderer, "FPS: 0", gFontNormal, textNormalColour ) ) )
+        if( !( LTexture_LoadText( &gFPSText, gRenderer, "FPS: 0", gFontNormal, textNormalColour ) ) )
         {
             printf( "Failed to render texture!\n" );
             quit = true;
@@ -333,11 +336,7 @@ int main( int argc, char* args[] )
 
             // Update time
             snprintf( timeText, 50, "Time since reset: %dms", TW_Timer_GetTime( &mainTimer ) );
-            if( !( LTexture_LoadText( &gTimeText, gRenderer, timeText, gFontNormal, textNormalColour ) ) )
-            {
-                printf( "Failed to render texture!\n" );
-                quit = true;
-            }
+            TW_Text_Render_Texture( &gTimeText, gRenderer );
 
             // Update FPS
             snprintf(fpsText, 50, "FPS: %.2f", TW_FPSTimer_GetFPS( &fpsTimer ) );
@@ -360,7 +359,7 @@ int main( int argc, char* args[] )
             LTexture_Render( &gMouseText, gRenderer, ((SCREEN_WIDTH - gMouseText.mWidth) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render time text
-            LTexture_Render( &gTimeText, gRenderer, ((SCREEN_WIDTH - gTimeText.mWidth) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            LTexture_Render( &gTimeText.renderedText.mTexture, gRenderer, ((SCREEN_WIDTH - gTimeText.renderedText.mWidth) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render FPS text
             LTexture_Render( &gFPSText, gRenderer, ((SCREEN_WIDTH - gFPSText.mWidth) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
