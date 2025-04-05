@@ -2,7 +2,7 @@
 #include <SDL2/SDL.h>
 #include "timer.h"
 
-// Instantiate the TW_Timer object.
+// Initialises a TW_Timer object
 void TW_Timer_Init( TW_Timer* self, bool paused )
 {
     // Checks should exists here to ensure that SDL has been initiated.
@@ -12,13 +12,13 @@ void TW_Timer_Init( TW_Timer* self, bool paused )
     self->pauseDuration = 0;
 }
 
-// Resets a TW_Timer object without changing the state.
+// Resets a TW_Timer object without changing the state
 void TW_Timer_Reset( TW_Timer* self )
 {
     TW_Timer_Init( self, self->paused );
 }
 
-// Pause an unpaused TW_Timer object.
+// Pause an unpaused TW_Timer object
 void TW_Timer_Pause( TW_Timer* self )
 {
     if( !( self->paused ) )
@@ -28,7 +28,7 @@ void TW_Timer_Pause( TW_Timer* self )
     }
 }
 
-// Resume a paused TW_Timer object.
+// Resume a paused TW_Timer object
 void TW_Timer_Resume( TW_Timer* self )
 {
     if( self->paused )
@@ -38,7 +38,7 @@ void TW_Timer_Resume( TW_Timer* self )
     }
 }
 
-// Get the current time of a TW_Timer object.
+// Get the current time of a TW_Timer object
 Uint64 TW_Timer_GetTime( TW_Timer* self )
 {
     if( self->paused )
@@ -51,7 +51,7 @@ Uint64 TW_Timer_GetTime( TW_Timer* self )
     }
 }
 
-// Frees the memory of a TW_Timer object.
+// Frees the memory of a TW_Timer object
 void TW_Timer_Free( TW_Timer* self )
 {
     self->currentTime = 0;

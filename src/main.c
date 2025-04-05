@@ -98,11 +98,6 @@ bool init()
 
 void closeAll()
 {
-    // Free Loaded Images
-    // This is no longer done... should probably be.
-    // SDL_DestroyTexture( gTexture );
-    // gTexture = NULL;
-    
     // Destroy Window
     SDL_DestroyRenderer( gRenderer );
     SDL_DestroyWindow( gWindow );
