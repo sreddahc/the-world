@@ -41,8 +41,9 @@ typedef struct TW_Animation {
  * - int            - height            - The height of the animation
  * - int            - width             - The width of the animation
  * - int            - frameCount        - The number of frames in the animation
+ * - bool           - paused            - Is the animation paused? true = yes, false = no
  */
-bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, int height, int width, int frameCount );
+bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, int height, int width, int frameCount, bool paused );
 
 
 /**

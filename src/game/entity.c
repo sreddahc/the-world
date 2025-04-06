@@ -1,4 +1,4 @@
-#include "sprite.h"
+#include "entity.h"
 
 // Initialise a TW_Sprite object.
 void TW_Entity_Init( TW_Entity* self )

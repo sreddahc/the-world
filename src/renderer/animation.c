@@ -4,8 +4,6 @@
 // Initialises a TW_Animation object.
 bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, int height, int width, int frameCount, bool paused )
 {
-    bool success = true;
-
     self->width = width;
     self->height = height;
     self->frameCount = frameCount;
@@ -15,7 +13,7 @@ bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, 
     TW_Texture animationTexture;
     if( ! TW_Texture_LoadImage( &animationTexture, renderer, path ) )
     {
-        success = false;
+        return false;
     }
     self->texture = animationTexture;
 
@@ -23,7 +21,6 @@ bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, 
     int gridRows = self->texture.height / height;
     int gridSize = gridCols * gridRows;
 
-    // No idea if I'm doing memory allocation correctly... but should verify...
     SDL_Rect* animationGrid = malloc( gridSize * sizeof( *animationGrid ) );
     self->grid = animationGrid;
     for( int frame = 0; frame < gridSize; frame++ )
@@ -34,9 +31,11 @@ bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, 
         self->grid[ frame ].h = height;
     }
 
-    return success;
+    return true;
 }
 
+
+// Gets the next frame texture in the animation and increments the current frame counter.
 void TW_Animation_GetNextFrame( TW_Animation* self )
 {
     if( ! self->paused )
@@ -45,9 +44,10 @@ void TW_Animation_GetNextFrame( TW_Animation* self )
     }
 }
 
+
+// Frees resources used by a TW_Animation object.
 void TW_Animation_Free( TW_Animation* self )
 {
-    // Need to verify to ensure that I'm doing memory freeing correctly...
     free( self->grid );
     self->grid = NULL;
     self->currentFrame = 0;

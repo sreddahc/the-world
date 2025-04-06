@@ -8,7 +8,7 @@
 #include "renderer/text.h"
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
-#include "game/sprite.h"
+#include "game/entity.h"
 #include "renderer/animation.h"
 
 // Global variables
@@ -185,15 +185,14 @@ int main( int argc, char* args[] )
         const int WALKING_ANIMATION_FRAMES = 4;
         const int SPRITE_HEIGHT = 32;
         const int SPRITE_WIDTH = 32;
-        SDL_Rect gSprite[ WALKING_ANIMATION_FRAMES ];
+
         // Controls
-        int frame = 0;
         SDL_RendererFlip flipType = SDL_FLIP_NONE;
         double degrees = 0;
         double angle_increment = 30;
         
         TW_Animation gPlayer;
-        TW_Animation_Init( &gPlayer, gRenderer, "src/images/sprites/player.png", 32, 32, 4 );
+        TW_Animation_Init( &gPlayer, gRenderer, "src/images/sprites/player.png", SPRITE_WIDTH, SPRITE_HEIGHT, WALKING_ANIMATION_FRAMES, false );
 
         while( !quit )
         {
