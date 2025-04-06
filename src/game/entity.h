@@ -1,20 +1,38 @@
 #pragma once
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "../renderer/animation.h"
 #include "../renderer/renderer.h"
 
 
 // Type definitions
 
+enum TW_Component_Type
+{
+    TW_COMPONENT_NODE,
+    TW_COMPONENT_ANIMATION,
+    TW_COMPONENT_TOTAL_COMPONENTS
+};
+
+
+typedef struct TW_Component {
+    int type;
+    union {
+        TW_Animation animation;
+    } component;
+} TW_Component;
+
+
 /**
- * TW_Entity - A wrapper object that contains all information to do with a player sprite
+ * TW_Entity - An entity
  * 
  * Elements:
  * - TW_Texture*    - texture       - The texture of the sprite
  * - TW_Coord*      - position      - The position of an object on the screen
  */
 typedef struct TW_Entity {
-    TW_Texture texture;
-    TW_Coord position;
+    TW_Component* components;
 } TW_Entity;
 
 

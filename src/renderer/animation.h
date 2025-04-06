@@ -14,6 +14,8 @@
  * - int            - width             - Width of the animation texture
  * - int            - frameCount        - Number of frames in the animation
  * - int            - currentFrame      - Current frame of the animation
+ * - int            - animationSpeed    - Animation speed in milliseconds. Default = 100
+ * - int            - timeLastUpdated   - Used to check when to update animation frames
  * - bool           - paused            - Pause animation? true = yes, false = no
  * - SDL_Rect*      - grid              - Grid that subdivides the texture based on the
  *                                        size of the animation object.
@@ -24,6 +26,8 @@ typedef struct TW_Animation {
     int height;
     int frameCount;
     int currentFrame;
+    int animationSpeed;
+    int timeLastUpdated;
     bool paused;
     SDL_Rect* grid;
     TW_Texture texture;
@@ -41,9 +45,10 @@ typedef struct TW_Animation {
  * - int            - height            - The height of the animation
  * - int            - width             - The width of the animation
  * - int            - frameCount        - The number of frames in the animation
+ * - int            - animationSpeed    - Animation speed in milliseconds. Default = 100
  * - bool           - paused            - Is the animation paused? true = yes, false = no
  */
-bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, int height, int width, int frameCount, bool paused );
+bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, int height, int width, int frameCount, int animationSpeed, bool paused );
 
 
 /**

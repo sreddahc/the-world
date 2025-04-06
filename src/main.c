@@ -138,8 +138,8 @@ int main( int argc, char* args[] )
         char timeText[50] = "Time since reset: 0ms";
         
         // Background
-        TW_Entity gBackground;
-        TW_Entity_Load( &gBackground, gRenderer, "src/images/backgrounds/day.png", 0, 0 );
+        TW_Texture gBackground;
+        TW_Texture_LoadImage( &gBackground, gRenderer, "src/images/backgrounds/day.png" );
 
         // Text
         SDL_Color textNormalColour = { 0, 0, 0 };
@@ -192,7 +192,7 @@ int main( int argc, char* args[] )
         double angle_increment = 30;
         
         TW_Animation gPlayer;
-        TW_Animation_Init( &gPlayer, gRenderer, "src/images/sprites/player.png", SPRITE_WIDTH, SPRITE_HEIGHT, WALKING_ANIMATION_FRAMES, false );
+        TW_Animation_Init( &gPlayer, gRenderer, "src/images/sprites/player.png", SPRITE_WIDTH, SPRITE_HEIGHT, WALKING_ANIMATION_FRAMES, 100, false );
 
         while( !quit )
         {

@@ -1,13 +1,16 @@
 #include "animation.h"
+#include "../engine/timer.h"
 
 
 // Initialises a TW_Animation object.
-bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, int height, int width, int frameCount, bool paused )
+bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, int height, int width, int frameCount, int animationSpeed, bool paused )
 {
     self->width = width;
     self->height = height;
     self->frameCount = frameCount;
     self->currentFrame = 0;
+    self->animationSpeed = animationSpeed;
+    self->timeLastUpdated = 0;
     self->paused = paused;
     
     TW_Texture animationTexture;
@@ -40,7 +43,12 @@ void TW_Animation_GetNextFrame( TW_Animation* self )
 {
     if( ! self->paused )
     {
-        self->currentFrame = ( self->currentFrame + 1 ) % self->frameCount;
+        // This is not the right way to implement DeltaTime... though it does work.
+        if( SDL_GetTicks() - self->timeLastUpdated >= self->animationSpeed )
+        {
+            self->timeLastUpdated = SDL_GetTicks64();
+            self->currentFrame = ( self->currentFrame + 1 ) % self->frameCount;
+        }
     }
 }
 
