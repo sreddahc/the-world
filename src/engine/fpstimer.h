@@ -49,7 +49,7 @@ void TW_FPSTimer_Update( TW_FPSTimer* self );
  * TW_FPSTimer*     - self      - The TW_FPSTimer object to initialise
  * 
  * Returns:
- * float            - The current FPS as a float
+ * float            - The current FPS as a floa     
  */
 float TW_FPSTimer_GetFPS( TW_FPSTimer* self );
 
