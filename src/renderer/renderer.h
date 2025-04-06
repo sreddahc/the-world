@@ -1,7 +1,23 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+#include <stdbool.h>
+
 
 // Type definitions
+
+/**
+ * TW_Coord - an vector of size 2 that provides the x and y coordinates of an object
+ * 
+ * Elements:
+ * int              - x             - The x position of an object
+ * int              - y             - The y position of an object
+ */
+typedef struct TW_Coord {
+    int x;
+    int y;
+} TW_Coord;
+
 
 /**
  * TW_Texture - A wrapper object that contains all information relating to a texture.
@@ -16,6 +32,7 @@ typedef struct TW_Texture {
     int width;                  // Width of the texture
     int height;                 // Height of the texture
 } TW_Texture;
+
 
 // Function definitions
 

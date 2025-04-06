@@ -8,6 +8,8 @@
 #include "renderer/text.h"
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
+#include "game/sprite.h"
+#include "renderer/animation.h"
 
 // Global variables
 // Screen dimensions
@@ -29,11 +31,6 @@ enum KeyPressSurfaces
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
-
-typedef struct MousePosition {
-    int x;
-    int y;
-} MousePosition;
 
 // Functions
 bool init();
@@ -123,7 +120,7 @@ int main( int argc, char* args[] )
         bool quit = false;
 
         // Mouse
-        MousePosition mousePosition = { 0, 0 };
+        TW_Coord mousePosition = { 0, 0 };
         char mousePositionText[50] = "Mouse Position: X=0, Y=0";
 
         // Frame counter
@@ -141,14 +138,14 @@ int main( int argc, char* args[] )
         char timeText[50] = "Time since reset: 0ms";
         
         // Background
-        TW_Texture gBackground;
-        TW_Texture_LoadImage( &gBackground, gRenderer, "src/images/backgrounds/day.png" );
+        TW_Entity gBackground;
+        TW_Entity_Load( &gBackground, gRenderer, "src/images/backgrounds/day.png", 0, 0 );
 
         // Text
         SDL_Color textNormalColour = { 0, 0, 0 };
 
         // Title
-        struct TW_Text gTitle;
+        TW_Text gTitle;
         TW_Text_FastInit( &gTitle, "My games title :D" );
         TW_Text_SetFont( &gTitle, gTitle.fontName, 28 );
         if ( ! TW_Text_Render_Texture( &gTitle, gRenderer ) )
@@ -212,6 +209,9 @@ int main( int argc, char* args[] )
                 gSprite[ f ].h = SPRITE_HEIGHT;
             }
         }
+        
+        TW_Animation gPlayer;
+        TW_Animation_Init( &gPlayer, gRenderer, "src/images/sprites/player.png", 32, 32, 4 );
 
         while( !quit )
         {
@@ -331,7 +331,7 @@ int main( int argc, char* args[] )
             SDL_RenderClear( gRenderer );
             
             // Render background
-            TW_Texture_Render( &gBackground, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            TW_Texture_Render( &gBackground.texture, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render title text
             TW_Texture_Render( &gTitle.renderedText.texture, gRenderer, ( SCREEN_WIDTH - gTitle.renderedText.width ) / 2, 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
@@ -350,6 +350,9 @@ int main( int argc, char* args[] )
             TW_Texture_Render( &gSpriteSheet, gRenderer, 235, 235, gSpriteFrame, degrees, NULL, flipType );
             frame = ( frame + 1 ) % WALKING_ANIMATION_FRAMES;
 
+            TW_Texture_Render( &gPlayer.texture, gRenderer, 20, 20, &gPlayer.grid[ gPlayer.currentFrame ], 0.0, NULL, SDL_FLIP_NONE );
+            TW_Animation_GetNextFrame( &gPlayer );
+
             // Update screen
             SDL_RenderPresent( gRenderer );
 
@@ -367,6 +370,7 @@ int main( int argc, char* args[] )
 
 
         // Free resources
+        TW_Animation_Free( &gPlayer );
         TW_Timer_Free( &fpsTimer );
         TW_Timer_Free( &mainTimer );
         TW_Texture_Free( &gTitle );
