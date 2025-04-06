@@ -37,7 +37,7 @@ bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, 
 }
 
 void TW_Animation_GetNextFrame( TW_Animation* self )
-{   
+{
     self->currentFrame = ( self->currentFrame + 1 ) % self->frameCount;
 }
 
@@ -46,4 +46,10 @@ void TW_Animation_Free( TW_Animation* self )
     // Need to verify to ensure that I'm doing memory freeing correctly...
     free( self->grid );
     self->grid = NULL;
+    self->currentFrame = 0;
+    self->frameCount = 0;
+    self->width = 0;
+    self->height = 0;
+    TW_Texture_Free( &self->texture );
+    self = NULL;
 }
