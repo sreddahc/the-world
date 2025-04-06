@@ -28,4 +28,8 @@ typedef struct TW_Entity {
  */
 void TW_Entity_Init( TW_Entity* self );
 
+
+/**
+ * TW_Entity_Load - 
+ */
 void TW_Entity_Load( TW_Entity* self, SDL_Renderer* renderer, char* spriteMap, int x, int y );

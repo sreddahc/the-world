@@ -2,7 +2,7 @@
 
 
 // Initialises a TW_Animation object.
-bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, int height, int width, int frameCount )
+bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, int height, int width, int frameCount, bool paused )
 {
     bool success = true;
 
@@ -10,6 +10,7 @@ bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, 
     self->height = height;
     self->frameCount = frameCount;
     self->currentFrame = 0;
+    self->paused = paused;
     
     TW_Texture animationTexture;
     if( ! TW_Texture_LoadImage( &animationTexture, renderer, path ) )
@@ -38,7 +39,10 @@ bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, 
 
 void TW_Animation_GetNextFrame( TW_Animation* self )
 {
-    self->currentFrame = ( self->currentFrame + 1 ) % self->frameCount;
+    if( ! self->paused )
+    {
+        self->currentFrame = ( self->currentFrame + 1 ) % self->frameCount;
+    }
 }
 
 void TW_Animation_Free( TW_Animation* self )

@@ -191,24 +191,6 @@ int main( int argc, char* args[] )
         SDL_RendererFlip flipType = SDL_FLIP_NONE;
         double degrees = 0;
         double angle_increment = 30;
-
-        TW_Texture gSpriteSheet;
-        if( !( TW_Texture_LoadImage( &gSpriteSheet, gRenderer, "src/images/sprites/player.png" ) ) )
-        {
-            printf( "Failed to load walking animation texture.\n" );
-        }
-        else
-        {
-            // Set sprite animation frames
-            // An assumption is being made that the frames go from left to right only.
-            for( int f = 0; f < WALKING_ANIMATION_FRAMES; f++ )
-            {
-                gSprite[ f ].x = f * SPRITE_WIDTH;
-                gSprite[ f ].y = 0;
-                gSprite[ f ].w = SPRITE_WIDTH;
-                gSprite[ f ].h = SPRITE_HEIGHT;
-            }
-        }
         
         TW_Animation gPlayer;
         TW_Animation_Init( &gPlayer, gRenderer, "src/images/sprites/player.png", 32, 32, 4 );
@@ -279,10 +261,12 @@ int main( int argc, char* args[] )
                     if( mainTimer.paused )
                     {
                         TW_Timer_Resume( &mainTimer );
+                        gPlayer.paused = false;
                     }
                     else
                     {
                         TW_Timer_Pause( &mainTimer );
+                        gPlayer.paused = true;
                     }
                     break;
 
@@ -346,11 +330,7 @@ int main( int argc, char* args[] )
             TW_Texture_Render( &gFPSText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gFPSText.renderedText.width) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render sprite
-            SDL_Rect* gSpriteFrame = &gSprite[ frame ];
-            TW_Texture_Render( &gSpriteSheet, gRenderer, 235, 235, gSpriteFrame, degrees, NULL, flipType );
-            frame = ( frame + 1 ) % WALKING_ANIMATION_FRAMES;
-
-            TW_Texture_Render( &gPlayer.texture, gRenderer, 20, 20, &gPlayer.grid[ gPlayer.currentFrame ], 0.0, NULL, SDL_FLIP_NONE );
+            TW_Texture_Render( &gPlayer.texture, gRenderer, 20, 20, &gPlayer.grid[ gPlayer.currentFrame ], degrees, NULL, flipType );
             TW_Animation_GetNextFrame( &gPlayer );
 
             // Update screen
@@ -377,7 +357,6 @@ int main( int argc, char* args[] )
         TW_Texture_Free( &gMouseText );
         TW_Texture_Free( &gTimeText );
         TW_Texture_Free( &gFPSText );
-        TW_Texture_Free( &gSpriteSheet );
         TW_Texture_Free( &gBackground );
     }
 
