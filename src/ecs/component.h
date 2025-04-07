@@ -2,15 +2,30 @@
 
 #include "../renderer/animation.h"
 
+
 // Type definitions
 
-
+/**
+ * TW_Component_Type - An enumeration of all the types of components so that they may be
+ * uniquely identified.
+ */
 enum TW_Component_Type
 {
     TW_COMPONENT_NODE,
+    TW_COMPONENT_TEXTURE,
     TW_COMPONENT_ANIMATION,
     TW_COMPONENT_TOTAL_COMPONENTS
 };
+
+
+/**
+ * TW_Component_Value - A union of all valid component types. This union should have one
+ * object matching each TW_Component_Type.
+ */
+typedef union TW_Component_Value {
+    TW_Texture* texture;
+    TW_Animation* animation;
+} TW_Component_Value;
 
 
 /**
@@ -22,7 +37,20 @@ enum TW_Component_Type
  */
 typedef struct TW_Component {
     int type;
-    union {
-        TW_Animation animation;
-    } component;
+    TW_Component_Value* value;
 } TW_Component;
+
+
+// Function definitions
+
+/**
+ * TW_Component_Create - Creates a pointer to a component of specified type and value.
+ * 
+ * Args:
+ * - int                    - type      - The type of the component value
+ * - TW_Component_Value*    - value     - A pointer to the component value
+ * 
+ * Returns:
+ * - TW_Component*          - A pointer to a component for inclusion in an entity
+ */
+TW_Component TW_Component_Create( int type, TW_Component_Value* value );

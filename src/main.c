@@ -8,7 +8,7 @@
 #include "renderer/text.h"
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
-#include "game/entity.h"
+#include "ecs/entity.h"
 #include "renderer/animation.h"
 
 // Global variables
@@ -140,6 +140,22 @@ int main( int argc, char* args[] )
         // Background
         TW_Texture gBackground;
         TW_Texture_LoadImage( &gBackground, gRenderer, "src/images/backgrounds/day.png" );
+
+        // ECS Testing
+        // TW_Entity gMob;
+
+        TW_Texture tempTexture;
+        // TW_Texture_LoadImage( &gTemp, gRenderer, "" );
+        TW_Component tempComponent = TW_Component_Create( TW_COMPONENT_TEXTURE, &tempTexture );
+        if( tempComponent.type == TW_COMPONENT_TEXTURE )
+        {
+            printf( "YES! It's a component! :D. My type is %d\n", tempComponent.type );
+            TW_Texture_LoadImage( &tempComponent.value->texture, gRenderer, "src/images/backgrounds/night.png");
+        }
+        else
+        {
+            printf( "Nope. Not a component :(\n");
+        }
 
         // Text
         SDL_Color textNormalColour = { 0, 0, 0 };
@@ -315,6 +331,11 @@ int main( int argc, char* args[] )
             
             // Render background
             TW_Texture_Render( &gBackground.texture, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
+
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // !! More Component Testing !!
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            TW_Texture_Render( &tempComponent.value->texture, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render title text
             TW_Texture_Render( &gTitle.renderedText.texture, gRenderer, ( SCREEN_WIDTH - gTitle.renderedText.width ) / 2, 10, NULL, 0.0, NULL, SDL_FLIP_NONE );

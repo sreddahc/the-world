@@ -9,26 +9,23 @@
  * TW_Entity - An entity
  * 
  * Elements:
- * - TW_Texture*    - texture       - The texture of the sprite
- * - TW_Coord*      - position      - The position of an object on the screen
+ * - TW_Texture*        - texture       - The texture of the sprite
+ * - TW_Coord*          - position      - The position of an object on the screen
  */
 typedef struct TW_Entity {
+    int size;
     TW_Component* components;
 } TW_Entity;
 
 
 // Function definitions
 
-// /**
-//  * TW_Sprite_Init - Initialise a TW_Sprite object.
-//  * 
-//  * Args:
-//  * - TW_Sprite*     - self      - The TW_Sprite object to be initialised      
-//  */
-// void TW_Entity_Init( TW_Entity* self );
 
-
-// /**
-//  * TW_Entity_Load - 
-//  */
-// void TW_Entity_Load( TW_Entity* self, SDL_Renderer* renderer, char* spriteMap, int x, int y );
+/**
+ * TW_Entity_AddComponent - Given an entity and component, adds a component to the entity
+ * 
+ * Args:
+ * - TW_Entity*         - self          - The entity to add a component to
+ * - TW_Component*      - component     - The component to add to the entity
+ */
+void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component );
