@@ -24,7 +24,7 @@ bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, 
     int gridRows = self->texture.height / height;
     int gridSize = gridCols * gridRows;
 
-    SDL_Rect* animationGrid = malloc( gridSize * sizeof( *animationGrid ) );
+    SDL_Rect* animationGrid = malloc( gridSize * sizeof( SDL_Rect ) );
     self->grid = animationGrid;
     for( int frame = 0; frame < gridSize; frame++ )
     {

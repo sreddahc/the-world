@@ -8,7 +8,7 @@
 #include "renderer/text.h"
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
-#include "game/entity.h"
+#include "ecs/entity.h"
 #include "renderer/animation.h"
 
 // Global variables
@@ -140,6 +140,32 @@ int main( int argc, char* args[] )
         // Background
         TW_Texture gBackground;
         TW_Texture_LoadImage( &gBackground, gRenderer, "src/images/backgrounds/day.png" );
+
+        // ECS Testing
+
+        TW_Texture tempTexture;
+        TW_Component* tempComponent = TW_Component_Create( TW_COMPONENT_TEXTURE, &tempTexture );
+
+        TW_Texture tempTexture2;
+        TW_Component* tempComponent2 = TW_Component_Create( TW_COMPONENT_TEXTURE, &tempTexture2 );
+
+        // Create entity
+        TW_Entity* tempEntity = TW_Entity_CreateEntity();
+        printf("Entity size: %d\n", tempEntity->size);
+
+        // Attempt to add a component to an entity
+        TW_Entity_AddComponent( tempEntity, tempComponent );
+        printf("Entity size: %d\n", tempEntity->size);
+        TW_Texture_LoadImage( &tempComponent->value->texture, gRenderer, "src/images/backgrounds/night.png" );
+
+        TW_Entity_AddComponent( tempEntity, tempComponent2 );
+        TW_Texture_LoadImage( &tempComponent2->value->texture, gRenderer, "src/images/backgrounds/day.png" );
+
+        if( tempEntity->components[ 0 ]->type == TW_COMPONENT_TEXTURE )
+        {
+            printf( "Entity is of size: %d\n", tempEntity->size );
+            printf( "First component is type: %d\n", tempEntity->components[ 0 ]->type );
+        }
 
         // Text
         SDL_Color textNormalColour = { 0, 0, 0 };
@@ -315,6 +341,12 @@ int main( int argc, char* args[] )
             
             // Render background
             TW_Texture_Render( &gBackground.texture, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
+
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // !! More Component Testing !!
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            TW_Texture_Render( &tempEntity->components[ 0 ]->value->texture, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            TW_Texture_Render( &tempEntity->components[ 1 ]->value->texture, gRenderer, 20, 20, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render title text
             TW_Texture_Render( &gTitle.renderedText.texture, gRenderer, ( SCREEN_WIDTH - gTitle.renderedText.width ) / 2, 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
