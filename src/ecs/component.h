@@ -51,6 +51,8 @@ typedef struct TW_Component {
  * - TW_Component_Value*    - value     - A pointer to the component value
  * 
  * Returns:
- * - TW_Component*          - A pointer to a component for inclusion in an entity
+ * - TW_Component           - Returns a component of the specified type
  */
 TW_Component TW_Component_Create( int type, TW_Component_Value* value );
+
+void TW_Component_Free( TW_Component* self );

@@ -14,11 +14,14 @@
  */
 typedef struct TW_Entity {
     int size;
-    TW_Component* components;
+    TW_Component** components;
 } TW_Entity;
 
 
 // Function definitions
+
+
+TW_Entity* TW_Entity_CreateEntity();
 
 
 /**
