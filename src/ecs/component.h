@@ -32,8 +32,8 @@ typedef union TW_Component_Value {
  * TW_Component - Components are a part of entities to be added to TW_Entity objects
  * 
  * Args:
- * - int            - type          - The type of component this is
- * - union          - component     - The data component of the matching type
+ * - int                    - type          - The type of component this is
+ * - TW_Component_Value*    - value         - The component
  */
 typedef struct TW_Component {
     int type;
@@ -47,12 +47,16 @@ typedef struct TW_Component {
  * TW_Component_Create - Creates a pointer to a component of specified type and value.
  * 
  * Args:
- * - int                    - type      - The type of the component value
- * - TW_Component_Value*    - value     - A pointer to the component value
+ * - int                    - type          - The type of the component value
+ * - TW_Component_Value*    - value         - A pointer to the component value
  * 
  * Returns:
- * - TW_Component           - Returns a component of the specified type
+ * - TW_Component*          - Returns a pointer to the component the specified type
  */
 TW_Component* TW_Component_Create( int type, TW_Component_Value* value );
 
+
+/**
+ * TW_Component_Free - Frees resources for a given TW_Component
+ */
 void TW_Component_Free( TW_Component* self );

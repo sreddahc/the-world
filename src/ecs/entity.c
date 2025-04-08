@@ -1,6 +1,7 @@
 #include "entity.h"
 
 
+// Creates an TW_Entity object for all your component needs.
 TW_Entity* TW_Entity_CreateEntity()
 {
     TW_Entity* entity = malloc( sizeof( TW_Entity ) );
@@ -10,6 +11,7 @@ TW_Entity* TW_Entity_CreateEntity()
 }
 
 
+// Given an entity and component, adds a component to the entity.
 void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
 {
     // should identify if the entity has already been added... if so don't add it.

@@ -20,12 +20,17 @@ typedef struct TW_Entity {
 
 // Function definitions
 
-
+/**
+ * TW_Entity_CreateEntity - Creates an TW_Entity object for all your component needs.
+ * 
+ * Returns:
+ * - TW_Entity*         - Returns an empty entity
+ */
 TW_Entity* TW_Entity_CreateEntity();
 
 
 /**
- * TW_Entity_AddComponent - Given an entity and component, adds a component to the entity
+ * TW_Entity_AddComponent - Given an entity and component, adds a component to the entity.
  * 
  * Args:
  * - TW_Entity*         - self          - The entity to add a component to
