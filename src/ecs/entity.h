@@ -10,7 +10,7 @@
  * 
  * Elements:
  * - TW_Texture*        - texture       - The texture of the sprite
- * - TW_Coord*          - position      - The position of an object on the screen
+ * - TW_Component**     - componenets   - The components
  */
 typedef struct TW_Entity {
     int size;
@@ -37,3 +37,12 @@ TW_Entity* TW_Entity_CreateEntity();
  * - TW_Component*      - component     - The component to add to the entity
  */
 void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component );
+
+
+/**
+ * TW_Entity_Free - Free the resources used by an entity
+ * 
+ * Args:
+ * - TW_Entity*         - self          - The entity to free
+ */
+void TW_Entity_Free( TW_Entity* self );
