@@ -14,19 +14,27 @@
  * 
  * Elements:
  * - SDL_Texture*   - texture           - SDL_Texture object, rendered image is stored here
+ * - int            - x                 - x position where the texture will be rendered
+ * - int            - y                 - y position where the texture will be rendered
  * - int            - width             - Width of the texture
  * - int            - height            - Height of the texture
+ * - double         - angle             - Rotation of the texture
+ * - SDL_RenderFlip - flip              - Flip the texture
+ * - SDL_Rect*      - crop              - portion of the texture to render
  */
 typedef struct TW_Texture {
     SDL_Texture* texture;       // SDL_Texture object, rendered image is stored here
+    int x;                      // X position of the texture
+    int y;                      // Y position of the texture
     int width;                  // Width of the texture
     int height;                 // Height of the texture
     double angle;               // Angle of the texture
+    SDL_RendererFlip flip;      // Flip the texture
     SDL_Rect* crop;             // Crop image to SDL_Rect
 } TW_Texture;
 
 
-// Function definitions
+// Function definitionss
 
 /**
  * TW_Texture_CreateTexture - Creates a TW_Texture
@@ -63,3 +71,19 @@ void TW_Texture_Render( TW_Texture* self );
  * - TW_Texture*        - self          - The TW_Texture object
  */
 void TW_Texture_Free( TW_Texture* self );
+
+
+SDL_Rect* TW_CreateSDLRect( int x, int y, int w, int h );
+
+
+/**
+ * TW_Texture_Crop - Crop the texture
+ * 
+ * Args:
+ * - TW_Texture*        - self          - The TW_Texture object to crop
+ * - int                - x             - X position where the crop starts
+ * - int                - y             - Y position where the crop starts
+ * - int                - w             - Width of the crop
+ * - int                - h             - Height of thecrop
+ */
+void TW_Texture_Crop(TW_Texture* self, int x, int y, int w, int h );

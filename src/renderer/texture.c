@@ -6,6 +6,9 @@ TW_Texture* TW_Texture_CreateTexture()
 {
     TW_Texture* texture = malloc( sizeof( TW_Texture ) );
     texture->angle = 0.0;
+    texture->flip = SDL_FLIP_NONE;
+    texture->x = 0;
+    texture->y = 0;
     return texture;
 }
 
@@ -25,10 +28,8 @@ bool TW_Texture_LoadImage( TW_Texture* self, char* path )
     {
         self->width = surface->w;
         self->height = surface->h;
-        SDL_Rect renderZone = { 0, 0, self->width, self->height };
-        self->crop = &renderZone;
     }
-    
+
     SDL_SetColorKey( surface, SDL_TRUE, SDL_MapRGB( surface->format, 0x00, 0x00, 0x00 ) );
 
     self->texture = SDL_CreateTextureFromSurface( TW_GetRenderer(), surface );
@@ -47,14 +48,20 @@ bool TW_Texture_LoadImage( TW_Texture* self, char* path )
 // Render a TW_Texture object.
 void TW_Texture_Render( TW_Texture* self )
 {
+    SDL_Rect renderZone = { self->x, self->y, self->width, self->height };
+    if( ! self->crop == NULL )
+    {
+        renderZone.w = self->crop->w;
+        renderZone.h = self->crop->h;
+    }
     SDL_RenderCopyEx(
         TW_GetRenderer(),   // The renderer
         self->texture,      // The texture
-        NULL,               // Source SDL_Rect (NULL for entire Texture)
-        NULL,               // Destination SDL_Rect (NULL for entire rendering target)
-        0.0,                // Angle
+        self->crop,         // Source SDL_Rect (NULL for entire Texture)
+        &renderZone,        // Destination SDL_Rect (NULL for entire rendering target)
+        self->angle,        // Angle of the texture
         NULL,               // Axis centre point (NULL if centre of texture)
-        SDL_FLIP_NONE
+        self->flip          // Flip the texture
     );
 }
 
@@ -69,6 +76,18 @@ void TW_Texture_Free( TW_Texture* self )
         self->width = 0;
         self->height = 0;
         self->angle = 0.0;
+        self->flip = 0;
         self->crop = NULL;
     }
+}
+
+SDL_Rect* TW_CreateSDLRect( int x, int y, int w, int h )
+{
+    SDL_Rect rectZone = { x, y, w, h };
+    return &rectZone;
+}
+
+void TW_Texture_Crop(TW_Texture* self, int x, int y, int w, int h )
+{
+    self->crop = TW_CreateSDLRect( x, y, w, h );
 }

@@ -68,7 +68,7 @@ bool init()
             else
             {
                 // Initialise Renderer Colour
-                SDL_SetRenderDrawColor( TW_GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF );
+                SDL_SetRenderDrawColor( TW_GetRenderer(), 0x00, 0x00, 0x00, 0xff );
 
                 // Initialise PNG loading
                 int imgFlags = IMG_INIT_PNG;
@@ -136,8 +136,11 @@ int main( int argc, char* args[] )
         char timeText[50] = "Time since reset: 0ms";
         
         // Background
-        TW_Texture* tBackground = TW_Texture_CreateTexture( TW_GetRenderer() );
+        TW_Texture* tBackground = TW_Texture_CreateTexture();
         TW_Texture_LoadImage( tBackground, "src/images/backgrounds/day.png" );
+        tBackground->crop = TW_CreateSDLRect( 100, 100, tBackground->width - 200, tBackground->height - 200 );
+        printf( "this is just a test: %d\n", tBackground->crop->x );
+        
         // TW_Component* cBackground = TW_Component_Create( TW_COMPONENT_TEXTURE, &tBackground );
         // TW_Entity* eBackground = TW_Entity_CreateEntity();
         // TW_Entity_AddComponent( eBackground, cBackground );
@@ -323,7 +326,7 @@ int main( int argc, char* args[] )
 
             // TW_Texture_Render( tBackground, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
             TW_Texture_Render( tBackground );
-            // SDL_Rect renderZone = { 0, 0, tBackground->width, tBackground->height };
+            
             // SDL_RenderCopyEx( tBackground->renderer, tBackground->texture, NULL, &renderZone, 0.0, NULL, SDL_FLIP_NONE );
 
             // This is the beginning of what a new component creation function will look like.
