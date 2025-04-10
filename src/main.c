@@ -197,8 +197,11 @@ int main( int argc, char* args[] )
         TW_Animation gPlayer;
         TW_Animation_Init( &gPlayer, gRenderer, "src/images/sprites/player.png", SPRITE_WIDTH, SPRITE_HEIGHT, WALKING_ANIMATION_FRAMES, 100, false );
 
+
+        TW_Animation playerAnimation;
+        TW_Animation_Init( &playerAnimation, gRenderer, "src/images/sprites/player.png", SPRITE_WIDTH, SPRITE_HEIGHT, WALKING_ANIMATION_FRAMES, 100, false );
         TW_Entity* playerEntity = TW_Entity_CreateEntity();
-        TW_Component* playerSprite = TW_Component_Create( TW_COMPONENT_ANIMATION, &gPlayer );
+        TW_Component* playerSprite = TW_Component_Create( TW_COMPONENT_ANIMATION, &playerAnimation );
         TW_Entity_AddComponent( playerEntity, playerSprite );
 
         while( !quit )
@@ -333,6 +336,22 @@ int main( int argc, char* args[] )
                 }
             }
 
+            // // Animation Entity...
+            // for ( int entity = 0; entity < playerEntity->size; entity++ )
+            // {
+                TW_Texture_Render(
+                    // TW_Animation_GetTexture( &playerEntity->components[ 0 ]->value->animation ),
+                    &playerEntity->components[ 0 ]->value->animation->texture,
+                    gRenderer,
+                    40,
+                    40,
+                    NULL,
+                    0.0,
+                    NULL,
+                    SDL_FLIP_NONE
+                );
+            // }
+
             // Render title text
             TW_Texture_Render( &gTitle.renderedText.texture, gRenderer, ( SCREEN_WIDTH - gTitle.renderedText.width ) / 2, 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
@@ -346,7 +365,7 @@ int main( int argc, char* args[] )
             TW_Texture_Render( &gFPSText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gFPSText.renderedText.width) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render sprite
-            TW_Texture_Render( &gPlayer.texture, gRenderer, 20, 20, &gPlayer.grid[ gPlayer.currentFrame ], degrees, NULL, flipType );
+            TW_Texture_Render( &gPlayer.texture , gRenderer, 20, 20, &gPlayer.grid[ gPlayer.currentFrame ], degrees, NULL, flipType );
             TW_Animation_GetNextFrame( &gPlayer );
 
             // Update screen

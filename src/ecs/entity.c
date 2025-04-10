@@ -32,3 +32,8 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
         }
     }
 }
+
+
+// Free the resources used by an entity
+void TW_Entity_Free( TW_Entity* self )
+{}
