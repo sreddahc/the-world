@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <stdbool.h>
+#include "texture.h"
 
 
 // Type definitions
@@ -19,35 +20,14 @@ typedef struct TW_Coord {
 } TW_Coord;
 
 
-/**
- * TW_Texture - A wrapper object that contains all information relating to a texture.
- * 
- * Elements:
- * - SDL_Texture*   - texture           - SDL_Texture object, rendered image is stored here
- * - int            - width             - Width of the texture
- * - int            - height            - Height of the texture
- */
-typedef struct TW_Texture {
-    SDL_Texture* texture;       // SDL_Texture object, rendered image is stored here
-    int width;                  // Width of the texture
-    int height;                 // Height of the texture
-} TW_Texture;
+void TW_CreateRenderer( SDL_Window* window, int index, Uint32 flags);
+
+SDL_Renderer* TW_GetRenderer();
+
+void TW_DestroyRenderer();
 
 
 // Function definitions
-
-/**
- * TW_Texture_LoadImage - Renders a image at a given path into a TW_Texture object.
- * 
- * Args:
- * - TW_Texture*        - self          - The TW_Texture object
- * - SDL_Renderer*      - renderer      - The renderer that will render the image
- * - char*              - path          - Path to the image to be rendered
- * 
- * Returns:
- * - bool               - true if successful, false if not
- */
-bool TW_Texture_LoadImage( TW_Texture* self, SDL_Renderer* renderer, char* path );
 
 
 /**
@@ -57,7 +37,7 @@ bool TW_Texture_LoadImage( TW_Texture* self, SDL_Renderer* renderer, char* path 
  * - TW_Texture*        - self          - The TW_Texture object
  * - SDL_BlendMode      - blending      - The blend mode that will be set for blending operations
  */
-void TW_Texture_SetBlendMode( TW_Texture* self, SDL_BlendMode blending );
+// void TW_Texture_SetBlendMode( TW_Texture* self, SDL_BlendMode blending );
 
 
 /**
@@ -69,7 +49,7 @@ void TW_Texture_SetBlendMode( TW_Texture* self, SDL_BlendMode blending );
  * - Uint8              - green         - Amount of Green to include in texture
  * - Uint8              - blue          - Amount of Blue to include in texture
  */
-void TW_Texture_SetColour( TW_Texture* self, Uint8 red, Uint8 green, Uint8 blue);
+// void TW_Texture_SetColour( TW_Texture* self, Uint8 red, Uint8 green, Uint8 blue);
 
 
 /**
@@ -79,7 +59,7 @@ void TW_Texture_SetColour( TW_Texture* self, Uint8 red, Uint8 green, Uint8 blue)
  * - TW_Texture*        - self          - The TW_Texture object
  * - Uint8              - alpha         - Alpha: 0 = fully transparent to 255 = completely opaque.
  */
-void TW_Texture_SetAlpha( TW_Texture* self, Uint8 alpha );
+// void TW_Texture_SetAlpha( TW_Texture* self, Uint8 alpha );
 
 
 /**
@@ -95,16 +75,16 @@ void TW_Texture_SetAlpha( TW_Texture* self, Uint8 alpha );
  * - SDL_Point*         - centre        - Where the centre of the texture is. Default = middle
  * - SDL_RendererFlip   - flip          - Flip the texture. SDL_FLIP_NONE, SDL_FLIP_HORIZONTAL, SDL_FLIP_VERTICAL
  */
-void TW_Texture_Render(
-    TW_Texture* self,
-    SDL_Renderer* renderer,
-    int x,
-    int y,
-    SDL_Rect* clip,
-    double angle,
-    SDL_Point* centre,
-    SDL_RendererFlip flip
-);
+// void TW_Texture_Render(
+//     TW_Texture* self,
+//     SDL_Renderer* renderer,
+//     int x,
+//     int y,
+//     SDL_Rect* clip,
+//     double angle,
+//     SDL_Point* centre,
+//     SDL_RendererFlip flip
+// );
 
 
 /**
@@ -116,7 +96,7 @@ void TW_Texture_Render(
  * Returns:
  * - int                - The current width
  */
-int TW_Texture_GetWidth( TW_Texture* self );
+// int TW_Texture_GetWidth( TW_Texture* self );
 
 
 /**
@@ -128,7 +108,7 @@ int TW_Texture_GetWidth( TW_Texture* self );
  * Returns:
  * - int                - The current height
  */
-int TW_Texture_GetHeight( TW_Texture* self );
+// int TW_Texture_GetHeight( TW_Texture* self );
 
 
 /**
@@ -137,4 +117,4 @@ int TW_Texture_GetHeight( TW_Texture* self );
  * Args:
  * - TW_Texture*        - self          - The TW_Texture object
  */
-void TW_Texture_Free( TW_Texture* self );
+// void TW_Texture_Free( TW_Texture* self );

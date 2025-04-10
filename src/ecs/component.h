@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../renderer/animation.h"
+# include "../renderer/renderer.h"
+// #include "../renderer/animation.h"
 
 
 // Type definitions
@@ -24,7 +25,7 @@ enum TW_Component_Type
  */
 typedef union TW_Component_Value {
     TW_Texture* texture;
-    TW_Animation* animation;
+    // TW_Animation* animation;
 } TW_Component_Value;
 
 

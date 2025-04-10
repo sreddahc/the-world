@@ -9,7 +9,7 @@
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
 #include "ecs/entity.h"
-#include "renderer/animation.h"
+// #include "renderer/animation.h"
 
 // Global variables
 // Screen dimensions
@@ -30,7 +30,6 @@ enum KeyPressSurfaces
 };
 
 SDL_Window* gWindow = NULL;
-SDL_Renderer* gRenderer = NULL;
 
 // Functions
 bool init();
@@ -60,8 +59,8 @@ bool init()
         else
         {
             // Create renderer for window
-            gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
-            if( gRenderer == NULL )
+            TW_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+            if( TW_GetRenderer() == NULL )
             {
                 printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
                 success = false;
@@ -69,7 +68,7 @@ bool init()
             else
             {
                 // Initialise Renderer Colour
-                SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+                SDL_SetRenderDrawColor( TW_GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF );
 
                 // Initialise PNG loading
                 int imgFlags = IMG_INIT_PNG;
@@ -96,10 +95,9 @@ bool init()
 void closeAll()
 {
     // Destroy Window
-    SDL_DestroyRenderer( gRenderer );
+    TW_DestroyRenderer();
     SDL_DestroyWindow( gWindow );
     gWindow = NULL;
-    gRenderer = NULL;
 
     // Quit SDL subsystems
     TTF_Quit();
@@ -138,11 +136,11 @@ int main( int argc, char* args[] )
         char timeText[50] = "Time since reset: 0ms";
         
         // Background
-        TW_Texture tBackground;
-        TW_Texture_LoadImage( &tBackground, gRenderer, "src/images/backgrounds/day.png" );
-        TW_Component* cBackground = TW_Component_Create( TW_COMPONENT_TEXTURE, &tBackground );
-        TW_Entity* eBackground = TW_Entity_CreateEntity();
-        TW_Entity_AddComponent( eBackground, cBackground );
+        TW_Texture* tBackground = TW_Texture_CreateTexture( TW_GetRenderer() );
+        TW_Texture_LoadImage( tBackground, "src/images/backgrounds/day.png" );
+        // TW_Component* cBackground = TW_Component_Create( TW_COMPONENT_TEXTURE, &tBackground );
+        // TW_Entity* eBackground = TW_Entity_CreateEntity();
+        // TW_Entity_AddComponent( eBackground, cBackground );
 
         // Text
         SDL_Color textNormalColour = { 0, 0, 0 };
@@ -319,11 +317,14 @@ int main( int argc, char* args[] )
             // }
 
             // Update the surface
-            SDL_RenderClear( gRenderer );
+            SDL_RenderClear( TW_GetRenderer() );
 
             // Background
 
-            TW_Texture_Render( &tBackground, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            // TW_Texture_Render( tBackground, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            TW_Texture_Render( tBackground );
+            // SDL_Rect renderZone = { 0, 0, tBackground->width, tBackground->height };
+            // SDL_RenderCopyEx( tBackground->renderer, tBackground->texture, NULL, &renderZone, 0.0, NULL, SDL_FLIP_NONE );
 
             // This is the beginning of what a new component creation function will look like.
             // for ( int entity = 0; entity < eBackground->size; entity++ )
@@ -370,7 +371,7 @@ int main( int argc, char* args[] )
             // TW_Animation_GetNextFrame( &gPlayer );
 
             // // Update screen
-            SDL_RenderPresent( gRenderer );
+            SDL_RenderPresent( TW_GetRenderer() );
 
             // Update frames counter
             TW_FPSTimer_Update( &fpsTimer );
@@ -393,7 +394,7 @@ int main( int argc, char* args[] )
         // TW_Texture_Free( &gMouseText );
         // TW_Texture_Free( &gTimeText );
         // TW_Texture_Free( &gFPSText );
-        TW_Texture_Free( &tBackground );
+        TW_Texture_Free( tBackground );
     }
 
     // Free resources and close SDL
