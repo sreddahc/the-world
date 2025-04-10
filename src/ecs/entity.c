@@ -14,10 +14,10 @@ TW_Entity* TW_Entity_CreateEntity()
 // Given an entity and component, adds a component to the entity.
 void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
 {
-    // should identify if the entity has already been added... if so don't add it.
     self->size += 1;
     if( self->size > 0 )
     {
+        // Create space and add components. Memory handling for existing components.
         if( self->components == NULL )
         {
             self->components = malloc( self->size * sizeof( TW_Component ) );
@@ -32,3 +32,8 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
         }
     }
 }
+
+
+// Free the resources used by an entity
+void TW_Entity_Free( TW_Entity* self )
+{}

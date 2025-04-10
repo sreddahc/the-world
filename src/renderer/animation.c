@@ -13,12 +13,10 @@ bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, 
     self->timeLastUpdated = 0;
     self->paused = paused;
     
-    TW_Texture animationTexture;
-    if( ! TW_Texture_LoadImage( &animationTexture, renderer, path ) )
+    if( ! TW_Texture_LoadImage( &self->texture, renderer, path ) )
     {
         return false;
     }
-    self->texture = animationTexture;
 
     int gridCols = self->texture.width / width;
     int gridRows = self->texture.height / height;
@@ -37,7 +35,7 @@ bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, 
     return true;
 }
 
-
+ 
 // Gets the next frame texture in the animation and increments the current frame counter.
 void TW_Animation_GetNextFrame( TW_Animation* self )
 {
@@ -50,6 +48,13 @@ void TW_Animation_GetNextFrame( TW_Animation* self )
             self->currentFrame = ( self->currentFrame + 1 ) % self->frameCount;
         }
     }
+}
+
+
+// Fill this in!
+TW_Texture* TW_Animation_GetTexture( TW_Animation* self )
+{
+    return &self->texture;
 }
 
 

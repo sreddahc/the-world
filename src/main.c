@@ -138,34 +138,11 @@ int main( int argc, char* args[] )
         char timeText[50] = "Time since reset: 0ms";
         
         // Background
-        TW_Texture gBackground;
-        TW_Texture_LoadImage( &gBackground, gRenderer, "src/images/backgrounds/day.png" );
-
-        // ECS Testing
-
-        TW_Texture tempTexture;
-        TW_Component* tempComponent = TW_Component_Create( TW_COMPONENT_TEXTURE, &tempTexture );
-
-        TW_Texture tempTexture2;
-        TW_Component* tempComponent2 = TW_Component_Create( TW_COMPONENT_TEXTURE, &tempTexture2 );
-
-        // Create entity
-        TW_Entity* tempEntity = TW_Entity_CreateEntity();
-        printf("Entity size: %d\n", tempEntity->size);
-
-        // Attempt to add a component to an entity
-        TW_Entity_AddComponent( tempEntity, tempComponent );
-        printf("Entity size: %d\n", tempEntity->size);
-        TW_Texture_LoadImage( &tempComponent->value->texture, gRenderer, "src/images/backgrounds/night.png" );
-
-        TW_Entity_AddComponent( tempEntity, tempComponent2 );
-        TW_Texture_LoadImage( &tempComponent2->value->texture, gRenderer, "src/images/backgrounds/day.png" );
-
-        if( tempEntity->components[ 0 ]->type == TW_COMPONENT_TEXTURE )
-        {
-            printf( "Entity is of size: %d\n", tempEntity->size );
-            printf( "First component is type: %d\n", tempEntity->components[ 0 ]->type );
-        }
+        TW_Texture tBackground;
+        TW_Texture_LoadImage( &tBackground, gRenderer, "src/images/backgrounds/day.png" );
+        TW_Component* cBackground = TW_Component_Create( TW_COMPONENT_TEXTURE, &tBackground );
+        TW_Entity* eBackground = TW_Entity_CreateEntity();
+        TW_Entity_AddComponent( eBackground, cBackground );
 
         // Text
         SDL_Color textNormalColour = { 0, 0, 0 };
@@ -219,6 +196,13 @@ int main( int argc, char* args[] )
         
         TW_Animation gPlayer;
         TW_Animation_Init( &gPlayer, gRenderer, "src/images/sprites/player.png", SPRITE_WIDTH, SPRITE_HEIGHT, WALKING_ANIMATION_FRAMES, 100, false );
+
+
+        TW_Animation playerAnimation;
+        TW_Animation_Init( &playerAnimation, gRenderer, "src/images/sprites/player.png", SPRITE_WIDTH, SPRITE_HEIGHT, WALKING_ANIMATION_FRAMES, 100, false );
+        TW_Entity* playerEntity = TW_Entity_CreateEntity();
+        TW_Component* playerSprite = TW_Component_Create( TW_COMPONENT_ANIMATION, &playerAnimation );
+        TW_Entity_AddComponent( playerEntity, playerSprite );
 
         while( !quit )
         {
@@ -339,14 +323,34 @@ int main( int argc, char* args[] )
             // Update the surface
             SDL_RenderClear( gRenderer );
             
-            // Render background
-            TW_Texture_Render( &gBackground.texture, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            // Background
+            // This is the beginning of what a new component creation function will look like.
+            for ( int entity = 0; entity < eBackground->size; entity++ )
+            {
+                if( eBackground->components[ entity ]->type  == TW_COMPONENT_TEXTURE )
+                {
+                    TW_Texture_Render(
+                        &eBackground->components[ entity ]->value->texture,
+                        gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE
+                    );
+                }
+            }
 
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            // !! More Component Testing !!
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            TW_Texture_Render( &tempEntity->components[ 0 ]->value->texture, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
-            TW_Texture_Render( &tempEntity->components[ 1 ]->value->texture, gRenderer, 20, 20, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            // // Animation Entity...
+            // for ( int entity = 0; entity < playerEntity->size; entity++ )
+            // {
+                TW_Texture_Render(
+                    // TW_Animation_GetTexture( &playerEntity->components[ 0 ]->value->animation ),
+                    &playerEntity->components[ 0 ]->value->animation->texture,
+                    gRenderer,
+                    40,
+                    40,
+                    NULL,
+                    0.0,
+                    NULL,
+                    SDL_FLIP_NONE
+                );
+            // }
 
             // Render title text
             TW_Texture_Render( &gTitle.renderedText.texture, gRenderer, ( SCREEN_WIDTH - gTitle.renderedText.width ) / 2, 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
@@ -361,7 +365,7 @@ int main( int argc, char* args[] )
             TW_Texture_Render( &gFPSText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gFPSText.renderedText.width) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // Render sprite
-            TW_Texture_Render( &gPlayer.texture, gRenderer, 20, 20, &gPlayer.grid[ gPlayer.currentFrame ], degrees, NULL, flipType );
+            TW_Texture_Render( &gPlayer.texture , gRenderer, 20, 20, &gPlayer.grid[ gPlayer.currentFrame ], degrees, NULL, flipType );
             TW_Animation_GetNextFrame( &gPlayer );
 
             // Update screen
@@ -388,7 +392,7 @@ int main( int argc, char* args[] )
         TW_Texture_Free( &gMouseText );
         TW_Texture_Free( &gTimeText );
         TW_Texture_Free( &gFPSText );
-        TW_Texture_Free( &gBackground );
+        TW_Texture_Free( &tBackground );
     }
 
     // Free resources and close SDL

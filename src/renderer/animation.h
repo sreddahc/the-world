@@ -65,6 +65,12 @@ void TW_Animation_GetNextFrame( TW_Animation* self );
 
 
 /**
+ * Fill this in!
+ */
+TW_Texture* TW_Animation_Get_Frame( TW_Animation* self );
+
+
+/**
  * TW_Animation_Free - Frees resources used by a TW_Animation object.
  * 
  * Args:
