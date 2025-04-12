@@ -138,8 +138,10 @@ int main( int argc, char* args[] )
         // Background
         TW_Texture* tBackground = TW_Texture_CreateTexture();
         TW_Texture_LoadImage( tBackground, "src/images/backgrounds/day.png" );
-        tBackground->crop = TW_CreateSDLRect( 100, 100, tBackground->width - 200, tBackground->height - 200 );
-        printf( "this is just a test: %d\n", tBackground->crop->x );
+
+        // TW_Texture_Crop( tBackground, 0, 0, tBackground->width, tBackground->height );
+        // TW_Texture_Crop( tBackground, 100, 100, tBackground->width - 200, tBackground->height - 200 );
+        // printf( "this is just a test: %d\n", tBackground->crop.x );
         
         // TW_Component* cBackground = TW_Component_Create( TW_COMPONENT_TEXTURE, &tBackground );
         // TW_Entity* eBackground = TW_Entity_CreateEntity();
@@ -147,6 +149,11 @@ int main( int argc, char* args[] )
 
         // Text
         SDL_Color textNormalColour = { 0, 0, 0 };
+
+        // Title
+        TW_Text* gTitle = TW_Text_FastCreate( "My cool game ;)" );
+        // gTitle->fontSize = 32;
+
 
         // Title
         // TW_Text gTitle;
@@ -325,9 +332,12 @@ int main( int argc, char* args[] )
             // Background
 
             // TW_Texture_Render( tBackground, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            // if( tBackground->crop.w > tBackground->textureWidth / 1.9 )
+            // {
+            //     TW_Texture_Crop( tBackground, tBackground->crop.x + 2, tBackground->crop.y + 2, tBackground->crop.w - 4, tBackground->crop.h - 4 );
+            // }
             TW_Texture_Render( tBackground );
-            
-            // SDL_RenderCopyEx( tBackground->renderer, tBackground->texture, NULL, &renderZone, 0.0, NULL, SDL_FLIP_NONE );
+            // TW_Text_Render( gTitle );
 
             // This is the beginning of what a new component creation function will look like.
             // for ( int entity = 0; entity < eBackground->size; entity++ )
@@ -356,10 +366,7 @@ int main( int argc, char* args[] )
             //         SDL_FLIP_NONE
             //     );
             // // }
-
-            // // Render title text
-            // TW_Texture_Render( &gTitle.renderedText.texture, gRenderer, ( SCREEN_WIDTH - gTitle.renderedText.width ) / 2, 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
-
+            
             // // Render mouse text
             // TW_Texture_Render( &gMouseText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gMouseText.renderedText.width) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
