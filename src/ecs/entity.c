@@ -2,7 +2,7 @@
 
 
 // Creates an TW_Entity object for all your component needs.
-TW_Entity* TW_Entity_CreateEntity()
+TW_Entity* TW_Entity_Create()
 {
     TW_Entity* entity = malloc( sizeof( TW_Entity ) );
     entity->size = 0;

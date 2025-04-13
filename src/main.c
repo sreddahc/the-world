@@ -9,7 +9,7 @@
 #include "renderer/animation.h"
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
-#include "ecs/entity.h"
+#include "ecs/scene.h"
 // #include "renderer/animation.h"
 
 // Global variables
@@ -142,32 +142,31 @@ int main( int argc, char* args[] )
         TW_Texture* tBackground = TW_Texture_CreateTexture();
         TW_Texture_LoadImage( tBackground, "src/images/backgrounds/day.png" );
 
-        // TW_Texture_Crop( tBackground, 0, 0, tBackground->width, tBackground->height );
-        // TW_Texture_Crop( tBackground, 100, 100, tBackground->width - 200, tBackground->height - 200 );
-        // printf( "this is just a test: %d\n", tBackground->crop.x );
-        
-        // TW_Component* cBackground = TW_Component_Create( TW_COMPONENT_TEXTURE, &tBackground );
-        // TW_Entity* eBackground = TW_Entity_CreateEntity();
-        // TW_Entity_AddComponent( eBackground, cBackground );
+        // Front page scene
+        TW_Scene* sceneMain = TW_Scene_Create();
 
-        // Title
-        // TW_Text* gTitle = TW_Text_FastCreate( "MY COOL GAME!" );
-        // TW_Text_SetFont( gTitle, gTitle->fontName, 32 );
-
-        // TW_Text_RenderTexture( gTitle );
-        // gTitle->texture->x = (SCREEN_WIDTH - gTitle->texture->textureWidth) / 2;
-        // gTitle->texture->y = 30;
-
+        // Title Entity
         TW_Text* gTitle = TW_Text_Create( "PROBS A COOL GAME", NULL, 32, TW_Colour_Create( 0x80, 0x00, 0x80, 0xff ) );
+        TW_Entity* entityTitle = TW_Entity_Create();
+        TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_COMPONENT_TEXT, gTitle ) );
+        TW_Scene_AddEntity( sceneMain, entityTitle );
 
+        // Player Entity
         TW_Animation* gPlayer = TW_Animation_Create(
             TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 ),
             4,
             (int[]){ 0, 1, 2, 3 }
         );
+        TW_Entity* entityPlayer = TW_Entity_Create();
+        TW_Entity_AddComponent( entityPlayer, TW_Component_Create( TW_COMPONENT_ANIMATION, gPlayer ) );
+        TW_Scene_AddEntity( sceneMain, entityPlayer );
 
-        // Mouse Position
+        // Mouse Position Entity
         TW_Text* gMouseText = TW_Text_Create( mousePositionText, NULL, 0, NULL );
+        TW_Entity* entityMouseText = TW_Entity_Create();
+        TW_Entity_AddComponent( entityMouseText, TW_Component_Create( TW_COMPONENT_TEXT, gMouseText ) );
+        TW_Scene_AddEntity( sceneMain, entityMouseText );
+
         // TW_Text gMouseText;
         // TW_Text_FastInit( &gMouseText, mousePositionText );
         // if( ! TW_Text_Render_Texture( &gMouseText, gRenderer ) )
@@ -331,9 +330,14 @@ int main( int argc, char* args[] )
             // Background
 
             TW_Texture_Render( tBackground );
-            TW_Text_Render( gTitle );
-            TW_Animation_Render( gPlayer );
-            TW_Text_Render( gMouseText );
+
+            // For each Entity in a Scene
+            TW_Scene_Render( sceneMain );
+            
+
+            // TW_Text_Render( gTitle );
+            // TW_Animation_Render( gPlayer );
+            // TW_Text_Render( gMouseText );
 
             // TW_Sprite_Render( gPlayer );
 
@@ -400,7 +404,7 @@ int main( int argc, char* args[] )
         TW_Timer_Free( &fpsTimer );
         TW_Timer_Free( &mainTimer );
         // TW_Texture_Free( &gTitle );
-        TW_Texture_Free( &gMouseText );
+        TW_Text_Free( gMouseText );
         // TW_Texture_Free( &gTimeText );
         // TW_Texture_Free( &gFPSText );
         TW_Animation_Free( gPlayer );

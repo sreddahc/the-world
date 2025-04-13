@@ -21,12 +21,12 @@ typedef struct TW_Entity {
 // Function definitions
 
 /**
- * TW_Entity_CreateEntity - Creates an TW_Entity object for all your component needs.
+ * TW_Entity_Create - Creates an TW_Entity object for all your component needs.
  * 
  * Returns:
  * - TW_Entity*         - Returns an empty entity
  */
-TW_Entity* TW_Entity_CreateEntity();
+TW_Entity* TW_Entity_Create();
 
 
 /**

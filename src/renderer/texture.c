@@ -119,19 +119,19 @@ void TW_Texture_Free( TW_Texture* self )
     {
         SDL_DestroyTexture(self->texture);
         self->texture = NULL;
-        self->textureWidth = 0;
-        self->textureHeight = 0;
-        self->renderWidth = 0;
-        self->renderHeight = 0;
-        self->x = 0;
-        self->y = 0;
-        self->angle = 0.0;
-        self->flip = 0;
-        self->crop.x = 0;
-        self->crop.y = 0;
-        self->crop.w = 0;
-        self->crop.h = 0;
     }
+    self->textureWidth = 0;
+    self->textureHeight = 0;
+    self->renderWidth = 0;
+    self->renderHeight = 0;
+    self->x = 0;
+    self->y = 0;
+    self->angle = 0.0;
+    self->flip = 0;
+    self->crop.x = 0;
+    self->crop.y = 0;
+    self->crop.w = 0;
+    self->crop.h = 0;
     free( self );
 }
 
