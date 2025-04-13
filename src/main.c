@@ -138,18 +138,27 @@ int main( int argc, char* args[] )
         TW_Timer_Init( &mainTimer, false );
         char timeText[50] = "Time since reset: 0ms";
         
-        // Background
-        TW_Texture* tBackground = TW_Texture_CreateTexture();
-        TW_Texture_LoadImage( tBackground, "src/images/backgrounds/day.png" );
-
-        // Front page scene
+        // Main scene
         TW_Scene* sceneMain = TW_Scene_Create();
+
+        // Background
+        TW_Texture* gBackground = TW_Texture_CreateTexture();
+        TW_Texture_LoadImage( gBackground, "src/images/backgrounds/day.png" );
+        TW_Entity* entityBackground = TW_Entity_Create();
+        TW_Entity_AddComponent( entityBackground, TW_Component_Create( TW_COMPONENT_TEXTURE, gBackground ) );
+        TW_Scene_AddEntity( sceneMain, entityBackground );
 
         // Title Entity
         TW_Text* gTitle = TW_Text_Create( "PROBS A COOL GAME", NULL, 32, TW_Colour_Create( 0x80, 0x00, 0x80, 0xff ) );
         TW_Entity* entityTitle = TW_Entity_Create();
         TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_COMPONENT_TEXT, gTitle ) );
         TW_Scene_AddEntity( sceneMain, entityTitle );
+
+        // Mouse Position Entity
+        TW_Text* gMouseText = TW_Text_Create( mousePositionText, NULL, 0, NULL );
+        TW_Entity* entityMouseText = TW_Entity_Create();
+        TW_Entity_AddComponent( entityMouseText, TW_Component_Create( TW_COMPONENT_TEXT, gMouseText ) );
+        TW_Scene_AddEntity( sceneMain, entityMouseText );
 
         // Player Entity
         TW_Animation* gPlayer = TW_Animation_Create(
@@ -160,20 +169,6 @@ int main( int argc, char* args[] )
         TW_Entity* entityPlayer = TW_Entity_Create();
         TW_Entity_AddComponent( entityPlayer, TW_Component_Create( TW_COMPONENT_ANIMATION, gPlayer ) );
         TW_Scene_AddEntity( sceneMain, entityPlayer );
-
-        // Mouse Position Entity
-        TW_Text* gMouseText = TW_Text_Create( mousePositionText, NULL, 0, NULL );
-        TW_Entity* entityMouseText = TW_Entity_Create();
-        TW_Entity_AddComponent( entityMouseText, TW_Component_Create( TW_COMPONENT_TEXT, gMouseText ) );
-        TW_Scene_AddEntity( sceneMain, entityMouseText );
-
-        // TW_Text gMouseText;
-        // TW_Text_FastInit( &gMouseText, mousePositionText );
-        // if( ! TW_Text_Render_Texture( &gMouseText, gRenderer ) )
-        // {
-        //     printf( "ERROR: Failed to render texture - Mouse Text\n" );
-        //     quit = true;
-        // }
         
         // Time
         // TW_Text gTimeText;
@@ -193,25 +188,10 @@ int main( int argc, char* args[] )
         //     quit = true;
         // }
 
-        // Sprite
-        // const int WALKING_ANIMATION_FRAMES = 4;
-        // const int SPRITE_HEIGHT = 32;
-        // const int SPRITE_WIDTH = 32;
-
         // Controls
         // SDL_RendererFlip flipType = SDL_FLIP_NONE;
         // double degrees = 0;
         // double angle_increment = 30;
-        
-        // TW_Animation gPlayer;
-        // TW_Animation_Init( &gPlayer, gRenderer, "src/images/sprites/player.png", SPRITE_WIDTH, SPRITE_HEIGHT, WALKING_ANIMATION_FRAMES, 100, false );
-
-
-        // TW_Animation playerAnimation;
-        // TW_Animation_Init( &playerAnimation, gRenderer, "src/images/sprites/player.png", SPRITE_WIDTH, SPRITE_HEIGHT, WALKING_ANIMATION_FRAMES, 100, false );
-        // TW_Entity* playerEntity = TW_Entity_CreateEntity();
-        // TW_Component* playerSprite = TW_Component_Create( TW_COMPONENT_ANIMATION, &playerAnimation );
-        // TW_Entity_AddComponent( playerEntity, playerSprite );
 
         while( !quit )
         {
@@ -327,47 +307,8 @@ int main( int argc, char* args[] )
             // Update the surface
             SDL_RenderClear( TW_GetRenderer() );
 
-            // Background
-
-            TW_Texture_Render( tBackground );
-
             // For each Entity in a Scene
             TW_Scene_Render( sceneMain );
-            
-
-            // TW_Text_Render( gTitle );
-            // TW_Animation_Render( gPlayer );
-            // TW_Text_Render( gMouseText );
-
-            // TW_Sprite_Render( gPlayer );
-
-            // This is the beginning of what a new component creation function will look like.
-            // for ( int entity = 0; entity < eBackground->size; entity++ )
-            // {
-            //     if( eBackground->components[ entity ]->type  == TW_COMPONENT_TEXTURE )
-            //     {
-            //         TW_Texture_Render(
-            //             &eBackground->components[ entity ]->value->texture,
-            //             gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE
-            //         );
-            //     }
-            // }
-
-            // // // Animation Entity...
-            // // for ( int entity = 0; entity < playerEntity->size; entity++ )
-            // // {
-            //     TW_Texture_Render(
-            //         // TW_Animation_GetTexture( &playerEntity->components[ 0 ]->value->animation ),
-            //         &playerEntity->components[ 0 ]->value->animation->texture,
-            //         gRenderer,
-            //         40,
-            //         40,
-            //         NULL,
-            //         0.0,
-            //         NULL,
-            //         SDL_FLIP_NONE
-            //     );
-            // // }
             
             // // Render mouse text
             // TW_Texture_Render( &gMouseText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gMouseText.renderedText.width) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
@@ -409,7 +350,7 @@ int main( int argc, char* args[] )
         // TW_Texture_Free( &gFPSText );
         TW_Animation_Free( gPlayer );
         TW_Text_Free( gTitle );
-        TW_Texture_Free( tBackground );
+        TW_Texture_Free( gBackground );
     }
 
     // Free resources and close SDL
