@@ -6,7 +6,7 @@
 #include <string.h>
 #include "renderer/renderer.h"
 #include "renderer/text.h"
-#include "renderer/sprite.h"
+#include "renderer/animation.h"
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
 #include "ecs/entity.h"
@@ -156,10 +156,12 @@ int main( int argc, char* args[] )
         gTitle->texture->x = (SCREEN_WIDTH - gTitle->texture->textureWidth) / 2;
         gTitle->texture->y = 30;
 
-        // Sprite
-        TW_Sprite* gPlayer = TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 );
-        gPlayer->currentSprite = 0;
-        
+        TW_Animation* gPlayer = TW_Animation_Create(
+            TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 ),
+            4,
+            (int[]){ 0, 1, 2, 3 }
+        );
+
         // Mouse Position
         // TW_Text gMouseText;
         // TW_Text_FastInit( &gMouseText, mousePositionText );
@@ -328,9 +330,9 @@ int main( int argc, char* args[] )
 
             TW_Texture_Render( tBackground );
             TW_Texture_Render( gTitle->texture );
+            TW_Animation_Render( gPlayer );
 
-            gPlayer->currentSprite = ( gPlayer->currentSprite + 1 ) % gPlayer->gridSize;
-            TW_Sprite_Render( gPlayer );
+            // TW_Sprite_Render( gPlayer );
 
             // This is the beginning of what a new component creation function will look like.
             // for ( int entity = 0; entity < eBackground->size; entity++ )
@@ -397,7 +399,7 @@ int main( int argc, char* args[] )
         // TW_Texture_Free( &gMouseText );
         // TW_Texture_Free( &gTimeText );
         // TW_Texture_Free( &gFPSText );
-        TW_Sprite_Free( gPlayer );
+        TW_Animation_Free( gPlayer );
         TW_Text_Free( gTitle );
         TW_Texture_Free( tBackground );
     }
