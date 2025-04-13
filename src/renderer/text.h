@@ -48,7 +48,7 @@ bool TW_Text_SetFont( TW_Text* self, char* fontName, int fontSize );
 
 
 // /**
-//  * TW_Text_Init - Initialised a TW_Text object based on a series of parameters.
+//  * TW_Text_Create - Initialised a TW_Text object based on a series of parameters.
 //  * 
 //  * Args:
 //  * - TW_Text*       - self              - The TW_Text object to initialise
@@ -64,7 +64,7 @@ TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, SDL_Colo
 
 
 // /**
-//  * TW_Text_FastInit - Creates a TW_Text object with only the text value as input.
+//  * TW_Text_FastCreate - Creates a TW_Text object with only the text value as input.
 //  * Default is font DejaVuSans.ttf in size 16 black text.
 //  * 
 //  * Args:
@@ -72,16 +72,25 @@ TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, SDL_Colo
 //  * - char*          - textValue         - The value to assign to the TW_Text object
 //  * 
 //  * Returns:
-//  * - bool           - true if successful, false if not
+//  * - TW_Text*       - Returns the TW_Text with the textValue ready to be displayed
 //  */
 TW_Text* TW_Text_FastCreate( char* textValue );
 
 
 /**
- * TW_Text_Render - Creates an SDL_Texture from a TW_Text object so that it can be
- * displayed (e.g. using LTexture_Render).
+ * TW_Text_RenderTexture - Creates an SDL_Texture from a TW_Text object so that it can be
+ * displayed later (i.e. with LTexture_Render).
  * 
  * Args:
  * - TW_Text        - self              - The TW_Text object to render as a SDL_Texture
  */
-bool TW_Text_Render( TW_Text* self );
+bool TW_Text_RenderTexture( TW_Text* self );
+
+
+/**
+ * TW_Text_Free - Frees resources used by a TW_Text object.
+ * 
+ * Args:
+ * - TW_Text*       - self              - The TW_Text object to free resources from
+ */
+void TW_Text_Free( TW_Text* self );

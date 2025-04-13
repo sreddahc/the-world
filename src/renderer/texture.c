@@ -105,6 +105,7 @@ void TW_Texture_Free( TW_Texture* self )
         SDL_Rect renderZone = { 0, 0, 0, 0 };
         self->crop = renderZone;
     }
+    free( self );
 }
 
 

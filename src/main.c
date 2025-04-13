@@ -151,8 +151,11 @@ int main( int argc, char* args[] )
         SDL_Color textNormalColour = { 0, 0, 0 };
 
         // Title
-        TW_Text* gTitle = TW_Text_FastCreate( "My cool game ;)" );
-        // gTitle->fontSize = 32;
+        TW_Text* gTitle = TW_Text_FastCreate( "MY COOL GAME!" );
+        TW_Text_SetFont( gTitle, gTitle->fontName, 32 );
+        TW_Text_RenderTexture( gTitle );
+        gTitle->texture->x = (SCREEN_WIDTH - gTitle->texture->textureWidth) / 2;
+        gTitle->texture->y = 30;
 
 
         // Title
@@ -331,13 +334,8 @@ int main( int argc, char* args[] )
 
             // Background
 
-            // TW_Texture_Render( tBackground, gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE );
-            // if( tBackground->crop.w > tBackground->textureWidth / 1.9 )
-            // {
-            //     TW_Texture_Crop( tBackground, tBackground->crop.x + 2, tBackground->crop.y + 2, tBackground->crop.w - 4, tBackground->crop.h - 4 );
-            // }
             TW_Texture_Render( tBackground );
-            // TW_Text_Render( gTitle );
+            TW_Texture_Render( gTitle->texture );
 
             // This is the beginning of what a new component creation function will look like.
             // for ( int entity = 0; entity < eBackground->size; entity++ )

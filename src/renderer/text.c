@@ -22,7 +22,7 @@ bool TW_Text_SetFont( TW_Text* self, char* fontName, int fontSize )
 
 TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, SDL_Color fontColour )
 {
-    TW_Text* textObject;
+    TW_Text* textObject = malloc( sizeof( TW_Text ) );
 
     textObject->textValue = textValue;
     textObject->fontColour = fontColour;
@@ -36,6 +36,7 @@ TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, SDL_Colo
 }
 
 
+// Creates a TW_Text object with only the text value as input.
 TW_Text* TW_Text_FastCreate( char* textValue )
 {
     char* fontName = "src/assets/fonts/dejavu/DejaVuSans.ttf";
@@ -48,44 +49,29 @@ TW_Text* TW_Text_FastCreate( char* textValue )
 }
 
 
-bool TW_Text_Render( TW_Text* self )
+// Creates an SDL_Texture from a TW_Text object so that it can be displayed later.
+bool TW_Text_RenderTexture( TW_Text* self )
 {
     SDL_Surface* textSurface = TTF_RenderText_Solid( self->fontObject, self->textValue, self->fontColour );
 
     self->texture = TW_Texture_CreateTexture();
-    self->texture->x = 50;
-    self->texture->y = 50;
     TW_Texture_LoadSurface( self->texture, textSurface );
-
     SDL_FreeSurface( textSurface );
 
 }
 
-// bool TW_Text_Render_Texture( TW_Text* self, SDL_Renderer* renderer )
-// {
-//     bool success = true;
 
-//     SDL_Surface* textSurface = TTF_RenderText_Solid( self->fontObject, self->textValue, self->fontColour );
-//     if( textSurface == NULL )
-//     {
-//         printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
-//         success = false;
-//     }
-//     else
-//     {
-//         self->renderedText.texture = SDL_CreateTextureFromSurface( renderer, textSurface );
-//         if( self->renderedText.texture == NULL )
-//         {
-//             printf( "Unable to create texture from text. SDL Error: %s\n", SDL_GetError() );
-//             success = false;
-//         }
-//         else
-//         {
-//             self->renderedText.width = textSurface->w;
-//             self->renderedText.height = textSurface->h;
-//         }
-//         SDL_FreeSurface( textSurface );
-//     }
-    
-//     return success;
-// }
+// Frees resources used by a TW_Text object.
+void TW_Text_Free( TW_Text* self )
+{
+    self->textValue = NULL;
+    self->fontName = NULL;
+    self->fontObject = NULL;
+    self->fontColour.a = 0;
+    self->fontColour.r = 0;
+    self->fontColour.g = 0;
+    self->fontColour.b = 0;
+    self->fontSize = 0;
+    TW_Texture_Free( self->texture );
+    free( self );
+}
