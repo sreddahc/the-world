@@ -1,5 +1,6 @@
 #include "text.h"
 
+#define DEFAULT_FONT "src/assets/fonts/dejavu/DejaVuSans.ttf"
 
 bool TW_Text_SetFont( TW_Text* self, char* fontName, int fontSize )
 {
@@ -20,45 +21,54 @@ bool TW_Text_SetFont( TW_Text* self, char* fontName, int fontSize )
 }
 
 
-TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, SDL_Color fontColour )
-{
-    TW_Text* textObject = malloc( sizeof( TW_Text ) );
-
-    textObject->textValue = textValue;
-    textObject->fontColour = fontColour;
-
-    if( ! TW_Text_SetFont( textObject, fontName, fontSize ) )
-    {
-        printf( "ERROR: TW_Text_Init - Failed to set font." );
-    }
-
-    return textObject;
-}
-
-
-// Creates a TW_Text object with only the text value as input.
-TW_Text* TW_Text_FastCreate( char* textValue )
-{
-    char* fontName = "src/assets/fonts/dejavu/DejaVuSans.ttf";
-    int fontSize = 16;
-    SDL_Color fontColour = { 0, 0, 0 };
-
-    TW_Text* textObject = TW_Text_Create( textValue, fontName, fontSize, fontColour );
-
-    return textObject;
-}
-
-
-// Creates an SDL_Texture from a TW_Text object so that it can be displayed later.
-bool TW_Text_RenderTexture( TW_Text* self )
+// Updates a TW_Text texture to match TW_Text values
+bool TW_Text_Update( TW_Text* self )
 {
     SDL_Surface* textSurface = TTF_RenderText_Solid( self->fontObject, self->textValue, self->fontColour );
-
     self->texture = TW_Texture_CreateTexture();
     TW_Texture_LoadSurface( self->texture, textSurface );
     SDL_FreeSurface( textSurface );
-    TW_Texture_Render( self->texture );
+}
 
+
+TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, TW_Colour* fontColour )
+{
+    TW_Text* textObject = malloc( sizeof( TW_Text ) );
+
+    // Set defaults where applicable
+    if( fontColour == NULL )
+    {
+        fontColour = TW_Colour_Create( 0x00, 0x00, 0x00, 0xff );
+    }
+    textObject->textValue = textValue;
+    textObject->fontColour = TW_Colour_Get( fontColour );
+    TW_Colour_Free( fontColour );
+
+    // Font size
+    if( fontSize == 0 )
+    {
+        fontSize = 16;
+    }
+
+    // Font face
+    if( fontName == NULL )
+    {
+        fontName = DEFAULT_FONT;
+    }
+
+    if( ! TW_Text_SetFont( textObject, fontName, fontSize ) )
+    {
+        printf( "ERROR: Failed to set font\n" );
+    }
+
+    TW_Text_Update( textObject );
+
+    return textObject;
+}
+
+void TW_Text_Render( TW_Text* self )
+{
+    TW_Texture_Render( self->texture );
 }
 
 

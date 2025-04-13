@@ -119,7 +119,9 @@ int main( int argc, char* args[] )
         bool quit = false;
 
         // Mouse
-        TW_Coord mousePosition = { 0, 0 };
+        TW_Coord* mousePosition = malloc( sizeof( TW_Coord ) );
+        mousePosition->x = 0;
+        mousePosition->y = 0;
         char mousePositionText[50] = "Mouse Position: X=0, Y=0";
 
         // Frame counter
@@ -149,12 +151,14 @@ int main( int argc, char* args[] )
         // TW_Entity_AddComponent( eBackground, cBackground );
 
         // Title
-        TW_Text* gTitle = TW_Text_FastCreate( "MY COOL GAME!" );
-        TW_Text_SetFont( gTitle, gTitle->fontName, 32 );
+        // TW_Text* gTitle = TW_Text_FastCreate( "MY COOL GAME!" );
+        // TW_Text_SetFont( gTitle, gTitle->fontName, 32 );
 
-        TW_Text_RenderTexture( gTitle );
-        gTitle->texture->x = (SCREEN_WIDTH - gTitle->texture->textureWidth) / 2;
-        gTitle->texture->y = 30;
+        // TW_Text_RenderTexture( gTitle );
+        // gTitle->texture->x = (SCREEN_WIDTH - gTitle->texture->textureWidth) / 2;
+        // gTitle->texture->y = 30;
+
+        TW_Text* gTitle = TW_Text_Create( "PROBS A COOL GAME", NULL, 32, TW_Colour_Create( 0x80, 0x00, 0x80, 0xff ) );
 
         TW_Animation* gPlayer = TW_Animation_Create(
             TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 ),
@@ -163,6 +167,7 @@ int main( int argc, char* args[] )
         );
 
         // Mouse Position
+        TW_Text* gMouseText = TW_Text_Create( mousePositionText, NULL, 0, NULL );
         // TW_Text gMouseText;
         // TW_Text_FastInit( &gMouseText, mousePositionText );
         // if( ! TW_Text_Render_Texture( &gMouseText, gRenderer ) )
@@ -290,20 +295,17 @@ int main( int argc, char* args[] )
                 // Mouse Event
                 else if( e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP )
                 {
-                    SDL_GetMouseState( &mousePosition.x, &mousePosition.y );
+                    SDL_GetMouseState( &mousePosition->x, &mousePosition->y );
                     
-                    snprintf(mousePositionText, 50, "Mouse Position: X=%d, Y=%d", mousePosition.x, mousePosition.y);
+                    snprintf(mousePositionText, 50, "Mouse Position: X=%d, Y=%d", mousePosition->x, mousePosition->y);
 
                     if( e.type == SDL_MOUSEBUTTONDOWN )
                     {
                         strcat(mousePositionText, " - KEYDOWN");
                     }
 
-                    // if( ! TW_Text_Render_Texture( &gMouseText, gRenderer ) )
-                    // {
-                    //     printf( "ERROR: Failed to render texture - Mouse Text\n" );
-                    //     quit = true;
-                    // }
+                    TW_Text_Update( gMouseText );
+
                 }
             }
 
@@ -329,8 +331,9 @@ int main( int argc, char* args[] )
             // Background
 
             TW_Texture_Render( tBackground );
-            TW_Texture_Render( gTitle->texture );
+            TW_Text_Render( gTitle );
             TW_Animation_Render( gPlayer );
+            TW_Text_Render( gMouseText );
 
             // TW_Sprite_Render( gPlayer );
 
@@ -393,10 +396,11 @@ int main( int argc, char* args[] )
 
         // Free resources
         // TW_Animation_Free( &gPlayer );
+        free( mousePosition );
         TW_Timer_Free( &fpsTimer );
         TW_Timer_Free( &mainTimer );
         // TW_Texture_Free( &gTitle );
-        // TW_Texture_Free( &gMouseText );
+        TW_Texture_Free( &gMouseText );
         // TW_Texture_Free( &gTimeText );
         // TW_Texture_Free( &gFPSText );
         TW_Animation_Free( gPlayer );

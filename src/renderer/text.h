@@ -47,44 +47,34 @@ typedef struct TW_Text {
 bool TW_Text_SetFont( TW_Text* self, char* fontName, int fontSize );
 
 
-// /**
-//  * TW_Text_Create - Initialised a TW_Text object based on a series of parameters.
-//  * 
-//  * Args:
-//  * - TW_Text*       - self              - The TW_Text object to initialise
-//  * - char*          - textValue         - The value to assign to the TW_Text object
-//  * - char*          - fontName          - The name of the font to be used
-//  * - int            - fontSize          - The size of the font
-//  * - SDL_Color      - fontColour        - The colour of the font
-//  * 
-//  * Returns:
-//  * - bool           - true if successful, false if not
-//  */
-TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, SDL_Color fontColour );
-
-
-// /**
-//  * TW_Text_FastCreate - Creates a TW_Text object with only the text value as input.
-//  * Default is font DejaVuSans.ttf in size 16 black text.
-//  * 
-//  * Args:
-//  * - TW_Text*       - self              - The TW_Text object to initialise
-//  * - char*          - textValue         - The value to assign to the TW_Text object
-//  * 
-//  * Returns:
-//  * - TW_Text*       - Returns the TW_Text with the textValue ready to be displayed
-//  */
-TW_Text* TW_Text_FastCreate( char* textValue );
-
-
 /**
- * TW_Text_RenderTexture - Creates an SDL_Texture from a TW_Text object so that it can be
- * displayed later (i.e. with LTexture_Render).
+ * TW_Text_Update - Updates a TW_Text texture to match TW_Text values
  * 
  * Args:
  * - TW_Text        - self              - The TW_Text object to render as a SDL_Texture
  */
-bool TW_Text_RenderTexture( TW_Text* self );
+bool TW_Text_Update( TW_Text* self );
+
+
+/**
+ * TW_Text_Create - Initialised a TW_Text object based on a series of parameters.
+ * 
+ * Args:
+ * - char*          - textValue         - The value to assign to the TW_Text object
+ * - char*          - fontName          - The name of the font to be used. `NULL` defaults to `DejaVuSans.ttf`
+ * - int            - fontSize          - The size of the font. Font size `0` becomes `16`
+ * - SDL_Color      - fontColour        - The colour of the font. `NULL` defaults to black
+ * 
+ * Returns:
+ * - bool           - true if successful, false if not
+ */
+TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, TW_Colour* fontColour );
+
+
+/**
+ * TW_Text_Render - Renders a text object to the renderer
+ */
+void TW_Text_Render( TW_Text* self );
 
 
 /**

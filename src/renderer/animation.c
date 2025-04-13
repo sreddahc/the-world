@@ -31,7 +31,7 @@ TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int frameCount, int* 
 }
 
 
-// 
+// Create an animation object from a sprite object
 void TW_Animation_Render( TW_Animation* self )
 {
     self->spriteSheet->currentSprite = self->animationFrames[ self->currentFrame ];
