@@ -6,6 +6,7 @@
 #include <string.h>
 #include "renderer/renderer.h"
 #include "renderer/text.h"
+#include "renderer/sprite.h"
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
 #include "ecs/entity.h"
@@ -147,26 +148,17 @@ int main( int argc, char* args[] )
         // TW_Entity* eBackground = TW_Entity_CreateEntity();
         // TW_Entity_AddComponent( eBackground, cBackground );
 
-        // Text
-        SDL_Color textNormalColour = { 0, 0, 0 };
-
         // Title
         TW_Text* gTitle = TW_Text_FastCreate( "MY COOL GAME!" );
         TW_Text_SetFont( gTitle, gTitle->fontName, 32 );
+
         TW_Text_RenderTexture( gTitle );
         gTitle->texture->x = (SCREEN_WIDTH - gTitle->texture->textureWidth) / 2;
         gTitle->texture->y = 30;
 
-
-        // Title
-        // TW_Text gTitle;
-        // TW_Text_FastInit( &gTitle, "My games title :D" );
-        // TW_Text_SetFont( &gTitle, gTitle.fontName, 28 );
-        // if ( ! TW_Text_Render_Texture( &gTitle, gRenderer ) )
-        // {
-        //     printf( "ERROR: Failed to render texture - Title\n" );
-        //     quit = true;
-        // }
+        // Sprite
+        TW_Sprite* gPlayer = TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 );
+        gPlayer->currentSprite = 0;
         
         // Mouse Position
         // TW_Text gMouseText;
@@ -337,6 +329,9 @@ int main( int argc, char* args[] )
             TW_Texture_Render( tBackground );
             TW_Texture_Render( gTitle->texture );
 
+            gPlayer->currentSprite = ( gPlayer->currentSprite + 1 ) % gPlayer->gridSize;
+            TW_Sprite_Render( gPlayer );
+
             // This is the beginning of what a new component creation function will look like.
             // for ( int entity = 0; entity < eBackground->size; entity++ )
             // {
@@ -402,6 +397,8 @@ int main( int argc, char* args[] )
         // TW_Texture_Free( &gMouseText );
         // TW_Texture_Free( &gTimeText );
         // TW_Texture_Free( &gFPSText );
+        TW_Sprite_Free( gPlayer );
+        TW_Text_Free( gTitle );
         TW_Texture_Free( tBackground );
     }
 

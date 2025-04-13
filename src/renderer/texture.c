@@ -1,6 +1,39 @@
 #include "texture.h"
 
 
+// Create a colour object given a red, green and blue value
+TW_Colour* TW_Colour_Create( int r, int g, int b, int a )
+{
+    TW_Colour* localColour = malloc( sizeof( TW_Colour ) );
+
+    localColour->r = r;
+    localColour->g = g;
+    localColour->b = b;
+    localColour->a = a;     
+
+    return localColour;
+}
+
+
+// Get an SDL_Colour object from a TW_Colour object
+SDL_Colour TW_Colour_Get( TW_Colour* self )
+{
+    SDL_Colour lColour = { self->r, self->g, self->b, self->a };
+    return lColour;
+}
+
+
+// Free the resources used by a TW_Colour object
+void TW_Colour_Free( TW_Colour* self )
+{
+    self->r = 0;
+    self->g = 0;
+    self->b = 0;
+    self->a = 0;
+    free( self );
+}
+
+
 // Creates a TW_Texture
 TW_Texture* TW_Texture_CreateTexture()
 {
@@ -9,9 +42,6 @@ TW_Texture* TW_Texture_CreateTexture()
     texture->flip = SDL_FLIP_NONE;
     texture->x = 0;
     texture->y = 0;
-    texture->useColourKey = false;
-    SDL_Color colourKey = { 0x00, 0x00, 0x00, 0xff };
-    texture->colourKey = colourKey;
     
     return texture;
 }
@@ -27,12 +57,8 @@ bool TW_Texture_LoadSurface( TW_Texture* self, SDL_Surface* surface )
     self->textureWidth = surface->w;
     self->textureHeight = surface->h;
 
-    TW_Texture_Crop( self, 0, 0, self->textureWidth, self->textureHeight );
-    
-    if( self->useColourKey == true )
-    {
-        SDL_SetColorKey( surface, SDL_TRUE, SDL_MapRGB( surface->format, self->colourKey.r, self->colourKey.g, self->colourKey.b ) );
-    }
+    SDL_Rect renderZone = { 0, 0, self->textureWidth, self->textureHeight };
+    TW_Texture_Crop( self, renderZone );
     
     self->texture = SDL_CreateTextureFromSurface( TW_GetRenderer(), surface );
     if( self->texture == NULL )
@@ -72,8 +98,8 @@ bool TW_Texture_LoadImage( TW_Texture* self, char* path )
 void TW_Texture_Render( TW_Texture* self )
 {
     SDL_Rect renderZone = { self->x, self->y, self->renderWidth, self->renderHeight };
-    renderZone.w = self->crop.w + (self->textureWidth - self->crop.w);
-    renderZone.h = self->crop.h + (self->textureHeight - self->crop.h);
+    renderZone.w = self->crop.w + (self->renderWidth - self->crop.w);
+    renderZone.h = self->crop.h + (self->renderHeight - self->crop.h);
     SDL_RenderCopyEx(
         TW_GetRenderer(),   // The renderer
         self->texture,      // The texture
@@ -101,26 +127,17 @@ void TW_Texture_Free( TW_Texture* self )
         self->y = 0;
         self->angle = 0.0;
         self->flip = 0;
-        // This is likely not right... but likely not a big deal... maybe...
-        SDL_Rect renderZone = { 0, 0, 0, 0 };
-        self->crop = renderZone;
+        self->crop.x = 0;
+        self->crop.y = 0;
+        self->crop.w = 0;
+        self->crop.h = 0;
     }
     free( self );
 }
 
 
 //Crop a given TW_Texture object to the specified dimensions.
-void TW_Texture_Crop(TW_Texture* self, int x, int y, int w, int h )
+void TW_Texture_Crop(TW_Texture* self, SDL_Rect region )
 {
-    SDL_Rect rectZone = { x, y, w, h }; 
-    self->crop = rectZone;
-}
-
-// Sets the colour key of a TW_Texture object such that a given
-void TW_Texture_SetColourKey( TW_Texture* self, int r, int g, int b )
-{
-    self->colourKey.r = r;
-    self->colourKey.g = g;
-    self->colourKey.b = b;
-    self->useColourKey = true;
+    self->crop = region;
 }

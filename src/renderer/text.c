@@ -57,6 +57,7 @@ bool TW_Text_RenderTexture( TW_Text* self )
     self->texture = TW_Texture_CreateTexture();
     TW_Texture_LoadSurface( self->texture, textSurface );
     SDL_FreeSurface( textSurface );
+    TW_Texture_Render( self->texture );
 
 }
 

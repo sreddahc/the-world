@@ -9,6 +9,21 @@
 // Type definitions
 
 /**
+ * TW_Colour - A Colour object
+ * 
+ * Elements:
+ * - int            - r                 - Red
+ * - int            - g                 - Green
+ * - int            - b                 - Blue
+ */
+typedef struct TW_Colour{
+    int r;          // Red
+    int g;          // Green
+    int b;          // Blue
+    int a;          // Alpha
+} TW_Colour;
+
+/**
  * TW_Texture - A wrapper object that contains all information relating to a texture.
  * 
  * Elements:
@@ -32,14 +47,47 @@ typedef struct TW_Texture {
     int renderWidth;            // Width of the render
     int renderHeight;           // Height of the render
     double angle;               // Angle of the texture to render
-    bool useColourKey;          // true = colour key exists, false = no colour key
-    SDL_Colour colourKey;       // the colour to use as the colour key
     SDL_RendererFlip flip;      // Flip the texture
     SDL_Rect crop;              // Crop image to SDL_Rect
 } TW_Texture;
 
 
-// Function definitionss
+// Function definitions
+
+/**
+ * TW_Colour_Create - Create a colour object given a red, green and blue value
+ * 
+ * Args:
+ * - int            - r             - Red
+ * - int            - g             - Green
+ * - int            - b             - Blue
+ * 
+ * Returns:
+ * - TW_Colour*     - Returns a TW_Colour object
+ */
+TW_Colour* TW_Colour_Create( int r, int g, int b, int a );
+
+
+/**
+ * TW_Colour_Get - Get an SDL_Colour object from a TW_Colour object
+ * 
+ * Args:
+ * - TW_Colour*     - self          - The TW_Colour object to obtain the SDL_Colour from
+ * 
+ * Returns:
+ * - SDL_Colour     - Returns a SDL_Colour object
+ */
+SDL_Colour TW_Colour_Get( TW_Colour* self );
+
+
+/**
+ * TW_Colour_Free - Free the resources used by a TW_Colour object
+ * 
+ * Args:
+ * - TW_Colour*     - self          - The TW_Colour object to free
+ */
+void TW_Colour_Free( TW_Colour* self );
+
 
 /**
  * TW_Texture_CreateTexture - Creates a TW_Texture
@@ -98,32 +146,6 @@ void TW_Texture_Free( TW_Texture* self );
  * 
  * Args:
  * - TW_Texture*        - self          - The TW_Texture object to crop
- * - int                - x             - X position where the crop starts
- * - int                - y             - Y position where the crop starts
- * - int                - w             - Width of the crop
- * - int                - h             - Height of thecrop
+ * - SDL_Rect           - region        - The part of the image to crop to
  */
-void TW_Texture_Crop(TW_Texture* self, int x, int y, int w, int h );
-
-
-/**
- * TW_Texture_SetColourKey - Sets the colour key of a TW_Texture object such that a given
- *                           colour will treated as transparent.
- * 
- * Args:
- * - TW_Texture*        - self          - Set the colour key of this texture
- * - int                - r             - The red component of the colour key
- * - int                - g             - The green component of the colour key
- * - int                - b             - The blue component of the colour key
- */
-void TW_Texture_SetColourKey( TW_Texture* self, int r, int g, int b );
-
-
-// /**
-//  * TW_Texture_UnsetColourKey - Unsets the colour key of a TW_Texture object so that no
-//  *                             colour is transparent.
-//  * 
-//  * Args:
-//  * - TW_Texture*        - self          - Unset the colour key of this texture
-//  */
-// void TW_Texture_UnsetColourKey( TW_Texture* self );
+void TW_Texture_Crop(TW_Texture* self, SDL_Rect region );
