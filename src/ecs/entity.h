@@ -49,4 +49,6 @@ void TW_Entity_Free( TW_Entity* self );
 
 // --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
 
+bool TW_Entity_ComponentExists( TW_Entity* self, int type );
+
 void TW_Entity_Render( TW_Entity* self );
