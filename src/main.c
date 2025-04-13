@@ -6,10 +6,11 @@
 #include <string.h>
 #include "renderer/renderer.h"
 #include "renderer/text.h"
+#include "renderer/animation.h"
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
-#include "ecs/entity.h"
-#include "renderer/animation.h"
+#include "ecs/scene.h"
+// #include "renderer/animation.h"
 
 // Global variables
 // Screen dimensions
@@ -30,7 +31,6 @@ enum KeyPressSurfaces
 };
 
 SDL_Window* gWindow = NULL;
-SDL_Renderer* gRenderer = NULL;
 
 // Functions
 bool init();
@@ -60,8 +60,8 @@ bool init()
         else
         {
             // Create renderer for window
-            gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
-            if( gRenderer == NULL )
+            TW_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+            if( TW_GetRenderer() == NULL )
             {
                 printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
                 success = false;
@@ -69,7 +69,7 @@ bool init()
             else
             {
                 // Initialise Renderer Colour
-                SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+                SDL_SetRenderDrawColor( TW_GetRenderer(), 0x00, 0x00, 0x00, 0xff );
 
                 // Initialise PNG loading
                 int imgFlags = IMG_INIT_PNG;
@@ -96,10 +96,9 @@ bool init()
 void closeAll()
 {
     // Destroy Window
-    SDL_DestroyRenderer( gRenderer );
+    TW_DestroyRenderer();
     SDL_DestroyWindow( gWindow );
     gWindow = NULL;
-    gRenderer = NULL;
 
     // Quit SDL subsystems
     TTF_Quit();
@@ -120,7 +119,9 @@ int main( int argc, char* args[] )
         bool quit = false;
 
         // Mouse
-        TW_Coord mousePosition = { 0, 0 };
+        TW_Coord* mousePosition = malloc( sizeof( TW_Coord ) );
+        mousePosition->x = 0;
+        mousePosition->y = 0;
         char mousePositionText[50] = "Mouse Position: X=0, Y=0";
 
         // Frame counter
@@ -137,72 +138,60 @@ int main( int argc, char* args[] )
         TW_Timer_Init( &mainTimer, false );
         char timeText[50] = "Time since reset: 0ms";
         
+        // Main scene
+        TW_Scene* sceneMain = TW_Scene_Create();
+
         // Background
-        TW_Texture tBackground;
-        TW_Texture_LoadImage( &tBackground, gRenderer, "src/images/backgrounds/day.png" );
-        TW_Component* cBackground = TW_Component_Create( TW_COMPONENT_TEXTURE, &tBackground );
-        TW_Entity* eBackground = TW_Entity_CreateEntity();
-        TW_Entity_AddComponent( eBackground, cBackground );
+        TW_Texture* gBackground = TW_Texture_CreateTexture();
+        TW_Texture_LoadImage( gBackground, "src/images/backgrounds/day.png" );
+        TW_Entity* entityBackground = TW_Entity_Create();
+        TW_Entity_AddComponent( entityBackground, TW_Component_Create( TW_COMPONENT_TEXTURE, gBackground ) );
+        TW_Scene_AddEntity( sceneMain, entityBackground );
 
-        // Text
-        SDL_Color textNormalColour = { 0, 0, 0 };
+        // Title Entity
+        TW_Text* gTitle = TW_Text_Create( "PROBS A COOL GAME", NULL, 32, TW_Colour_Create( 0x80, 0x00, 0x80, 0xff ) );
+        TW_Entity* entityTitle = TW_Entity_Create();
+        TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_COMPONENT_TEXT, gTitle ) );
+        TW_Scene_AddEntity( sceneMain, entityTitle );
 
-        // Title
-        TW_Text gTitle;
-        TW_Text_FastInit( &gTitle, "My games title :D" );
-        TW_Text_SetFont( &gTitle, gTitle.fontName, 28 );
-        if ( ! TW_Text_Render_Texture( &gTitle, gRenderer ) )
-        {
-            printf( "ERROR: Failed to render texture - Title\n" );
-            quit = true;
-        }
-        
-        // Mouse Position
-        TW_Text gMouseText;
-        TW_Text_FastInit( &gMouseText, mousePositionText );
-        if( ! TW_Text_Render_Texture( &gMouseText, gRenderer ) )
-        {
-            printf( "ERROR: Failed to render texture - Mouse Text\n" );
-            quit = true;
-        }
+        // Mouse Position Entity
+        TW_Text* gMouseText = TW_Text_Create( mousePositionText, NULL, 0, NULL );
+        TW_Entity* entityMouseText = TW_Entity_Create();
+        TW_Entity_AddComponent( entityMouseText, TW_Component_Create( TW_COMPONENT_TEXT, gMouseText ) );
+        TW_Scene_AddEntity( sceneMain, entityMouseText );
+
+        // Player Entity
+        TW_Animation* gPlayer = TW_Animation_Create(
+            TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 ),
+            4,
+            (int[]){ 0, 1, 2, 3 }
+        );
+        TW_Entity* entityPlayer = TW_Entity_Create();
+        TW_Entity_AddComponent( entityPlayer, TW_Component_Create( TW_COMPONENT_ANIMATION, gPlayer ) );
+        TW_Scene_AddEntity( sceneMain, entityPlayer );
         
         // Time
-        TW_Text gTimeText;
-        TW_Text_FastInit( &gTimeText, timeText );
-        if( ! TW_Text_Render_Texture( &gTimeText, gRenderer ) )
-        {
-            printf( "ERROR: Failed to render texture - Time Text\n" );
-            quit = true;
-        }
+        // TW_Text gTimeText;
+        // TW_Text_FastInit( &gTimeText, timeText );
+        // if( ! TW_Text_Render_Texture( &gTimeText, gRenderer ) )
+        // {
+        //     printf( "ERROR: Failed to render texture - Time Text\n" );
+        //     quit = true;
+        // }
 
         // FPS
-        TW_Text gFPSText;
-        TW_Text_FastInit( &gFPSText, fpsText );
-        if( ! TW_Text_Render_Texture( &gFPSText, gRenderer ) )
-        {
-            printf( "ERROR: Failed to render texture - FPS Text\n" );
-            quit = true;
-        }
-
-        // Sprite
-        const int WALKING_ANIMATION_FRAMES = 4;
-        const int SPRITE_HEIGHT = 32;
-        const int SPRITE_WIDTH = 32;
+        // TW_Text gFPSText;
+        // TW_Text_FastInit( &gFPSText, fpsText );
+        // if( ! TW_Text_Render_Texture( &gFPSText, gRenderer ) )
+        // {
+        //     printf( "ERROR: Failed to render texture - FPS Text\n" );
+        //     quit = true;
+        // }
 
         // Controls
-        SDL_RendererFlip flipType = SDL_FLIP_NONE;
-        double degrees = 0;
-        double angle_increment = 30;
-        
-        TW_Animation gPlayer;
-        TW_Animation_Init( &gPlayer, gRenderer, "src/images/sprites/player.png", SPRITE_WIDTH, SPRITE_HEIGHT, WALKING_ANIMATION_FRAMES, 100, false );
-
-
-        TW_Animation playerAnimation;
-        TW_Animation_Init( &playerAnimation, gRenderer, "src/images/sprites/player.png", SPRITE_WIDTH, SPRITE_HEIGHT, WALKING_ANIMATION_FRAMES, 100, false );
-        TW_Entity* playerEntity = TW_Entity_CreateEntity();
-        TW_Component* playerSprite = TW_Component_Create( TW_COMPONENT_ANIMATION, &playerAnimation );
-        TW_Entity_AddComponent( playerEntity, playerSprite );
+        // SDL_RendererFlip flipType = SDL_FLIP_NONE;
+        // double degrees = 0;
+        // double angle_increment = 30;
 
         while( !quit )
         {
@@ -223,42 +212,42 @@ int main( int argc, char* args[] )
                         break;
                     
                     // No flip
-                    case SDLK_s:
-                        flipType = SDL_FLIP_NONE;
-                        break;
+                    // case SDLK_s:
+                    //     flipType = SDL_FLIP_NONE;
+                    //     break;
 
                     // Flip horizontally
-                    case SDLK_a:
-                        flipType = SDL_FLIP_HORIZONTAL;
-                        break;
+                    // case SDLK_a:
+                    //     flipType = SDL_FLIP_HORIZONTAL;
+                    //     break;
                     
                     // Flip vertically
-                    case SDLK_w:
-                        flipType = SDL_FLIP_VERTICAL;
-                        break;
+                    // case SDLK_w:
+                    //     flipType = SDL_FLIP_VERTICAL;
+                    //     break;
 
                     // Rotate clockwise
-                    case SDLK_RIGHT:
-                        degrees += angle_increment;
-                        if( degrees >= 360 )
-                        {
-                            degrees -= 360;
-                        }
-                        break;
+                    // case SDLK_RIGHT:
+                    //     degrees += angle_increment;
+                    //     if( degrees >= 360 )
+                    //     {
+                    //         degrees -= 360;
+                    //     }
+                    //     break;
                     
                     // Rotate anti-clockwise
-                    case SDLK_LEFT:
-                        degrees -= angle_increment;
-                        if( degrees < 0 )
-                        {
-                            degrees += 360;
-                        }
-                        break;
+                    // case SDLK_LEFT:
+                    //     degrees -= angle_increment;
+                    //     if( degrees < 0 )
+                    //     {
+                    //         degrees += 360;
+                    //     }
+                    //     break;
                     
                     // Reset angle
-                    case SDLK_DOWN:
-                        degrees = 0;
-                        break;
+                    // case SDLK_DOWN:
+                    //     degrees = 0;
+                    //     break;
                     
                     // Reset clock
                     case SDLK_RETURN:
@@ -270,12 +259,10 @@ int main( int argc, char* args[] )
                     if( mainTimer.paused )
                     {
                         TW_Timer_Resume( &mainTimer );
-                        gPlayer.paused = false;
                     }
                     else
                     {
                         TW_Timer_Pause( &mainTimer );
-                        gPlayer.paused = true;
                     }
                     break;
 
@@ -287,89 +274,54 @@ int main( int argc, char* args[] )
                 // Mouse Event
                 else if( e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP )
                 {
-                    SDL_GetMouseState( &mousePosition.x, &mousePosition.y );
+                    SDL_GetMouseState( &mousePosition->x, &mousePosition->y );
                     
-                    snprintf(mousePositionText, 50, "Mouse Position: X=%d, Y=%d", mousePosition.x, mousePosition.y);
+                    snprintf(mousePositionText, 50, "Mouse Position: X=%d, Y=%d", mousePosition->x, mousePosition->y);
 
                     if( e.type == SDL_MOUSEBUTTONDOWN )
                     {
                         strcat(mousePositionText, " - KEYDOWN");
                     }
 
-                    if( ! TW_Text_Render_Texture( &gMouseText, gRenderer ) )
-                    {
-                        printf( "ERROR: Failed to render texture - Mouse Text\n" );
-                        quit = true;
-                    }
+                    TW_Text_Update( gMouseText );
+
                 }
             }
 
             // Update time
             snprintf( timeText, 50, "Time since reset: %dms", TW_Timer_GetTime( &mainTimer ) );
-            if( ! TW_Text_Render_Texture( &gTimeText, gRenderer ) )
-            {
-                printf( "ERROR: Failed to render texture - Time Text\n" );
-                quit = true;
-            }
+            // if( ! TW_Text_Render_Texture( &gTimeText, gRenderer ) )
+            // {
+            //     printf( "ERROR: Failed to render texture - Time Text\n" );
+            //     quit = true;
+            // }
 
             // Update FPS
             snprintf(fpsText, 50, "FPS: %.2f", TW_FPSTimer_GetFPS( &fpsTimer ) );
-            if( ! TW_Text_Render_Texture( &gFPSText, gRenderer ) )
-            {
-                printf( "ERROR: Failed to render texture - FPS Text\n" );
-                quit = true;
-            }
-
-            // Update the surface
-            SDL_RenderClear( gRenderer );
-            
-            // Background
-            // This is the beginning of what a new component creation function will look like.
-            for ( int entity = 0; entity < eBackground->size; entity++ )
-            {
-                if( eBackground->components[ entity ]->type  == TW_COMPONENT_TEXTURE )
-                {
-                    TW_Texture_Render(
-                        &eBackground->components[ entity ]->value->texture,
-                        gRenderer, 0, 0, NULL, 0.0, NULL, SDL_FLIP_NONE
-                    );
-                }
-            }
-
-            // // Animation Entity...
-            // for ( int entity = 0; entity < playerEntity->size; entity++ )
+            // if( ! TW_Text_Render_Texture( &gFPSText, gRenderer ) )
             // {
-                TW_Texture_Render(
-                    // TW_Animation_GetTexture( &playerEntity->components[ 0 ]->value->animation ),
-                    &playerEntity->components[ 0 ]->value->animation->texture,
-                    gRenderer,
-                    40,
-                    40,
-                    NULL,
-                    0.0,
-                    NULL,
-                    SDL_FLIP_NONE
-                );
+            //     printf( "ERROR: Failed to render texture - FPS Text\n" );
+            //     quit = true;
             // }
 
-            // Render title text
-            TW_Texture_Render( &gTitle.renderedText.texture, gRenderer, ( SCREEN_WIDTH - gTitle.renderedText.width ) / 2, 10, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            // Update the surface
+            SDL_RenderClear( TW_GetRenderer() );
 
-            // Render mouse text
-            TW_Texture_Render( &gMouseText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gMouseText.renderedText.width) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            // For each Entity in a Scene
+            TW_Scene_Render( sceneMain );
 
-            // Render time text
-            TW_Texture_Render( &gTimeText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gTimeText.renderedText.width) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            // // Render time text
+            // TW_Texture_Render( &gTimeText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gTimeText.renderedText.width) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
-            // Render FPS text
-            TW_Texture_Render( &gFPSText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gFPSText.renderedText.width) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
+            // // Render FPS text
+            // TW_Texture_Render( &gFPSText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gFPSText.renderedText.width) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
-            // Render sprite
-            TW_Texture_Render( &gPlayer.texture , gRenderer, 20, 20, &gPlayer.grid[ gPlayer.currentFrame ], degrees, NULL, flipType );
-            TW_Animation_GetNextFrame( &gPlayer );
+            // // Render sprite
+            // TW_Texture_Render( &gPlayer.texture , gRenderer, 20, 20, &gPlayer.grid[ gPlayer.currentFrame ], degrees, NULL, flipType );
+            // TW_Animation_GetNextFrame( &gPlayer );
 
-            // Update screen
-            SDL_RenderPresent( gRenderer );
+            // // Update screen
+            SDL_RenderPresent( TW_GetRenderer() );
 
             // Update frames counter
             TW_FPSTimer_Update( &fpsTimer );
@@ -385,14 +337,17 @@ int main( int argc, char* args[] )
 
 
         // Free resources
-        TW_Animation_Free( &gPlayer );
+        // TW_Animation_Free( &gPlayer );
+        free( mousePosition );
         TW_Timer_Free( &fpsTimer );
         TW_Timer_Free( &mainTimer );
-        TW_Texture_Free( &gTitle );
-        TW_Texture_Free( &gMouseText );
-        TW_Texture_Free( &gTimeText );
-        TW_Texture_Free( &gFPSText );
-        TW_Texture_Free( &tBackground );
+        // TW_Texture_Free( &gTitle );
+        TW_Text_Free( gMouseText );
+        // TW_Texture_Free( &gTimeText );
+        // TW_Texture_Free( &gFPSText );
+        TW_Animation_Free( gPlayer );
+        TW_Text_Free( gTitle );
+        TW_Texture_Free( gBackground );
     }
 
     // Free resources and close SDL

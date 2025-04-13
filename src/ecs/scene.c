@@ -2,7 +2,7 @@
 
 
 // Creates a scene to store entities in.
-TW_Scene* TW_Scene_CreateScene()
+TW_Scene* TW_Scene_Create()
 {
     TW_Scene* scene = malloc( sizeof( TW_Scene ) );
     scene->size = 0;
@@ -37,3 +37,14 @@ void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity )
 // TW_Scene_Free - Free the resources used by a scene.
 void TW_Scene_Free( TW_Scene* self )
 {}
+
+// --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
+
+// Renders all entities in a scene - Developers note: This should probably be broken up...
+void TW_Scene_Render( TW_Scene* self )
+{
+    for( int index = 0; index < self->size; index++ ){
+        // For each Component in an Entity
+        TW_Entity_Render( self->entities[ index ] );
+    }
+}

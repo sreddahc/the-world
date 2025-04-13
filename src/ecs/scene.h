@@ -21,12 +21,12 @@ typedef struct TW_Scene {
 // Function definitions
 
 /**
- * TW_Scene_CreateScene - Creates a scene to store entities in.
+ * TW_Scene_Create - Creates a scene to store entities in.
  * 
  * Returns:
  * TW_Scene*        - Returns an empty scene
  */
-TW_Scene* TW_Scene_CreateScene();
+TW_Scene* TW_Scene_Create();
 
 
 /**
@@ -46,3 +46,15 @@ void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity );
  * - TW_Scene*      - self          - The scene to free
  */
 void TW_Scene_Free( TW_Scene* self );
+
+
+// --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
+
+// Developers note: This should probably be broken up...
+/**
+ * TW_Scene_Render - Given a scene, attempts to render all entities
+ * 
+ * Args:
+ * - TW_Scene*      - self          - The scene to render
+ */
+void TW_Scene_Render( TW_Scene* self );

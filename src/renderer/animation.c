@@ -1,72 +1,59 @@
 #include "animation.h"
-#include "../engine/timer.h"
 
 
-// Initialises a TW_Animation object.
-bool TW_Animation_Init( TW_Animation* self, SDL_Renderer* renderer, char* path, int height, int width, int frameCount, int animationSpeed, bool paused )
+// Create an animation object from a sprite object
+TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int frameCount, int* animationFrames )
 {
-    self->width = width;
-    self->height = height;
-    self->frameCount = frameCount;
-    self->currentFrame = 0;
-    self->animationSpeed = animationSpeed;
-    self->timeLastUpdated = 0;
-    self->paused = paused;
-    
-    if( ! TW_Texture_LoadImage( &self->texture, renderer, path ) )
+    TW_Animation* animation = malloc( sizeof( TW_Animation ) );
+
+    animation->spriteSheet = spriteSheet;
+    animation->frameCount = frameCount;
+    animation->animationFrames = animationFrames;
+    animation->currentFrame = 0;
+    animation->animationSpeed = 10;
+    animation->paused = false;
+
+    // Checks
+    for( int frame = 0; frame < frameCount; frame++ )
     {
-        return false;
-    }
-
-    int gridCols = self->texture.width / width;
-    int gridRows = self->texture.height / height;
-    int gridSize = gridCols * gridRows;
-
-    SDL_Rect* animationGrid = malloc( gridSize * sizeof( SDL_Rect ) );
-    self->grid = animationGrid;
-    for( int frame = 0; frame < gridSize; frame++ )
-    {
-        self->grid[ frame ].x = ( frame % gridCols ) * width;
-        self->grid[ frame ].y = ( frame / gridCols ) * height;
-        self->grid[ frame ].w = width;
-        self->grid[ frame ].h = height;
-    }
-
-    return true;
-}
-
- 
-// Gets the next frame texture in the animation and increments the current frame counter.
-void TW_Animation_GetNextFrame( TW_Animation* self )
-{
-    if( ! self->paused )
-    {
-        // This is not the right way to implement DeltaTime... though it does work.
-        if( SDL_GetTicks() - self->timeLastUpdated >= self->animationSpeed )
+        if( animation->animationFrames[ frame ] >= animation->spriteSheet->gridSize )
         {
-            self->timeLastUpdated = SDL_GetTicks64();
-            self->currentFrame = ( self->currentFrame + 1 ) % self->frameCount;
+            printf(
+                "ERROR: Request for frame %d outside of range (grid size = %d)\n",
+                animation->animationFrames[ frame ],
+                animation->spriteSheet->gridSize
+            );
+            return NULL;
         }
     }
+
+    return animation;
 }
 
 
-// Fill this in!
-TW_Texture* TW_Animation_GetTexture( TW_Animation* self )
+// Create an animation object from a sprite object
+void TW_Animation_Render( TW_Animation* self )
 {
-    return &self->texture;
+    self->spriteSheet->currentSprite = self->animationFrames[ self->currentFrame ];
+    TW_Sprite_Render( self->spriteSheet );
+    if( self->paused == false )
+    {
+        self->currentFrame = ( self->currentFrame + 1 ) % self->frameCount;
+    }
 }
 
 
 // Frees resources used by a TW_Animation object.
 void TW_Animation_Free( TW_Animation* self )
 {
-    free( self->grid );
-    self->grid = NULL;
+    self->paused = false;
+    self->animationSpeed = 0;
     self->currentFrame = 0;
+    for( int index = 0; index < self->frameCount; index++ )
+    {
+        self->animationFrames[ index ] = 0;
+    }
     self->frameCount = 0;
-    self->width = 0;
-    self->height = 0;
-    TW_Texture_Free( &self->texture );
-    self = NULL;
+    TW_Sprite_Free( self->spriteSheet );
+    free( self );
 }
