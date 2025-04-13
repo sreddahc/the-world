@@ -48,6 +48,8 @@ void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity );
 void TW_Scene_Free( TW_Scene* self );
 
 
+// --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
+
 // Developers note: This should probably be broken up...
 /**
  * TW_Scene_Render - Given a scene, attempts to render all entities

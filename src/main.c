@@ -309,9 +309,6 @@ int main( int argc, char* args[] )
 
             // For each Entity in a Scene
             TW_Scene_Render( sceneMain );
-            
-            // // Render mouse text
-            // TW_Texture_Render( &gMouseText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gMouseText.renderedText.width) / 2), 50, NULL, 0.0, NULL, SDL_FLIP_NONE );
 
             // // Render time text
             // TW_Texture_Render( &gTimeText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gTimeText.renderedText.width) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );

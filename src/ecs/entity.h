@@ -46,3 +46,7 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component );
  * - TW_Entity*         - self          - The entity to free
  */
 void TW_Entity_Free( TW_Entity* self );
+
+// --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
+
+void TW_Entity_Render( TW_Entity* self );

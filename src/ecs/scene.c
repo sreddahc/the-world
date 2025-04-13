@@ -38,35 +38,13 @@ void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity )
 void TW_Scene_Free( TW_Scene* self )
 {}
 
+// --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
+
 // Renders all entities in a scene - Developers note: This should probably be broken up...
 void TW_Scene_Render( TW_Scene* self )
 {
-    for( int i = 0; i < self->size; i++ ){
+    for( int index = 0; index < self->size; index++ ){
         // For each Component in an Entity
-        for( int j = 0; j < self->entities[ i ]->size; j++ )
-        {
-            // Render visual components
-            switch ( self->entities[ i ]->components[ j ]->type )
-            {
-            case TW_COMPONENT_TEXTURE:
-                TW_Texture_Render( self->entities[ i ]->components[ j ]->value );
-                break;
-
-            case TW_COMPONENT_TEXT:
-                TW_Text_Render( self->entities[ i ]->components[ j ]->value );
-                break;
-            
-                case TW_COMPONENT_SPRITE:
-                TW_Sprite_Render( self->entities[ i ]->components[ j ]->value );
-                break;
-            
-            case TW_COMPONENT_ANIMATION:
-                TW_Animation_Render( self->entities[ i ]->components[ j ]->value );
-                break;
-            
-            default:
-                break;
-            }
-        }
+        TW_Entity_Render( self->entities[ index ] );
     }
 }
