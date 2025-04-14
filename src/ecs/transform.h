@@ -17,8 +17,8 @@
 typedef struct TW_Transform {
     TW_Vector2* position;
     TW_Vector2* centre;
-    float angle;
-    float scale;
+    double angle;
+    double scale;
 } TW_Transform;
 
 
@@ -33,7 +33,7 @@ typedef struct TW_Transform {
  * - float              - angle         - The angle of the entity (in degrees)
  * - float              - scale         - The scale of  the entity
  */
-TW_Transform* TW_Transform_Create( int x, int y, float angle, float scale );
+TW_Transform* TW_Transform_Create( int x, int y, double angle, double scale );
 
 
 /**
