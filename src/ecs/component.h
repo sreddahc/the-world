@@ -1,9 +1,10 @@
 #pragma once
 
-# include "../renderer/renderer.h"
-# include "../renderer/text.h"
-# include "../renderer/sprite.h"
-# include "../renderer/animation.h"
+#include "transform.h"
+#include "../renderer/renderer.h"
+#include "../renderer/text.h"
+#include "../renderer/sprite.h"
+#include "../renderer/animation.h"
 
 
 // Type definitions
@@ -28,6 +29,7 @@ enum TW_Component_Type
  * object matching each TW_Component_Type.
  */
 typedef union TW_Component_Value {
+    TW_Transform* transform;
     TW_Texture* texture;
     TW_Text* text;
     TW_Sprite* sprite;
@@ -64,6 +66,18 @@ TW_Component* TW_Component_Create( int type, TW_Component_Value* value );
 
 
 /**
+ * TW_Component_Render - If there is a visual aspect to the component... renders it
+ * 
+ * Args:
+ * - TW_Component*          - self          - The TW_Component to render
+ */
+void TW_Component_Render( TW_Component* self );
+
+
+/**
  * TW_Component_Free - Frees resources for a given TW_Component
+ * 
+ * Args:
+ * - TW_Component*          - self          - The TW_Component to free
  */
 void TW_Component_Free( TW_Component* self );

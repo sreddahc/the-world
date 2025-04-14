@@ -33,38 +33,29 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
     }
 }
 
-
-// Free the resources used by an entity
-void TW_Entity_Free( TW_Entity* self )
-{}
-
 // --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
 
+/**
+ * TW_Component_Render - Renders any entities with visual components
+ * 
+ * Args:
+ * - TW_Entity*             - self          - The TW_Component to render
+ */
 void TW_Entity_Render( TW_Entity* self )
 {
     for( int index = 0; index < self->size; index++ )
     {
-        // Render visual components
-        switch ( self->components[ index ]->type )
-        {
-        case TW_COMPONENT_TEXTURE:
-            TW_Texture_Render( self->components[ index ]->value );
-            break;
-
-        case TW_COMPONENT_TEXT:
-            TW_Text_Render( self->components[ index ]->value );
-            break;
-        
-            case TW_COMPONENT_SPRITE:
-            TW_Sprite_Render( self->components[ index ]->value );
-            break;
-        
-        case TW_COMPONENT_ANIMATION:
-            TW_Animation_Render( self->components[ index ]->value );
-            break;
-        
-        default:
-            break;
-        }
+        TW_Component_Render( self->components[ index ] );
     }
+}
+
+// Free the resources used by an entity
+void TW_Entity_Free( TW_Entity* self )
+{
+    for( int index = 0; index < self->size; index++ )
+    {
+        TW_Component_Free( self->components[ index ] );
+    }
+    self->size = 0;
+    free( self );
 }

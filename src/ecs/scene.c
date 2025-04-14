@@ -33,11 +33,6 @@ void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity )
     }
 }
 
-
-// TW_Scene_Free - Free the resources used by a scene.
-void TW_Scene_Free( TW_Scene* self )
-{}
-
 // --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
 
 // Renders all entities in a scene - Developers note: This should probably be broken up...
@@ -47,4 +42,16 @@ void TW_Scene_Render( TW_Scene* self )
         // For each Component in an Entity
         TW_Entity_Render( self->entities[ index ] );
     }
+}
+
+
+// TW_Scene_Free - Free the resources used by a scene.
+void TW_Scene_Free( TW_Scene* self )
+{
+    for( int index = 0; index < self->size; index++ )
+    {
+        TW_Entity_Free( self->entities[ index ] );
+    }
+    self->size = 0;
+    free( self );
 }

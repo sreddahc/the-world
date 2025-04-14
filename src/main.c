@@ -340,13 +340,7 @@ int main( int argc, char* args[] )
         TW_Vector2_Free( mousePosition );
         TW_Timer_Free( &fpsTimer );
         TW_Timer_Free( &mainTimer );
-        // TW_Texture_Free( &gTitle );
-        TW_Text_Free( gMouseText );
-        // TW_Texture_Free( &gTimeText );
-        // TW_Texture_Free( &gFPSText );
-        TW_Animation_Free( gPlayer );
-        TW_Text_Free( gTitle );
-        TW_Texture_Free( gBackground );
+        TW_Scene_Free( sceneMain );
     }
 
     // Free resources and close SDL
