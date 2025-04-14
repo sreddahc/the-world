@@ -7,19 +7,6 @@
 
 // Type definitions
 
-/**
- * TW_Coord - an vector of size 2 that provides the x and y coordinates of an object
- * 
- * Elements:
- * - int            - x                 - The x position of an object
- * - int            - y                 - The y position of an object
- */
-typedef struct TW_Coord {
-    int x;
-    int y;
-} TW_Coord;
-
-
 void TW_CreateRenderer( SDL_Window* window, int index, Uint32 flags);
 
 SDL_Renderer* TW_GetRenderer();

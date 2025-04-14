@@ -10,6 +10,7 @@
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
 #include "ecs/scene.h"
+#include "engine/maths.h"
 // #include "renderer/animation.h"
 
 // Global variables
@@ -119,9 +120,7 @@ int main( int argc, char* args[] )
         bool quit = false;
 
         // Mouse
-        TW_Coord* mousePosition = malloc( sizeof( TW_Coord ) );
-        mousePosition->x = 0;
-        mousePosition->y = 0;
+        TW_Vector2* mousePosition = TW_Vector2_Create( 0, 0 );
         char mousePositionText[50] = "Mouse Position: X=0, Y=0";
 
         // Frame counter
@@ -338,7 +337,7 @@ int main( int argc, char* args[] )
 
         // Free resources
         // TW_Animation_Free( &gPlayer );
-        free( mousePosition );
+        TW_Vector2_Free( mousePosition );
         TW_Timer_Free( &fpsTimer );
         TW_Timer_Free( &mainTimer );
         // TW_Texture_Free( &gTitle );
