@@ -11,7 +11,6 @@
 #include "engine/fpstimer.h"
 #include "ecs/scene.h"
 #include "engine/maths.h"
-// #include "renderer/animation.h"
 
 // Global variables
 // Screen dimensions

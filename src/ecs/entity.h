@@ -49,6 +49,15 @@ void TW_Entity_Free( TW_Entity* self );
 
 // --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
 
-bool TW_Entity_ComponentExists( TW_Entity* self, int type );
+/**
+ * TW_Transform_GetComponent - // Given an entity and component type search the entity for
+ * that component. If found, return the index of that component, otherwise return `-1`.
+ * 
+ * Args:
+ * TW_Entity*           - self          - The entity to search
+ * int                  - type          - The TW_Component_Type to search for
+ */
+TW_Component* TW_Transform_GetComponent( TW_Entity* self, int type );
+
 
 void TW_Entity_Render( TW_Entity* self );

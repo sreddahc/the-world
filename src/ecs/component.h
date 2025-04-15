@@ -9,6 +9,9 @@
 
 // Type definitions
 
+// Placeholder for TW_Entity
+typedef struct TW_Entity TW_Entity;
+
 /**
  * TW_Component_Type - An enumeration of all the types of components so that they may be
  * uniquely identified.
@@ -46,6 +49,7 @@ typedef union TW_Component_Value {
  */
 typedef struct TW_Component {
     int type;
+    TW_Entity* parent;
     TW_Component_Value* value;
 } TW_Component;
 

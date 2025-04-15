@@ -31,6 +31,7 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
             self->components[ self->size - 1 ] = component;
         }
     }
+    component->parent = self;
 }
 
 // --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
@@ -47,6 +48,20 @@ void TW_Entity_Render( TW_Entity* self )
     {
         TW_Component_Render( self->components[ index ] );
     }
+}
+
+// Given an entity and component type search the entity for that component.
+// If found, return the index of that component, otherwise return `-1`.
+TW_Component* TW_Transform_GetComponent( TW_Entity* self, int type )
+{
+    for( int index = 0; index < self->size; index++ )
+    {
+        if( self->components[ index ]->type == type )
+        {
+            return self->components[ index ];
+        }
+    }
+    return NULL;
 }
 
 // Free the resources used by an entity
