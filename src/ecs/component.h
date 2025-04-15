@@ -48,9 +48,16 @@ typedef union TW_Component_Value {
  * - TW_Component_Value*    - value         - The component
  */
 typedef struct TW_Component {
-    int type;
+    enum TW_Component_Type type;
     TW_Entity* parent;
-    TW_Component_Value* value;
+    union {
+        TW_Transform* transform;
+        TW_Texture* texture;
+        TW_Text* text;
+        TW_Sprite* sprite;
+        TW_Animation* animation;
+    };
+    // TW_Component_Value* value;
 } TW_Component;
 
 
@@ -76,6 +83,16 @@ TW_Component* TW_Component_Create( int type, TW_Component_Value* value );
  * - TW_Component*          - self          - The TW_Component to render
  */
 void TW_Component_Render( TW_Component* self );
+
+
+/**
+ * TW_Component_GetParent - Given a component, return a pointer to its parent entity
+ * object if it exists. If not, return `NULL`.
+ * 
+ * Args:
+ * - TW_Component*          - self          - The component to fetch the parent entity of
+ */
+TW_Entity* TW_Component_GetParent( TW_Component* self );
 
 
 /**

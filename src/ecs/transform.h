@@ -5,6 +5,9 @@
 
 // Type definitions
 
+typedef struct TW_Component TW_Component;
+
+
 /**
  * TW_Transform - A transform object used to provide basic information about an entity
  * 
@@ -19,6 +22,7 @@ typedef struct TW_Transform {
     TW_Vector2* centre;
     double angle;
     double scale;
+    TW_Component* parent                // Parent component if it exists, otherwise `NULL`
 } TW_Transform;
 
 

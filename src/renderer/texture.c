@@ -1,4 +1,5 @@
 #include "texture.h"
+#include "../ecs/entity.h"
 
 
 // Create a colour object given a red, green and blue value
@@ -38,10 +39,8 @@ void TW_Colour_Free( TW_Colour* self )
 TW_Texture* TW_Texture_CreateTexture()
 {
     TW_Texture* texture = malloc( sizeof( TW_Texture ) );
-    texture->angle = 0.0;
     texture->flip = SDL_FLIP_NONE;
-    texture->x = 0;
-    texture->y = 0;
+    texture->parent = NULL;
     
     return texture;
 }
@@ -97,7 +96,23 @@ bool TW_Texture_LoadImage( TW_Texture* self, char* path )
 // Render a TW_Texture object.
 void TW_Texture_Render( TW_Texture* self )
 {
-    SDL_Rect renderZone = { self->x, self->y, self->renderWidth, self->renderHeight };
+    // Render position
+    int x = 0;
+    int y = 0;
+    double angle = 0.0;
+
+    if( self->parent != NULL )
+    {
+        TW_Component* transformComponent = TW_Entity_GetComponent( self->parent->parent, TW_COMPONENT_TRANSFORM );
+        if ( transformComponent != NULL )
+        {
+            x = transformComponent->transform->position->x;
+            y = transformComponent->transform->position->y;
+            angle = transformComponent->transform->angle;
+        }
+    }
+
+    SDL_Rect renderZone = { x, y, self->renderWidth, self->renderHeight };
     renderZone.w = self->crop.w + (self->renderWidth - self->crop.w);
     renderZone.h = self->crop.h + (self->renderHeight - self->crop.h);
     SDL_RenderCopyEx(
@@ -105,7 +120,7 @@ void TW_Texture_Render( TW_Texture* self )
         self->texture,      // The texture
         &self->crop,        // Source SDL_Rect (NULL for entire Texture)
         &renderZone,        // Destination SDL_Rect (NULL for entire rendering target)
-        self->angle,        // Angle of the texture
+        angle,        // Angle of the texture
         NULL,               // Axis centre point (NULL if centre of texture)
         self->flip          // Flip the texture
     );
@@ -124,9 +139,6 @@ void TW_Texture_Free( TW_Texture* self )
     self->textureHeight = 0;
     self->renderWidth = 0;
     self->renderHeight = 0;
-    self->x = 0;
-    self->y = 0;
-    self->angle = 0.0;
     self->flip = 0;
     self->crop.x = 0;
     self->crop.y = 0;

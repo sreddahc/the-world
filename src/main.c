@@ -144,7 +144,6 @@ int main( int argc, char* args[] )
         TW_Texture_LoadImage( gBackground, "src/images/backgrounds/day.png" );
         TW_Entity* entityBackground = TW_Entity_Create();
         TW_Entity_AddComponent( entityBackground, TW_Component_Create( TW_COMPONENT_TEXTURE, gBackground ) );
-        TW_Entity_AddComponent( entityBackground, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 100, 100, 0.0, 1.0 ) ) );
         TW_Scene_AddEntity( sceneMain, entityBackground );
 
         // Title Entity
@@ -169,6 +168,8 @@ int main( int argc, char* args[] )
         TW_Entity_AddComponent( entityPlayer, TW_Component_Create( TW_COMPONENT_ANIMATION, gPlayer ) );
         TW_Scene_AddEntity( sceneMain, entityPlayer );
         
+// ---
+
         // Time
         // TW_Text gTimeText;
         // TW_Text_FastInit( &gTimeText, timeText );

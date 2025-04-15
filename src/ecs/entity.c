@@ -36,12 +36,7 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
 
 // --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
 
-/**
- * TW_Component_Render - Renders any entities with visual components
- * 
- * Args:
- * - TW_Entity*             - self          - The TW_Component to render
- */
+
 void TW_Entity_Render( TW_Entity* self )
 {
     for( int index = 0; index < self->size; index++ )
@@ -50,9 +45,10 @@ void TW_Entity_Render( TW_Entity* self )
     }
 }
 
+
 // Given an entity and component type search the entity for that component.
-// If found, return the index of that component, otherwise return `-1`.
-TW_Component* TW_Transform_GetComponent( TW_Entity* self, int type )
+// If found, return a pointer to that component, otherwise return `NULL`.
+TW_Component* TW_Entity_GetComponent( TW_Entity* self, int type )
 {
     for( int index = 0; index < self->size; index++ )
     {

@@ -27,6 +27,8 @@ TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int frameCount, int* 
         }
     }
 
+    animation->parent = NULL;
+
     return animation;
 }
 

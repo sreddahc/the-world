@@ -29,6 +29,7 @@ TW_Sprite* TW_Sprite_Create( char* path, int width, int height )
     }
     
     sprite->currentSprite = 0;
+    sprite->parent = NULL;
 
     return sprite;
 }

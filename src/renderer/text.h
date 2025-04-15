@@ -10,6 +10,9 @@
 
 // Type definitions
 
+typedef struct TW_Component TW_Component;
+
+
 /**
  * TW_Text - A wrapper object for rendering text to a TW_Texture object.
  * 
@@ -28,8 +31,8 @@ typedef struct TW_Text {
     SDL_Color fontColour;           // Colour of the font. Default = Black
     TTF_Font* fontObject;           // The TTF_Font object required to render the texture
     TW_Texture* texture;            // The TW_Texture. Rendered text is stored here
+    TW_Component* parent;           // Parent component if it exists, otherwise `NULL`
 } TW_Text;
-
 
 // Function definitions
 

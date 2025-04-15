@@ -8,6 +8,9 @@
 
 // Type definitions
 
+typedef struct TW_Component TW_Component;
+
+
 /**
  * TW_Colour - A Colour object
  * 
@@ -42,13 +45,11 @@ typedef struct TW_Texture {
     SDL_Texture* texture;       // SDL_Texture object, rendered image is stored here
     int textureWidth;           // Width of the texture
     int textureHeight;          // Height of the texture
-    int x;                      // X position of the texture
-    int y;                      // Y position of the texture
     int renderWidth;            // Width of the render
     int renderHeight;           // Height of the render
-    double angle;               // Angle of the texture to render
     SDL_RendererFlip flip;      // Flip the texture
     SDL_Rect crop;              // Crop image to SDL_Rect
+    TW_Component* parent;       // Parent component if it exists, otherwise `NULL`
 } TW_Texture;
 
 

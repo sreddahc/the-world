@@ -63,6 +63,8 @@ TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, TW_Colou
 
     TW_Text_Update( textObject );
 
+    textObject->parent = NULL;
+
     return textObject;
 }
 
