@@ -51,12 +51,10 @@ bool TW_Texture_LoadSurface( TW_Texture* self, SDL_Surface* surface )
 {
     bool success = true;
 
-    self->renderWidth = surface->w;
-    self->renderHeight = surface->h;
-    self->textureWidth = surface->w;
-    self->textureHeight = surface->h;
+    self->width = surface->w;
+    self->height = surface->h;
 
-    SDL_Rect renderZone = { 0, 0, self->textureWidth, self->textureHeight };
+    SDL_Rect renderZone = { 0, 0, self->width, self->height };
     TW_Texture_Crop( self, renderZone );
     
     self->texture = SDL_CreateTextureFromSurface( TW_GetRenderer(), surface );
@@ -94,33 +92,28 @@ bool TW_Texture_LoadImage( TW_Texture* self, char* path )
 
 
 // Render a TW_Texture object.
-void TW_Texture_Render( TW_Texture* self )
+void TW_Texture_Render( TW_Texture* self, TW_Transform* transform )
 {
     // Render position
     int x = 0;
     int y = 0;
     double angle = 0.0;
 
-    if( self->parent != NULL )
+    if( transform != NULL )
     {
-        TW_Component* transformComponent = TW_Entity_GetComponent( self->parent->parent, TW_COMPONENT_TRANSFORM );
-        if ( transformComponent != NULL )
-        {
-            x = transformComponent->transform->position->x;
-            y = transformComponent->transform->position->y;
-            angle = transformComponent->transform->angle;
-        }
+        x = transform->position->x;
+        y = transform->position->y;
+        angle = transform->angle;
     }
 
-    SDL_Rect renderZone = { x, y, self->renderWidth, self->renderHeight };
-    renderZone.w = self->crop.w + (self->renderWidth - self->crop.w);
-    renderZone.h = self->crop.h + (self->renderHeight - self->crop.h);
+    SDL_Rect renderZone = { x, y, self->crop.w, self->crop.h };
+
     SDL_RenderCopyEx(
         TW_GetRenderer(),   // The renderer
         self->texture,      // The texture
         &self->crop,        // Source SDL_Rect (NULL for entire Texture)
         &renderZone,        // Destination SDL_Rect (NULL for entire rendering target)
-        angle,        // Angle of the texture
+        angle,              // Angle of the texture
         NULL,               // Axis centre point (NULL if centre of texture)
         self->flip          // Flip the texture
     );
@@ -136,10 +129,8 @@ void TW_Texture_Free( TW_Texture* self )
         self->texture = NULL;
         self->parent = NULL;
     }
-    self->textureWidth = 0;
-    self->textureHeight = 0;
-    self->renderWidth = 0;
-    self->renderHeight = 0;
+    self->width = 0;
+    self->height = 0;
     self->flip = 0;
     self->crop.x = 0;
     self->crop.y = 0;

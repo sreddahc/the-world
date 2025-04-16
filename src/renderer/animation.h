@@ -54,7 +54,7 @@ TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int frameCount, int* 
  * Args:
  * - TW_Animation*      - The animation object to render
  */
-void TW_Animation_Render( TW_Animation* self );
+void TW_Animation_Render( TW_Animation* self, TW_Transform* transform );
 
 
 /**

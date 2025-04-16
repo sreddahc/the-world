@@ -34,10 +34,10 @@ TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int frameCount, int* 
 
 
 // Create an animation object from a sprite object
-void TW_Animation_Render( TW_Animation* self )
+void TW_Animation_Render( TW_Animation* self, TW_Transform* transform )
 {
     self->spriteSheet->currentSprite = self->animationFrames[ self->currentFrame ];
-    TW_Sprite_Render( self->spriteSheet );
+    TW_Sprite_Render( self->spriteSheet, transform );
     if( self->paused == false )
     {
         self->currentFrame = ( self->currentFrame + 1 ) % self->frameCount;

@@ -41,24 +41,24 @@ TW_Component* TW_Component_Create( int type, TW_Component_Value* value ){
 
 
 // If there is a visual aspect to the component... renders it
-void TW_Component_Render( TW_Component* self )
+void TW_Component_Render( TW_Component* self, TW_Transform* transform )
 {
     switch ( self->type )
     {
         case TW_COMPONENT_TEXTURE:
-            TW_Texture_Render( self->texture );
+            TW_Texture_Render( self->texture, transform );
             break;
 
         case TW_COMPONENT_TEXT:
-            TW_Text_Render( self->text );
+            TW_Text_Render( self->text, transform );
             break;
 
             case TW_COMPONENT_SPRITE:
-            TW_Sprite_Render( self->sprite );
+            TW_Sprite_Render( self->sprite, transform );
             break;
 
         case TW_COMPONENT_ANIMATION:
-            TW_Animation_Render( self->animation );
+            TW_Animation_Render( self->animation, transform );
             break;
 
         default:

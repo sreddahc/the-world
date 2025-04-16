@@ -39,9 +39,17 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
 
 void TW_Entity_Render( TW_Entity* self )
 {
+    
+    TW_Component* transformComponent = TW_Entity_GetComponent( self, TW_COMPONENT_TRANSFORM );
+    TW_Transform* transform = NULL;
+    if( transformComponent != NULL )
+    {
+        transform = transformComponent->transform;
+    }
+
     for( int index = 0; index < self->size; index++ )
     {
-        TW_Component_Render( self->components[ index ] );
+        TW_Component_Render( self->components[ index ], transform );
     }
 }
 

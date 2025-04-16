@@ -11,11 +11,11 @@ TW_Sprite* TW_Sprite_Create( char* path, int width, int height )
 
     sprite->texture = TW_Texture_CreateTexture();
     TW_Texture_LoadImage( sprite->texture, path );
-    sprite->texture->renderWidth = sprite->width;
-    sprite->texture->renderHeight = sprite->height;
+    // sprite->texture->width = sprite->width;
+    // sprite->texture->height = sprite->height;
 
-    int rows = sprite->texture->textureHeight / sprite->height;
-    int cols = sprite->texture->textureWidth / sprite->width;
+    int rows = sprite->texture->height / sprite->height;
+    int cols = sprite->texture->width / sprite->width;
     sprite->gridSize = rows * cols;
     
     SDL_Rect* grid = malloc( sprite->gridSize * sizeof( SDL_Rect ) );
@@ -55,9 +55,8 @@ void TW_Sprite_Free( TW_Sprite* self )
 }
 
 // Select a sprite from a TW_Sprite sprite sheet
-void TW_Sprite_Render( TW_Sprite* self )
+void TW_Sprite_Render( TW_Sprite* self, TW_Transform* transform )
 {
     TW_Texture_Crop( self->texture, self->grid[ self->currentSprite ] );
-    TW_Texture_Render( self->texture );
+    TW_Texture_Render( self->texture , transform );
 }
-

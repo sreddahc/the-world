@@ -82,7 +82,7 @@ TW_Component* TW_Component_Create( int type, TW_Component_Value* value );
  * Args:
  * - TW_Component*          - self          - The TW_Component to render
  */
-void TW_Component_Render( TW_Component* self );
+void TW_Component_Render( TW_Component* self, TW_Transform* transform );
 
 
 /**

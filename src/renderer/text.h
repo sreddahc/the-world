@@ -77,7 +77,7 @@ TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, TW_Colou
 /**
  * TW_Text_Render - Renders a text object to the renderer
  */
-void TW_Text_Render( TW_Text* self );
+void TW_Text_Render( TW_Text* self, TW_Transform* transform );
 
 
 /**

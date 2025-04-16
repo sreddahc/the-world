@@ -58,4 +58,4 @@ void TW_Sprite_Free( TW_Sprite* self );
  * - TW_Sprite*     - self          - The sprite sheet
  * - int            - sprite        - The frame from the sprite sheet to render
  */
-void TW_Sprite_Render( TW_Sprite* self );
+void TW_Sprite_Render( TW_Sprite* self, TW_Transform* transform );
