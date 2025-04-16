@@ -95,18 +95,27 @@ bool TW_Texture_LoadImage( TW_Texture* self, char* path )
 void TW_Texture_Render( TW_Texture* self, TW_Transform* transform )
 {
     // Render position
-    int x = 0;
-    int y = 0;
+    TW_Vector2* position = TW_Vector2_Create( 0, 0 );
     double angle = 0.0;
+    double scale = 1.0;
+    TW_Vector2* offset = TW_Vector2_Create( 0, 0 );
 
     if( transform != NULL )
     {
-        x = transform->position->x;
-        y = transform->position->y;
+        position->x = transform->position->x;
+        position->y = transform->position->y;
         angle = transform->angle;
+        scale = transform->scale;
+        offset->x = transform->centre->x;
+        offset->y = transform->centre->y;
     }
 
-    SDL_Rect renderZone = { x, y, self->crop.w, self->crop.h };
+    SDL_Rect renderZone = {
+        position->x - offset->x,
+        position->y - offset->y,
+        (int)((double)self->crop.w * scale),
+        (int)((double)self->crop.h * scale)
+    };
 
     SDL_RenderCopyEx(
         TW_GetRenderer(),   // The renderer
@@ -117,6 +126,9 @@ void TW_Texture_Render( TW_Texture* self, TW_Transform* transform )
         NULL,               // Axis centre point (NULL if centre of texture)
         self->flip          // Flip the texture
     );
+
+    TW_Vector2_Free( position );
+    TW_Vector2_Free( offset );
 }
 
 
