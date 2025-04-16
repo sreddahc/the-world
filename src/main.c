@@ -1,6 +1,3 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -210,10 +207,26 @@ int main( int argc, char* args[] )
                     if( mainTimer.paused )
                     {
                         TW_Timer_Resume( &mainTimer );
+                        for( int i = 0; i < sceneMain->size; i++ )
+                        {
+                            TW_Component* tempAnimation = TW_Entity_GetComponent( sceneMain->entities[ i ], TW_COMPONENT_ANIMATION );
+                            if( tempAnimation != NULL )
+                            {
+                                tempAnimation->animation->paused = false;
+                            }
+                        }
                     }
                     else
                     {
                         TW_Timer_Pause( &mainTimer );
+                        for( int i = 0; i < sceneMain->size; i++ )
+                        {
+                            TW_Component* tempAnimation = TW_Entity_GetComponent( sceneMain->entities[ i ], TW_COMPONENT_ANIMATION );
+                            if( tempAnimation != NULL )
+                            {
+                                tempAnimation->animation->paused = true;
+                            }
+                        }
                     }
                     break;
 
@@ -268,9 +281,7 @@ int main( int argc, char* args[] )
             }
         }
 
-
         // Free resources
-        // TW_Animation_Free( &gPlayer );
         TW_Vector2_Free( mousePosition );
         TW_Timer_Free( &fpsTimer );
         TW_Timer_Free( &mainTimer );
