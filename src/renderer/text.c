@@ -63,12 +63,14 @@ TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, TW_Colou
 
     TW_Text_Update( textObject );
 
+    textObject->parent = NULL;
+
     return textObject;
 }
 
-void TW_Text_Render( TW_Text* self )
+void TW_Text_Render( TW_Text* self, TW_Transform* transform )
 {
-    TW_Texture_Render( self->texture );
+    TW_Texture_Render( self->texture, transform );
 }
 
 

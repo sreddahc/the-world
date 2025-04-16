@@ -30,6 +30,15 @@ TW_Entity* TW_Entity_Create();
 
 
 /**
+ * TW_Entity_Free - Free the resources used by an entity
+ * 
+ * Args:
+ * - TW_Entity*         - self          - The entity to free
+ */
+void TW_Entity_Free( TW_Entity* self );
+
+
+/**
  * TW_Entity_AddComponent - Given an entity and component, adds a component to the entity.
  * 
  * Args:
@@ -39,16 +48,23 @@ TW_Entity* TW_Entity_Create();
 void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component );
 
 
-/**
- * TW_Entity_Free - Free the resources used by an entity
- * 
- * Args:
- * - TW_Entity*         - self          - The entity to free
- */
-void TW_Entity_Free( TW_Entity* self );
-
 // --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
 
-bool TW_Entity_ComponentExists( TW_Entity* self, int type );
+/**
+ * TW_Entity_GetComponent - Given an entity and component type search the entity for
+ * that component. If found, return a pointer to that component, otherwise return `NULL`.
+ * 
+ * Args:
+ * TW_Entity*           - self          - The entity to search
+ * int                  - type          - The TW_Component_Type to search for
+ */
+TW_Component* TW_Entity_GetComponent( TW_Entity* self, int type );
 
+
+/**
+ * TW_Component_Render - Renders any entities with visual components
+ * 
+ * Args:
+ * - TW_Entity*             - self          - The TW_Component to render
+ */
 void TW_Entity_Render( TW_Entity* self );

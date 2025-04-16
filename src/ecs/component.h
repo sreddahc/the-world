@@ -1,12 +1,16 @@
 #pragma once
 
-# include "../renderer/renderer.h"
-# include "../renderer/text.h"
-# include "../renderer/sprite.h"
-# include "../renderer/animation.h"
+#include "transform.h"
+#include "../renderer/renderer.h"
+#include "../renderer/text.h"
+#include "../renderer/sprite.h"
+#include "../renderer/animation.h"
 
 
 // Type definitions
+
+// Placeholder for TW_Entity
+typedef struct TW_Entity TW_Entity;
 
 /**
  * TW_Component_Type - An enumeration of all the types of components so that they may be
@@ -14,7 +18,7 @@
  */
 enum TW_Component_Type
 {
-    TW_COMPONENT_NODE,
+    TW_COMPONENT_TRANSFORM,
     TW_COMPONENT_TEXTURE,
     TW_COMPONENT_TEXT,
     TW_COMPONENT_SPRITE,
@@ -28,6 +32,7 @@ enum TW_Component_Type
  * object matching each TW_Component_Type.
  */
 typedef union TW_Component_Value {
+    TW_Transform* transform;
     TW_Texture* texture;
     TW_Text* text;
     TW_Sprite* sprite;
@@ -43,8 +48,16 @@ typedef union TW_Component_Value {
  * - TW_Component_Value*    - value         - The component
  */
 typedef struct TW_Component {
-    int type;
-    TW_Component_Value* value;
+    enum TW_Component_Type type;
+    TW_Entity* parent;
+    union {
+        TW_Transform* transform;
+        TW_Texture* texture;
+        TW_Text* text;
+        TW_Sprite* sprite;
+        TW_Animation* animation;
+    };
+    // TW_Component_Value* value;
 } TW_Component;
 
 
@@ -64,6 +77,28 @@ TW_Component* TW_Component_Create( int type, TW_Component_Value* value );
 
 
 /**
+ * TW_Component_Render - If there is a visual aspect to the component... renders it
+ * 
+ * Args:
+ * - TW_Component*          - self          - The TW_Component to render
+ */
+void TW_Component_Render( TW_Component* self, TW_Transform* transform );
+
+
+/**
+ * TW_Component_GetParent - Given a component, return a pointer to its parent entity
+ * object if it exists. If not, return `NULL`.
+ * 
+ * Args:
+ * - TW_Component*          - self          - The component to fetch the parent entity of
+ */
+TW_Entity* TW_Component_GetParent( TW_Component* self );
+
+
+/**
  * TW_Component_Free - Frees resources for a given TW_Component
+ * 
+ * Args:
+ * - TW_Component*          - self          - The TW_Component to free
  */
 void TW_Component_Free( TW_Component* self );

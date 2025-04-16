@@ -5,6 +5,9 @@
 
 // Type definitions
 
+typedef struct TW_Component TW_Component;
+
+
 /**
  * TW_Sprite - A sprite based off a sprite sheet
  * 
@@ -23,6 +26,7 @@ typedef struct TW_Sprite {
     SDL_Rect* grid;         // Texture grid based on the height and width of the sprite
     int gridSize;           // Number of grids/subdivisions of the parent texture
     int currentSprite;      // The sprite to display
+    TW_Component* parent    // Parent component if it exists, otherwise `NULL`
 } TW_Sprite;
 
 // Function definitions
@@ -54,4 +58,4 @@ void TW_Sprite_Free( TW_Sprite* self );
  * - TW_Sprite*     - self          - The sprite sheet
  * - int            - sprite        - The frame from the sprite sheet to render
  */
-void TW_Sprite_Render( TW_Sprite* self );
+void TW_Sprite_Render( TW_Sprite* self, TW_Transform* transform );

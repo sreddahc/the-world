@@ -1,6 +1,3 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -10,7 +7,7 @@
 #include "engine/timer.h"
 #include "engine/fpstimer.h"
 #include "ecs/scene.h"
-// #include "renderer/animation.h"
+#include "engine/maths.h"
 
 // Global variables
 // Screen dimensions
@@ -119,9 +116,7 @@ int main( int argc, char* args[] )
         bool quit = false;
 
         // Mouse
-        TW_Coord* mousePosition = malloc( sizeof( TW_Coord ) );
-        mousePosition->x = 0;
-        mousePosition->y = 0;
+        TW_Vector2* mousePosition = TW_Vector2_Create( 0, 0 );
         char mousePositionText[50] = "Mouse Position: X=0, Y=0";
 
         // Frame counter
@@ -152,46 +147,37 @@ int main( int argc, char* args[] )
         TW_Text* gTitle = TW_Text_Create( "PROBS A COOL GAME", NULL, 32, TW_Colour_Create( 0x80, 0x00, 0x80, 0xff ) );
         TW_Entity* entityTitle = TW_Entity_Create();
         TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_COMPONENT_TEXT, gTitle ) );
+        TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( SCREEN_WIDTH / 2, 30, 0.0, 1.0 ) ) );
+        TW_Vector2_Set(TW_Entity_GetComponent( entityTitle, TW_COMPONENT_TRANSFORM )->transform->centre, gTitle->texture->width / 2, gTitle->texture->height / 2 );
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
         // Mouse Position Entity
         TW_Text* gMouseText = TW_Text_Create( mousePositionText, NULL, 0, NULL );
         TW_Entity* entityMouseText = TW_Entity_Create();
         TW_Entity_AddComponent( entityMouseText, TW_Component_Create( TW_COMPONENT_TEXT, gMouseText ) );
+        TW_Entity_AddComponent( entityMouseText, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 5, 5, 0.0, 1.0 ) ) );
         TW_Scene_AddEntity( sceneMain, entityMouseText );
 
         // Player Entity
-        TW_Animation* gPlayer = TW_Animation_Create(
-            TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 ),
-            4,
-            (int[]){ 0, 1, 2, 3 }
-        );
+        TW_Animation* gPlayer = TW_Animation_Create( TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 ), 4, (int[]){ 0, 1, 2, 3 } );
         TW_Entity* entityPlayer = TW_Entity_Create();
         TW_Entity_AddComponent( entityPlayer, TW_Component_Create( TW_COMPONENT_ANIMATION, gPlayer ) );
+        TW_Entity_AddComponent( entityPlayer, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 200, 200, 0.0, 1.0 ) ) );
         TW_Scene_AddEntity( sceneMain, entityPlayer );
-        
+
         // Time
-        // TW_Text gTimeText;
-        // TW_Text_FastInit( &gTimeText, timeText );
-        // if( ! TW_Text_Render_Texture( &gTimeText, gRenderer ) )
-        // {
-        //     printf( "ERROR: Failed to render texture - Time Text\n" );
-        //     quit = true;
-        // }
+        TW_Text* gTimeText = TW_Text_Create( timeText, NULL, 0, NULL );
+        TW_Entity* entityTimeText = TW_Entity_Create();
+        TW_Entity_AddComponent( entityTimeText, TW_Component_Create( TW_COMPONENT_TEXT, gTimeText ) );
+        TW_Entity_AddComponent(entityTimeText, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 5, 25, 0.0, 1.0 ) ) );
+        TW_Scene_AddEntity( sceneMain, entityTimeText );
 
         // FPS
-        // TW_Text gFPSText;
-        // TW_Text_FastInit( &gFPSText, fpsText );
-        // if( ! TW_Text_Render_Texture( &gFPSText, gRenderer ) )
-        // {
-        //     printf( "ERROR: Failed to render texture - FPS Text\n" );
-        //     quit = true;
-        // }
-
-        // Controls
-        // SDL_RendererFlip flipType = SDL_FLIP_NONE;
-        // double degrees = 0;
-        // double angle_increment = 30;
+        TW_Text* gFPSText = TW_Text_Create( fpsText, NULL, 0, NULL );
+        TW_Entity* entityFPSText = TW_Entity_Create();
+        TW_Entity_AddComponent( entityFPSText, TW_Component_Create( TW_COMPONENT_TEXT, gFPSText ) );
+        TW_Entity_AddComponent(entityFPSText, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 5, 45, 0.0, 1.0 ) ) );
+        TW_Scene_AddEntity( sceneMain, entityFPSText );
 
         while( !quit )
         {
@@ -211,44 +197,6 @@ int main( int argc, char* args[] )
                         quit = true;
                         break;
                     
-                    // No flip
-                    // case SDLK_s:
-                    //     flipType = SDL_FLIP_NONE;
-                    //     break;
-
-                    // Flip horizontally
-                    // case SDLK_a:
-                    //     flipType = SDL_FLIP_HORIZONTAL;
-                    //     break;
-                    
-                    // Flip vertically
-                    // case SDLK_w:
-                    //     flipType = SDL_FLIP_VERTICAL;
-                    //     break;
-
-                    // Rotate clockwise
-                    // case SDLK_RIGHT:
-                    //     degrees += angle_increment;
-                    //     if( degrees >= 360 )
-                    //     {
-                    //         degrees -= 360;
-                    //     }
-                    //     break;
-                    
-                    // Rotate anti-clockwise
-                    // case SDLK_LEFT:
-                    //     degrees -= angle_increment;
-                    //     if( degrees < 0 )
-                    //     {
-                    //         degrees += 360;
-                    //     }
-                    //     break;
-                    
-                    // Reset angle
-                    // case SDLK_DOWN:
-                    //     degrees = 0;
-                    //     break;
-                    
                     // Reset clock
                     case SDLK_RETURN:
                     TW_Timer_Reset( &mainTimer );
@@ -259,10 +207,26 @@ int main( int argc, char* args[] )
                     if( mainTimer.paused )
                     {
                         TW_Timer_Resume( &mainTimer );
+                        for( int i = 0; i < sceneMain->size; i++ )
+                        {
+                            TW_Component* tempAnimation = TW_Entity_GetComponent( sceneMain->entities[ i ], TW_COMPONENT_ANIMATION );
+                            if( tempAnimation != NULL )
+                            {
+                                tempAnimation->animation->paused = false;
+                            }
+                        }
                     }
                     else
                     {
                         TW_Timer_Pause( &mainTimer );
+                        for( int i = 0; i < sceneMain->size; i++ )
+                        {
+                            TW_Component* tempAnimation = TW_Entity_GetComponent( sceneMain->entities[ i ], TW_COMPONENT_ANIMATION );
+                            if( tempAnimation != NULL )
+                            {
+                                tempAnimation->animation->paused = true;
+                            }
+                        }
                     }
                     break;
 
@@ -290,35 +254,17 @@ int main( int argc, char* args[] )
 
             // Update time
             snprintf( timeText, 50, "Time since reset: %dms", TW_Timer_GetTime( &mainTimer ) );
-            // if( ! TW_Text_Render_Texture( &gTimeText, gRenderer ) )
-            // {
-            //     printf( "ERROR: Failed to render texture - Time Text\n" );
-            //     quit = true;
-            // }
+            TW_Text_Update( gTimeText );
 
             // Update FPS
             snprintf(fpsText, 50, "FPS: %.2f", TW_FPSTimer_GetFPS( &fpsTimer ) );
-            // if( ! TW_Text_Render_Texture( &gFPSText, gRenderer ) )
-            // {
-            //     printf( "ERROR: Failed to render texture - FPS Text\n" );
-            //     quit = true;
-            // }
+            TW_Text_Update( gFPSText );
 
             // Update the surface
             SDL_RenderClear( TW_GetRenderer() );
 
             // For each Entity in a Scene
             TW_Scene_Render( sceneMain );
-
-            // // Render time text
-            // TW_Texture_Render( &gTimeText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gTimeText.renderedText.width) / 2), 75, NULL, 0.0, NULL, SDL_FLIP_NONE );
-
-            // // Render FPS text
-            // TW_Texture_Render( &gFPSText.renderedText.texture, gRenderer, ((SCREEN_WIDTH - gFPSText.renderedText.width) / 2), 100, NULL, 0.0, NULL, SDL_FLIP_NONE );
-
-            // // Render sprite
-            // TW_Texture_Render( &gPlayer.texture , gRenderer, 20, 20, &gPlayer.grid[ gPlayer.currentFrame ], degrees, NULL, flipType );
-            // TW_Animation_GetNextFrame( &gPlayer );
 
             // // Update screen
             SDL_RenderPresent( TW_GetRenderer() );
@@ -335,19 +281,11 @@ int main( int argc, char* args[] )
             }
         }
 
-
         // Free resources
-        // TW_Animation_Free( &gPlayer );
-        free( mousePosition );
+        TW_Vector2_Free( mousePosition );
         TW_Timer_Free( &fpsTimer );
         TW_Timer_Free( &mainTimer );
-        // TW_Texture_Free( &gTitle );
-        TW_Text_Free( gMouseText );
-        // TW_Texture_Free( &gTimeText );
-        // TW_Texture_Free( &gFPSText );
-        TW_Animation_Free( gPlayer );
-        TW_Text_Free( gTitle );
-        TW_Texture_Free( gBackground );
+        TW_Scene_Free( sceneMain );
     }
 
     // Free resources and close SDL

@@ -5,6 +5,9 @@
 
 // Type definitions
 
+typedef struct TW_Component TW_Component;
+
+
 /**
  * TW_Animation - An animated texture.
  * 
@@ -25,6 +28,7 @@ typedef struct TW_Animation {
     int animationSpeed;         // Speed of the animation
     int timeLastUpdated;        // Time last updates (to determine next frame)
     bool paused;                // true = paused, false = unpaused
+    TW_Component* parent        // Parent component if it exists, otherwise `NULL`
 } TW_Animation;
 
 
@@ -50,7 +54,7 @@ TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int frameCount, int* 
  * Args:
  * - TW_Animation*      - The animation object to render
  */
-void TW_Animation_Render( TW_Animation* self );
+void TW_Animation_Render( TW_Animation* self, TW_Transform* transform );
 
 
 /**

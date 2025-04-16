@@ -8,6 +8,9 @@
 
 // Type definitions
 
+typedef struct TW_Component TW_Component;
+typedef struct TW_Transform TW_Transform;
+
 /**
  * TW_Colour - A Colour object
  * 
@@ -28,27 +31,17 @@ typedef struct TW_Colour{
  * 
  * Elements:
  * - SDL_Texture*   - texture           - SDL_Texture object, rendered image is stored here
- * - int            - textureWidth      - Width of the texture
- * - int            - textureHeight     - Height of the texture
- * - int            - x                 - x position where the texture will be rendered
- * - int            - y                 - y position where the texture will be rendered
- * - int            - renderWidth       - Width of the the render
- * - int            - renderHeight      - Height of the the render
- * - double         - angle             - Rotation of the texture
+ * - int            - width             - Width of the texture
+ * - int            - height            - Height of the texture
  * - SDL_RenderFlip - flip              - Flip the texture
  * - SDL_Rect*      - crop              - portion of the texture to render
  */
 typedef struct TW_Texture {
     SDL_Texture* texture;       // SDL_Texture object, rendered image is stored here
-    int textureWidth;           // Width of the texture
-    int textureHeight;          // Height of the texture
-    int x;                      // X position of the texture
-    int y;                      // Y position of the texture
-    int renderWidth;            // Width of the render
-    int renderHeight;           // Height of the render
-    double angle;               // Angle of the texture to render
-    SDL_RendererFlip flip;      // Flip the texture
+    int width;                  // Width of the texture
+    int height;                 // Height of the texture
     SDL_Rect crop;              // Crop image to SDL_Rect
+    TW_Component* parent;       // Parent component if it exists, otherwise `NULL`
 } TW_Texture;
 
 
@@ -130,7 +123,7 @@ bool TW_Texture_LoadImage( TW_Texture* self, char* path );
  * Args:
  * - TW_Texture*        - self          - The TW_Texture object to render
  */
-void TW_Texture_Render( TW_Texture* self );
+void TW_Texture_Render( TW_Texture* self, TW_Transform* transform );
 
 /**
  * TW_Texture_Free - Free resources used by a TW_Texture object.

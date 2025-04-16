@@ -1,4 +1,5 @@
 #include "texture.h"
+#include "../ecs/entity.h"
 
 
 // Create a colour object given a red, green and blue value
@@ -38,10 +39,7 @@ void TW_Colour_Free( TW_Colour* self )
 TW_Texture* TW_Texture_CreateTexture()
 {
     TW_Texture* texture = malloc( sizeof( TW_Texture ) );
-    texture->angle = 0.0;
-    texture->flip = SDL_FLIP_NONE;
-    texture->x = 0;
-    texture->y = 0;
+    texture->parent = NULL;
     
     return texture;
 }
@@ -52,12 +50,10 @@ bool TW_Texture_LoadSurface( TW_Texture* self, SDL_Surface* surface )
 {
     bool success = true;
 
-    self->renderWidth = surface->w;
-    self->renderHeight = surface->h;
-    self->textureWidth = surface->w;
-    self->textureHeight = surface->h;
+    self->width = surface->w;
+    self->height = surface->h;
 
-    SDL_Rect renderZone = { 0, 0, self->textureWidth, self->textureHeight };
+    SDL_Rect renderZone = { 0, 0, self->width, self->height };
     TW_Texture_Crop( self, renderZone );
     
     self->texture = SDL_CreateTextureFromSurface( TW_GetRenderer(), surface );
@@ -95,20 +91,45 @@ bool TW_Texture_LoadImage( TW_Texture* self, char* path )
 
 
 // Render a TW_Texture object.
-void TW_Texture_Render( TW_Texture* self )
+void TW_Texture_Render( TW_Texture* self, TW_Transform* transform )
 {
-    SDL_Rect renderZone = { self->x, self->y, self->renderWidth, self->renderHeight };
-    renderZone.w = self->crop.w + (self->renderWidth - self->crop.w);
-    renderZone.h = self->crop.h + (self->renderHeight - self->crop.h);
+    // Render position
+    TW_Vector2* position = TW_Vector2_Create( 0, 0 );
+    double angle = 0.0;
+    double scale = 1.0;
+    TW_Vector2* offset = TW_Vector2_Create( 0, 0 );
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
+
+    if( transform != NULL )
+    {
+        position->x = transform->position->x;
+        position->y = transform->position->y;
+        angle = transform->angle;
+        scale = transform->scale;
+        flip = transform->flip;
+        offset->x = transform->centre->x;
+        offset->y = transform->centre->y;
+    }
+
+    SDL_Rect renderZone = {
+        position->x - offset->x,
+        position->y - offset->y,
+        (int)((double)self->crop.w * scale),
+        (int)((double)self->crop.h * scale)
+    };
+
     SDL_RenderCopyEx(
         TW_GetRenderer(),   // The renderer
         self->texture,      // The texture
         &self->crop,        // Source SDL_Rect (NULL for entire Texture)
         &renderZone,        // Destination SDL_Rect (NULL for entire rendering target)
-        self->angle,        // Angle of the texture
+        angle,              // Angle of the texture
         NULL,               // Axis centre point (NULL if centre of texture)
-        self->flip          // Flip the texture
+        flip          // Flip the texture
     );
+
+    TW_Vector2_Free( position );
+    TW_Vector2_Free( offset );
 }
 
 
@@ -119,15 +140,10 @@ void TW_Texture_Free( TW_Texture* self )
     {
         SDL_DestroyTexture(self->texture);
         self->texture = NULL;
+        self->parent = NULL;
     }
-    self->textureWidth = 0;
-    self->textureHeight = 0;
-    self->renderWidth = 0;
-    self->renderHeight = 0;
-    self->x = 0;
-    self->y = 0;
-    self->angle = 0.0;
-    self->flip = 0;
+    self->width = 0;
+    self->height = 0;
     self->crop.x = 0;
     self->crop.y = 0;
     self->crop.w = 0;
