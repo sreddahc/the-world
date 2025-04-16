@@ -150,6 +150,7 @@ int main( int argc, char* args[] )
         TW_Text* gTitle = TW_Text_Create( "PROBS A COOL GAME", NULL, 32, TW_Colour_Create( 0x80, 0x00, 0x80, 0xff ) );
         TW_Entity* entityTitle = TW_Entity_Create();
         TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_COMPONENT_TEXT, gTitle ) );
+        TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 200, 200, 0.0, 1.0 ) ) );
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
         // Mouse Position Entity

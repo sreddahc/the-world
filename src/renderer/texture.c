@@ -134,6 +134,7 @@ void TW_Texture_Free( TW_Texture* self )
     {
         SDL_DestroyTexture(self->texture);
         self->texture = NULL;
+        self->parent = NULL;
     }
     self->textureWidth = 0;
     self->textureHeight = 0;

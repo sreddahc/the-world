@@ -70,6 +70,11 @@ TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, TW_Colou
 
 void TW_Text_Render( TW_Text* self )
 {
+    if( self->parent != NULL )
+    {
+        // Pass our own parent to the child... I don't like this method... but it works.
+        self->texture->parent = self->parent;
+    }
     TW_Texture_Render( self->texture );
 }
 
