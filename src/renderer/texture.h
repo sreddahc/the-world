@@ -38,9 +38,8 @@ typedef struct TW_Colour{
  */
 typedef struct TW_Texture {
     SDL_Texture* texture;       // SDL_Texture object, rendered image is stored here
-    int width;           // Width of the texture
-    int height;          // Height of the texture
-    SDL_RendererFlip flip;      // Flip the texture
+    int width;                  // Width of the texture
+    int height;                 // Height of the texture
     SDL_Rect crop;              // Crop image to SDL_Rect
     TW_Component* parent;       // Parent component if it exists, otherwise `NULL`
 } TW_Texture;

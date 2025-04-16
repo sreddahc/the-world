@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SDL2/SDL.h>
 #include "../engine/maths.h"
 
 
@@ -22,6 +23,7 @@ typedef struct TW_Transform {
     TW_Vector2* centre;
     double angle;
     double scale;
+    SDL_RendererFlip flip;
     TW_Component* parent                // Parent component if it exists, otherwise `NULL`
 } TW_Transform;
 

@@ -39,7 +39,6 @@ void TW_Colour_Free( TW_Colour* self )
 TW_Texture* TW_Texture_CreateTexture()
 {
     TW_Texture* texture = malloc( sizeof( TW_Texture ) );
-    texture->flip = SDL_FLIP_NONE;
     texture->parent = NULL;
     
     return texture;
@@ -99,6 +98,7 @@ void TW_Texture_Render( TW_Texture* self, TW_Transform* transform )
     double angle = 0.0;
     double scale = 1.0;
     TW_Vector2* offset = TW_Vector2_Create( 0, 0 );
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
 
     if( transform != NULL )
     {
@@ -106,6 +106,7 @@ void TW_Texture_Render( TW_Texture* self, TW_Transform* transform )
         position->y = transform->position->y;
         angle = transform->angle;
         scale = transform->scale;
+        flip = transform->flip;
         offset->x = transform->centre->x;
         offset->y = transform->centre->y;
     }
@@ -124,7 +125,7 @@ void TW_Texture_Render( TW_Texture* self, TW_Transform* transform )
         &renderZone,        // Destination SDL_Rect (NULL for entire rendering target)
         angle,              // Angle of the texture
         NULL,               // Axis centre point (NULL if centre of texture)
-        self->flip          // Flip the texture
+        flip          // Flip the texture
     );
 
     TW_Vector2_Free( position );
@@ -143,7 +144,6 @@ void TW_Texture_Free( TW_Texture* self )
     }
     self->width = 0;
     self->height = 0;
-    self->flip = 0;
     self->crop.x = 0;
     self->crop.y = 0;
     self->crop.w = 0;

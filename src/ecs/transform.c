@@ -9,6 +9,7 @@ TW_Transform* TW_Transform_Create( int x, int y, double angle, double scale )
     transform->centre = TW_Vector2_Create( 0, 0 );
     transform->angle = angle;
     transform->scale = scale;
+    transform->flip = SDL_FLIP_NONE;
     transform->parent = NULL;
 
     return transform;
