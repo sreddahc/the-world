@@ -8,6 +8,7 @@
 #include "engine/fpstimer.h"
 #include "ecs/scene.h"
 #include "engine/maths.h"
+#include "engine/gametimer.h"
 
 // Global variables
 // Screen dimensions
@@ -82,6 +83,8 @@ bool init()
                     printf( "SDL_ttf could not initialise! SDL_ttf Error: %s\n", TTF_GetError() );
                     success = false;
                 }
+
+                TW_GameTimer_Create();
             }
         }
     }
@@ -114,6 +117,12 @@ int main( int argc, char* args[] )
     {
         // Main loop flag
         bool quit = false;
+
+        // Delta Time
+        Uint64 now = SDL_GetPerformanceCounter();
+        Uint64 previous = SDL_GetPerformanceCounter();
+        float delta_time = 0.0;
+        char deltaTimeText[50] = "Delta Time: 0.00000 ms";
 
         // Mouse
         TW_Vector2* mousePosition = TW_Vector2_Create( 0, 0 );
@@ -178,6 +187,13 @@ int main( int argc, char* args[] )
         TW_Entity_AddComponent( entityFPSText, TW_Component_Create( TW_COMPONENT_TEXT, gFPSText ) );
         TW_Entity_AddComponent(entityFPSText, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 5, 45, 0.0, 1.0 ) ) );
         TW_Scene_AddEntity( sceneMain, entityFPSText );
+
+        // Delta Time
+        TW_Text* gDeltaTimeText = TW_Text_Create( deltaTimeText, NULL, 0, NULL );
+        TW_Entity* entityDeltaTimeText = TW_Entity_Create();
+        TW_Entity_AddComponent( entityDeltaTimeText, TW_Component_Create( TW_COMPONENT_TEXT, gDeltaTimeText ) );
+        TW_Entity_AddComponent(entityDeltaTimeText, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 5, 65, 0.0, 1.0 ) ) );
+        TW_Scene_AddEntity( sceneMain, entityDeltaTimeText );
 
         while( !quit )
         {
@@ -253,15 +269,19 @@ int main( int argc, char* args[] )
             }
 
             // Update time
-            snprintf( timeText, 50, "Time since reset: %dms", TW_Timer_GetTime( &mainTimer ) );
+            snprintf( timeText, 50, "Time since reset: %d ms", TW_Timer_GetTime( &mainTimer ) );
             TW_Text_Update( gTimeText );
 
             // Update FPS
-            snprintf(fpsText, 50, "FPS: %.2f", TW_FPSTimer_GetFPS( &fpsTimer ) );
+            snprintf( fpsText, 50, "FPS: %.2f", TW_FPSTimer_GetFPS( &fpsTimer ) );
             TW_Text_Update( gFPSText );
 
             // Update the surface
             SDL_RenderClear( TW_GetRenderer() );
+            TW_GameTimer_Update();
+
+            snprintf( deltaTimeText, 50, "Delta Time: %.5f ms", TW_GameTimer_GetTimeDelta() );
+            TW_Text_Update( gDeltaTimeText );
 
             // For each Entity in a Scene
             TW_Scene_Render( sceneMain );
@@ -286,6 +306,7 @@ int main( int argc, char* args[] )
         TW_Timer_Free( &fpsTimer );
         TW_Timer_Free( &mainTimer );
         TW_Scene_Free( sceneMain );
+        TW_GameTimer_Free();
     }
 
     // Free resources and close SDL
