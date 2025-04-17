@@ -4,6 +4,7 @@
 static TW_GameTimer* gameTimer = NULL;
 
 
+// Create a game timer to be used globally by all objects.
 void TW_GameTimer_Create()
 {
     gameTimer = malloc( sizeof( TW_GameTimer ) );
@@ -13,6 +14,7 @@ void TW_GameTimer_Create()
 }
 
 
+// Update the game timer. This should be called once every cycle of the main loop.
 void TW_GameTimer_Update()
 {
     gameTimer->now = SDL_GetPerformanceCounter();
@@ -25,12 +27,14 @@ void TW_GameTimer_Update()
 }
 
 
+// Get the current time delta.
 float TW_GameTimer_GetTimeDelta()
 {
     return gameTimer->delta_time;
 }
 
 
+// Free resources used by the game timer.
 void TW_GameTimer_Free()
 {
     gameTimer->previous = 0;
