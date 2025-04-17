@@ -1,5 +1,5 @@
 #include "animation.h"
-
+#include "../engine/gametimer.h"
 
 // Create an animation object from a sprite object
 TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int frameCount, int* animationFrames )
@@ -10,7 +10,8 @@ TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int frameCount, int* 
     animation->frameCount = frameCount;
     animation->animationFrames = animationFrames;
     animation->currentFrame = 0;
-    animation->animationSpeed = 10;
+    animation->animationSpeed = 100;
+    animation->timeSinceLastFrame = 0.0;
     animation->paused = false;
 
     // Checks
@@ -40,7 +41,12 @@ void TW_Animation_Render( TW_Animation* self, TW_Transform* transform )
     TW_Sprite_Render( self->spriteSheet, transform );
     if( self->paused == false )
     {
-        self->currentFrame = ( self->currentFrame + 1 ) % self->frameCount;
+        self->timeSinceLastFrame = self->timeSinceLastFrame + TW_GameTimer_GetTimeDelta();
+        if( self->timeSinceLastFrame >= (float)self->animationSpeed / MILLISECONDS_IN_A_SEC )
+        {
+            self->timeSinceLastFrame = self->timeSinceLastFrame - (float)self->animationSpeed / MILLISECONDS_IN_A_SEC;
+            self->currentFrame = ( self->currentFrame + 1 ) % self->frameCount;
+        }
     }
 }
 

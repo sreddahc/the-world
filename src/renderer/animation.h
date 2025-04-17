@@ -5,6 +5,9 @@
 
 // Type definitions
 
+#define MILLISECONDS_IN_A_SEC 1000.f
+
+
 typedef struct TW_Component TW_Component;
 
 
@@ -12,13 +15,13 @@ typedef struct TW_Component TW_Component;
  * TW_Animation - An animated texture.
  * 
  * Elements:
- * - TW_Sprite*     - sprites           - A sprite sheet with all frames of the animation
- * - int            - frameCount        - Number of frames in the animation
- * - int*           - animationFrames   - The frames which form the animation
- * - int            - currentFrame      - Current frame of the animation
- * - int            - animationSpeed    - Animation speed in milliseconds. Default = 100
- * - int            - timeLastUpdated   - Used to check when to update animation frames
- * - bool           - paused            - Pause animation? true = yes, false = no
+ * - TW_Sprite*     - sprites               - A sprite sheet with all frames of the animation
+ * - int            - frameCount            - Number of frames in the animation
+ * - int*           - animationFrames       - The frames which form the animation
+ * - int            - currentFrame          - Current frame of the animation
+ * - int            - animationSpeed        - Animation speed in milliseconds. Default = 100
+ * - float          - timeSinceLastUpdate   - Time since frame was last updated
+ * - bool           - paused                - Pause animation? true = yes, false = no
  */
 typedef struct TW_Animation {
     TW_Sprite* spriteSheet;     // The sprite object with all the texture information
@@ -26,7 +29,7 @@ typedef struct TW_Animation {
     int* animationFrames;       // Sprite frames that form part of the animation
     int currentFrame;           // The current frame of the animation
     int animationSpeed;         // Speed of the animation
-    int timeLastUpdated;        // Time last updates (to determine next frame)
+    float timeSinceLastFrame;   // Time since frame was last updated
     bool paused;                // true = paused, false = unpaused
     TW_Component* parent        // Parent component if it exists, otherwise `NULL`
 } TW_Animation;
