@@ -4,13 +4,19 @@
 
 // Type definitions
 
+#define MILLISECONDS_IN_A_SEC 1000.f
 #define TIME_DELTA_CAP 10000
+#define FPS_FRAME_CAP 200000
 
 
 typedef struct TW_GameTimer {
     float delta_time;
     Uint64 now;
     Uint64 previous;
+    Uint64 ms;
+    Uint64 frame;
+    int frameCap;
+    int ticksPerFrame;
 } TW_GameTimer;
 
 // Function definitions
@@ -29,9 +35,38 @@ void TW_GameTimer_Update();
 
 
 /**
- * TW_GameTimer_GetTimeDelta - Get the current time delta.
+ * TW_GameTimer_GetTimeDelta - Get the current time delta between now and the last time
+ *                             the game timer was updated.
+ * 
+ * Returns:
+ * - float          - Time delta
  */
 float TW_GameTimer_GetTimeDelta();
+
+
+/**
+ * TW_GameTimer_GetFPS - Get current Frames Per Second (FPS) as a float.
+ * 
+ * Returns:
+ * - float          - Current FPS
+ */
+float TW_GameTimer_GetFPS();
+
+
+/**
+ * TW_GameTimer_SetFrameLimit - Given a Frame Per Second limit, limit the frame rate.
+ * 
+ * Args:
+ * - int            - fps           - The FPS to be enforced. `0` = No limit.
+ */
+void TW_GameTimer_SetFrameLimit( int fps );
+
+
+/**
+ * TW_GameTimer_LimitFrameRate - If there is a frame cap set, delay the next frame to 
+ *                               limit the frame rate.
+ */
+void TW_GameTimer_LimitFrameRate();
 
 
 /**

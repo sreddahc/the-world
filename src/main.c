@@ -5,7 +5,6 @@
 #include "renderer/text.h"
 #include "renderer/animation.h"
 #include "engine/timer.h"
-#include "engine/fpstimer.h"
 #include "ecs/scene.h"
 #include "engine/maths.h"
 #include "engine/gametimer.h"
@@ -15,7 +14,6 @@
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 768;
 const int SCREEN_FPS = 60;
-const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
 
 // Key press surface constants
 enum KeyPressSurfaces
@@ -84,7 +82,9 @@ bool init()
                     success = false;
                 }
 
+                // Initialise the game timer
                 TW_GameTimer_Create();
+                TW_GameTimer_SetFrameLimit( SCREEN_FPS );
             }
         }
     }
@@ -118,29 +118,8 @@ int main( int argc, char* args[] )
         // Main loop flag
         bool quit = false;
 
-        // Delta Time
-        Uint64 now = SDL_GetPerformanceCounter();
-        Uint64 previous = SDL_GetPerformanceCounter();
-        float delta_time = 0.0;
-        char deltaTimeText[50] = "Delta Time: 0.00000 ms";
-
-        // Mouse
-        TW_Vector2* mousePosition = TW_Vector2_Create( 0, 0 );
-        char mousePositionText[50] = "Mouse Position: X=0, Y=0";
-
-        // Frame counter
-        TW_FPSTimer fpsTimer;
-        TW_FPSTimer_Init( &fpsTimer );
-        int countedFrames = 0;
-        char fpsText[50] = "FPS: 0.00";
-
         // Event handler
         SDL_Event e;
-
-        // Time
-        TW_Timer mainTimer;
-        TW_Timer_Init( &mainTimer, false );
-        char timeText[50] = "Time since reset: 0ms";
         
         // Main scene
         TW_Scene* sceneMain = TW_Scene_Create();
@@ -161,6 +140,8 @@ int main( int argc, char* args[] )
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
         // Mouse Position Entity
+        TW_Vector2* mousePosition = TW_Vector2_Create( 0, 0 );
+        char mousePositionText[50] = "Mouse Position: X=0, Y=0";
         TW_Text* gMouseText = TW_Text_Create( mousePositionText, NULL, 0, NULL );
         TW_Entity* entityMouseText = TW_Entity_Create();
         TW_Entity_AddComponent( entityMouseText, TW_Component_Create( TW_COMPONENT_TEXT, gMouseText ) );
@@ -175,6 +156,9 @@ int main( int argc, char* args[] )
         TW_Scene_AddEntity( sceneMain, entityPlayer );
 
         // Time
+        TW_Timer mainTimer;
+        TW_Timer_Init( &mainTimer, false );
+        char timeText[50] = "Time since reset: 0ms";
         TW_Text* gTimeText = TW_Text_Create( timeText, NULL, 0, NULL );
         TW_Entity* entityTimeText = TW_Entity_Create();
         TW_Entity_AddComponent( entityTimeText, TW_Component_Create( TW_COMPONENT_TEXT, gTimeText ) );
@@ -182,6 +166,7 @@ int main( int argc, char* args[] )
         TW_Scene_AddEntity( sceneMain, entityTimeText );
 
         // FPS
+        char fpsText[50] = "FPS: 0.00";
         TW_Text* gFPSText = TW_Text_Create( fpsText, NULL, 0, NULL );
         TW_Entity* entityFPSText = TW_Entity_Create();
         TW_Entity_AddComponent( entityFPSText, TW_Component_Create( TW_COMPONENT_TEXT, gFPSText ) );
@@ -189,6 +174,7 @@ int main( int argc, char* args[] )
         TW_Scene_AddEntity( sceneMain, entityFPSText );
 
         // Delta Time
+        char deltaTimeText[50] = "Delta Time: 0.00000 ms";
         TW_Text* gDeltaTimeText = TW_Text_Create( deltaTimeText, NULL, 0, NULL );
         TW_Entity* entityDeltaTimeText = TW_Entity_Create();
         TW_Entity_AddComponent( entityDeltaTimeText, TW_Component_Create( TW_COMPONENT_TEXT, gDeltaTimeText ) );
@@ -273,7 +259,7 @@ int main( int argc, char* args[] )
             TW_Text_Update( gTimeText );
 
             // Update FPS
-            snprintf( fpsText, 50, "FPS: %.2f", TW_FPSTimer_GetFPS( &fpsTimer ) );
+            snprintf( fpsText, 50, "FPS: %.2f ", TW_GameTimer_GetFPS() );
             TW_Text_Update( gFPSText );
 
             // Update the surface
@@ -288,22 +274,11 @@ int main( int argc, char* args[] )
 
             // // Update screen
             SDL_RenderPresent( TW_GetRenderer() );
-
-            // Update frames counter
-            TW_FPSTimer_Update( &fpsTimer );
-
-            // Cap framerate at 60fps
-            int frameTicks = TW_FPSTimer_GetFPS( &fpsTimer );
-
-            if( frameTicks < SCREEN_TICKS_PER_FRAME )
-            {
-                SDL_Delay( SCREEN_TICKS_PER_FRAME - frameTicks );
-            }
+            TW_GameTimer_LimitFrameRate();
         }
 
         // Free resources
         TW_Vector2_Free( mousePosition );
-        TW_Timer_Free( &fpsTimer );
         TW_Timer_Free( &mainTimer );
         TW_Scene_Free( sceneMain );
         TW_GameTimer_Free();
