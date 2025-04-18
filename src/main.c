@@ -107,13 +107,6 @@ void closeAll()
 }
 
 
-void test_printf();
-void test_printf()
-{
-    printf("this might work\n");
-}
-
-
 int main( int argc, char* args[] )
 {
     // Start up SDL and create window
@@ -127,9 +120,6 @@ int main( int argc, char* args[] )
 
         // Event handler
         SDL_Event e;
-        
-        TW_Think* thingy = TW_Think_Create( test_printf );
-        TW_Think_Run( thingy );
 
         // Main scene
         TW_Scene* sceneMain = TW_Scene_Create();
@@ -278,6 +268,8 @@ int main( int argc, char* args[] )
 
             snprintf( deltaTimeText, 50, "Delta Time: %.5f ms", TW_GameTimer_GetTimeDelta() );
             TW_Text_Update( gDeltaTimeText );
+
+            TW_Scene_Run( sceneMain );
 
             // For each Entity in a Scene
             TW_Scene_Render( sceneMain );

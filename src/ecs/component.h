@@ -35,6 +35,7 @@ enum TW_ComponentType
  */
 typedef union TW_ComponentValue {
     TW_Transform* transform;
+    TW_Think* think;
     TW_Texture* texture;
     TW_Text* text;
     TW_Sprite* sprite;
@@ -54,6 +55,7 @@ typedef struct TW_Component {
     TW_Entity* parent;
     union {
         TW_Transform* transform;
+        TW_Think* think;
         TW_Texture* texture;
         TW_Text* text;
         TW_Sprite* sprite;
@@ -85,6 +87,15 @@ TW_Component* TW_Component_Create( int type, TW_ComponentValue* value );
  * - TW_Component*          - self          - The TW_Component to render
  */
 void TW_Component_Render( TW_Component* self, TW_Transform* transform );
+
+
+/**
+ * TW_Component_Run - Run logic components
+ * 
+ * Args:
+ * - TW_Component*          - self          - The TW_Component to run
+ */
+void TW_Component_Run( TW_Component* self );
 
 
 /**

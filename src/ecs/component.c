@@ -11,6 +11,11 @@ TW_Component* TW_Component_Create( int type, TW_ComponentValue* value ){
             component->transform = value;
             component->transform->parent = component;
             break;
+        
+        case TW_COMPONENT_THINK:
+            component->transform = value;
+            component->transform->parent = component;
+            break;
 
         case TW_COMPONENT_TEXTURE:
             component->texture = value;
@@ -67,6 +72,16 @@ void TW_Component_Render( TW_Component* self, TW_Transform* transform )
 }
 
 
+// Run logic components
+void TW_Component_Run( TW_Component* self )
+{
+    if( self->type == TW_COMPONENT_THINK )
+    {
+        TW_Think_Run( self->think );
+    }
+}
+
+
 // Given a component, return a pointer to its parent entity object if it exists.
 // If not, return `NULL`.
 TW_Entity* TW_Component_GetParent( TW_Component* self )
@@ -87,6 +102,10 @@ void TW_Component_Free( TW_Component* self )
     {
         case TW_COMPONENT_TRANSFORM:
             TW_Transform_Free( self->transform );
+            break;
+
+        case TW_COMPONENT_THINK:
+            TW_Think_Free( self->think );
             break;
 
         case TW_COMPONENT_TEXTURE:
