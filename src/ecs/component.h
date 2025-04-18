@@ -1,5 +1,6 @@
 #pragma once
 
+#include "think.h"
 #include "transform.h"
 #include "../renderer/renderer.h"
 #include "../renderer/text.h"
@@ -16,9 +17,10 @@ typedef struct TW_Entity TW_Entity;
  * TW_Component_Type - An enumeration of all the types of components so that they may be
  * uniquely identified.
  */
-enum TW_Component_Type
+enum TW_ComponentType
 {
     TW_COMPONENT_TRANSFORM,
+    TW_COMPONENT_THINK,
     TW_COMPONENT_TEXTURE,
     TW_COMPONENT_TEXT,
     TW_COMPONENT_SPRITE,
@@ -31,13 +33,13 @@ enum TW_Component_Type
  * TW_Component_Value - A union of all valid component types. This union should have one
  * object matching each TW_Component_Type.
  */
-typedef union TW_Component_Value {
+typedef union TW_ComponentValue {
     TW_Transform* transform;
     TW_Texture* texture;
     TW_Text* text;
     TW_Sprite* sprite;
     TW_Animation* animation;
-} TW_Component_Value;
+} TW_ComponentValue;
 
 
 /**
@@ -48,7 +50,7 @@ typedef union TW_Component_Value {
  * - TW_Component_Value*    - value         - The component
  */
 typedef struct TW_Component {
-    enum TW_Component_Type type;
+    enum TW_ComponentType type;
     TW_Entity* parent;
     union {
         TW_Transform* transform;
@@ -73,7 +75,7 @@ typedef struct TW_Component {
  * Returns:
  * - TW_Component*          - Returns a pointer to the component the specified type
  */
-TW_Component* TW_Component_Create( int type, TW_Component_Value* value );
+TW_Component* TW_Component_Create( int type, TW_ComponentValue* value );
 
 
 /**

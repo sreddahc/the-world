@@ -107,6 +107,13 @@ void closeAll()
 }
 
 
+void test_printf();
+void test_printf()
+{
+    printf("this might work\n");
+}
+
+
 int main( int argc, char* args[] )
 {
     // Start up SDL and create window
@@ -121,6 +128,9 @@ int main( int argc, char* args[] )
         // Event handler
         SDL_Event e;
         
+        TW_Think* thingy = TW_Think_Create( test_printf );
+        TW_Think_Run( thingy );
+
         // Main scene
         TW_Scene* sceneMain = TW_Scene_Create();
 
