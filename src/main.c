@@ -144,15 +144,6 @@ int main( int argc, char* args[] )
         TW_Vector2_Set(TW_Entity_GetComponent( entityTitle, TW_C_TRANSFORM )->transform->centre, gTitle->texture->width / 2, gTitle->texture->height / 2 );
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
-        // Mouse Position Entity
-        TW_Vector2* mousePosition = TW_Vector2_Create( 0, 0 );
-        char mousePositionText[50] = "Mouse Position: X=0, Y=0";
-        TW_Text* gMouseText = TW_Text_Create( mousePositionText, NULL, 0, NULL );
-        TW_Entity* entityMouseText = TW_Entity_Create();
-        TW_Entity_AddComponent( entityMouseText, TW_Component_Create( TW_C_TEXT, gMouseText ) );
-        TW_Entity_AddComponent( entityMouseText, TW_Component_Create( TW_C_TRANSFORM, TW_Transform_Create( 500, 105, 0.0, 1.0 ) ) );
-        TW_Scene_AddEntity( sceneMain, entityMouseText );
-
         // Player Entity
         // TW_Animation* gPlayer = TW_Animation_Create( TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 ), 4, (int[]){ 0, 1, 2, 3 } );
         // TW_Entity* entityPlayer = TW_Entity_Create();
@@ -170,14 +161,6 @@ int main( int argc, char* args[] )
         TW_Entity_AddComponent( entityTimeText, TW_Component_Create( TW_C_TEXT, gTimeText ) );
         TW_Entity_AddComponent(entityTimeText, TW_Component_Create( TW_C_TRANSFORM, TW_Transform_Create( 500, 125, 0.0, 1.0 ) ) );
         TW_Scene_AddEntity( sceneMain, entityTimeText );
-
-        // Delta Time
-        char deltaTimeText[50] = "Delta Time: 0.00000 ms";
-        TW_Text* gDeltaTimeText = TW_Text_Create( deltaTimeText, NULL, 0, NULL );
-        TW_Entity* entityDeltaTimeText = TW_Entity_Create();
-        TW_Entity_AddComponent( entityDeltaTimeText, TW_Component_Create( TW_C_TEXT, gDeltaTimeText ) );
-        TW_Entity_AddComponent(entityDeltaTimeText, TW_Component_Create( TW_C_TRANSFORM, TW_Transform_Create( 500, 165, 0.0, 1.0 ) ) );
-        TW_Scene_AddEntity( sceneMain, entityDeltaTimeText );
 
         // Debug Status
         TW_DebugStats_Create( sceneMain );
@@ -220,19 +203,6 @@ int main( int argc, char* args[] )
                         }
                     }
                 }
-
-                if( TW_InputHandler_CheckMouse() == true )
-                {
-                    SDL_GetMouseState( &mousePosition->x, &mousePosition->y );
-                    snprintf(mousePositionText, 50, "Mouse Position: X=%d, Y=%d", mousePosition->x, mousePosition->y);
-
-                    if( TW_InputHandler_CheckMouseDepressed() == true )
-                    {
-                        strcat(mousePositionText, " - KEYDOWN");
-                    }
-
-                    TW_Text_Update( gMouseText );
-                }
             }
 
             snprintf( timeText, 50, "Time since reset: %d ms", TW_Timer_GetTime( mainTimer ) );
@@ -241,9 +211,6 @@ int main( int argc, char* args[] )
             // Update the surface
             SDL_RenderClear( TW_GetRenderer() );
             TW_GameState_Update();
-
-            snprintf( deltaTimeText, 50, "Delta Time: %.5f ms", TW_GameState_GetTimeDelta() );
-            TW_Text_Update( gDeltaTimeText );
 
             TW_Scene_Run( sceneMain );
 
@@ -256,7 +223,6 @@ int main( int argc, char* args[] )
         }
 
         // Free resources
-        TW_Vector2_Free( mousePosition );
         TW_Timer_Free( mainTimer );
         TW_Scene_Free( sceneMain );
         TW_GameState_Free();
