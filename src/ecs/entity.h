@@ -68,3 +68,12 @@ TW_Component* TW_Entity_GetComponent( TW_Entity* self, int type );
  * - TW_Entity*             - self          - The TW_Component to render
  */
 void TW_Entity_Render( TW_Entity* self );
+
+
+/**
+ * TW_Component_Run - Run logic components in TW_Entity
+ * 
+ * Args:
+ * - TW_Entity*             - self          - The TW_Component to run
+ */
+void TW_Entity_Run( TW_Entity* self );

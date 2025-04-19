@@ -95,9 +95,9 @@ void TW_Texture_Render( TW_Texture* self, TW_Transform* transform )
 {
     // Render position
     TW_Vector2* position = TW_Vector2_Create( 0, 0 );
+    TW_Vector2* offset = TW_Vector2_Create( 0, 0 );
     double angle = 0.0;
     double scale = 1.0;
-    TW_Vector2* offset = TW_Vector2_Create( 0, 0 );
     SDL_RendererFlip flip = SDL_FLIP_NONE;
 
     if( transform != NULL )
@@ -128,8 +128,8 @@ void TW_Texture_Render( TW_Texture* self, TW_Transform* transform )
         flip          // Flip the texture
     );
 
-    TW_Vector2_Free( position );
     TW_Vector2_Free( offset );
+    TW_Vector2_Free( position );
 }
 
 

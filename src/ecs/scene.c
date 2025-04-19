@@ -45,6 +45,16 @@ void TW_Scene_Render( TW_Scene* self )
 }
 
 
+// Run logic components in scene entities
+void TW_Scene_Run( TW_Scene* self )
+{
+    for( int index = 0; index < self->size; index++ )
+    {
+        TW_Entity_Run( self->entities[ index ] );
+    }
+}
+
+
 // TW_Scene_Free - Free the resources used by a scene.
 void TW_Scene_Free( TW_Scene* self )
 {

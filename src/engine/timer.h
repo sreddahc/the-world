@@ -34,6 +34,8 @@ typedef struct TW_Timer {
 void TW_Timer_Init( TW_Timer* self, bool paused );
 
 
+TW_Timer* TW_Timer_Create( bool paused );
+
 /**
  * TW_Timer_Reset - Resets a TW_Timer object without changing the state.
  * 
