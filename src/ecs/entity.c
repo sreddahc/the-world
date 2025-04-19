@@ -38,7 +38,7 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
 
 void TW_Entity_Render( TW_Entity* self )
 {
-    TW_Component* transformComponent = TW_Entity_GetComponent( self, TW_COMPONENT_TRANSFORM );
+    TW_Component* transformComponent = TW_Entity_GetComponent( self, TW_C_TRANSFORM );
     TW_Transform* transform = NULL;
     if( transformComponent != NULL )
     {

@@ -6,6 +6,7 @@ TW_Think* TW_Think_Create( void *some_function )
 {
     TW_Think* thinkObject = malloc( sizeof( TW_Think ) );
     thinkObject->think = some_function;
+    thinkObject->parent = NULL;
     return thinkObject;
 }
 
@@ -13,13 +14,21 @@ TW_Think* TW_Think_Create( void *some_function )
 // Run the function in the think object
 void TW_Think_Run( TW_Think* self )
 {
-    self->think();
+    if( self->parent != NULL )
+    {
+        self->think( self->parent );
+    }
+    else
+    {
+        self->think( NULL );
+    }
 }
 
 
 // Free the resources used by a think object
 void TW_Think_Free( TW_Think* self )
 {
-    self->think = 0;  // How do I nullify the think attribute?
+    self->think = 0;  // How do I nullify the think function pointer?
+    self->parent = NULL;
     free( self );
 }

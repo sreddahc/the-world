@@ -1,7 +1,11 @@
 #pragma once
 
+#include <stddef.h>
+
 
 // Type definitions
+
+typedef struct TW_Component TW_Component;
 
 /**
  * TW_Think - A think component contains a pointer to a function to execute.
@@ -11,6 +15,7 @@
  */
 typedef struct TW_Think {
     void (*think)();
+    TW_Component* parent;
 } TW_Think;
 
 

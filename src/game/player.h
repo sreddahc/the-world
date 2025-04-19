@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ecs/entity.h"
+#include "../ecs/scene.h"
 #include "../renderer/animation.h"
 
 
