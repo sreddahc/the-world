@@ -90,7 +90,6 @@ TW_Entity* TW_Component_GetParent( TW_Component* self )
     {
         return self->parent;
     }
-
     return NULL;
 }
 
@@ -127,4 +126,6 @@ void TW_Component_Free( TW_Component* self )
         default:
             break;
     }
+    self->type = 0;
+    free(self);
 }

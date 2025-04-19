@@ -69,6 +69,9 @@ void TW_GameTimer_SetFrameLimit( int fps );
 void TW_GameTimer_LimitFrameRate();
 
 
+Uint64 TW_GameTimer_GetTime();
+
+
 /**
  * TW_GameTimer_Free - Free resources used by the game timer.
  */

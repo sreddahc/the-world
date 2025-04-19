@@ -27,7 +27,7 @@ void TW_GameTimer_Update()
     gameTimer->delta_time = (float)( gameTimer->now - gameTimer->previous ) / (float)SDL_GetPerformanceFrequency();
     if( gameTimer->delta_time >= TIME_DELTA_CAP )
     {
-        gameTimer->delta_time = 0;
+        gameTimer->delta_time = 0.0;
     }
     gameTimer->previous = gameTimer->now;
 }
@@ -43,14 +43,14 @@ float TW_GameTimer_GetTimeDelta()
 // Get the current time delta between now and the last time the game timer was updated.
 float TW_GameTimer_GetFPS()
 {
-    float fps = gameTimer->frame / ( gameTimer->ms / MILLISECONDS_IN_A_SEC );
+    float fps = (float)gameTimer->frame / ( (float)gameTimer->ms / MILLISECONDS_IN_A_SEC );
     
     if( fps > FPS_FRAME_CAP )
     {
         return 0.0;
     }
 
-    return ;
+    return fps;
 }
 
 
@@ -72,6 +72,12 @@ void TW_GameTimer_LimitFrameRate()
             SDL_Delay( gameTimer->ticksPerFrame - frameTicks );
         }
     }
+}
+
+
+Uint64 TW_GameTimer_GetTime()
+{
+    return gameTimer->ms;
 }
 
 

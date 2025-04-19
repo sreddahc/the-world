@@ -25,7 +25,15 @@ bool TW_Text_SetFont( TW_Text* self, char* fontName, int fontSize )
 bool TW_Text_Update( TW_Text* self )
 {
     SDL_Surface* textSurface = TTF_RenderText_Solid( self->fontObject, self->textValue, self->fontColour );
+    
+    // -- BEGIN: Refactor - This fixes a memory leak... but free should perhaps not be used here.
+    if( self->texture != NULL )
+    {
+        TW_Texture_Free( self->texture );
+    }
     self->texture = TW_Texture_CreateTexture();
+    // -- END: Refactor - Instead it should check for an existing object first and work with that object.
+
     TW_Texture_LoadSurface( self->texture, textSurface );
     SDL_FreeSurface( textSurface );
 }
@@ -34,6 +42,7 @@ bool TW_Text_Update( TW_Text* self )
 TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, TW_Colour* fontColour )
 {
     TW_Text* textObject = malloc( sizeof( TW_Text ) );
+    textObject->texture = NULL;
 
     // Set defaults where applicable
     if( fontColour == NULL )
