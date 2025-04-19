@@ -113,3 +113,8 @@ void TW_DebugStats_Create( TW_Scene* self )
     TW_Component* cThinkDeltaTime = TW_Component_Create( TW_C_THINK, thinkDeltaTime );
     TW_Entity_AddComponent( entityDeltaTime, cThinkDeltaTime );
 }
+
+void TW_DebugStats_Free()
+{
+    
+}

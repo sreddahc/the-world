@@ -18,3 +18,5 @@ void TW_DebugStats_DeltaTime_Think( TW_Component* component );
  * TW_DebugStats_Create - Generates a number of text objects with debug statistics.
  */
 void TW_DebugStats_Create( TW_Scene* self );
+
+void TW_DebugStats_Free();
