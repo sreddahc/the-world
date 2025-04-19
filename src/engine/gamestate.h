@@ -9,7 +9,7 @@
 #define FPS_FRAME_CAP 200000
 
 
-typedef struct TW_GameTimer {
+typedef struct TW_GameState {
     float delta_time;
     Uint64 now;
     Uint64 previous;
@@ -17,21 +17,21 @@ typedef struct TW_GameTimer {
     Uint64 frame;
     int frameCap;
     int ticksPerFrame;
-} TW_GameTimer;
+} TW_GameState;
 
 // Function definitions
 
 /**
  * TW_GameTimer_Create - Create a game timer to be used globally by all objects.
  */
-void TW_GameTimer_Create();
+void TW_GameState_Create();
 
 
 /**
  * TW_GameTimer_Update - Update the game timer.
  * This should be called once every cycle of the main loop.
  */
-void TW_GameTimer_Update();
+void TW_GameState_Update();
 
 
 /**
@@ -41,7 +41,7 @@ void TW_GameTimer_Update();
  * Returns:
  * - float          - Time delta
  */
-float TW_GameTimer_GetTimeDelta();
+float TW_GameState_GetTimeDelta();
 
 
 /**
@@ -50,7 +50,7 @@ float TW_GameTimer_GetTimeDelta();
  * Returns:
  * - float          - Current FPS
  */
-float TW_GameTimer_GetFPS();
+float TW_GameState_GetFPS();
 
 
 /**
@@ -59,20 +59,20 @@ float TW_GameTimer_GetFPS();
  * Args:
  * - int            - fps           - The FPS to be enforced. `0` = No limit.
  */
-void TW_GameTimer_SetFrameLimit( int fps );
+void TW_GameState_SetFrameLimit( int fps );
 
 
 /**
  * TW_GameTimer_LimitFrameRate - If there is a frame cap set, delay the next frame to 
  *                               limit the frame rate.
  */
-void TW_GameTimer_LimitFrameRate();
+void TW_GameState_LimitFrameRate();
 
 
-Uint64 TW_GameTimer_GetTime();
+Uint64 TW_GameState_GetTime();
 
 
 /**
  * TW_GameTimer_Free - Free resources used by the game timer.
  */
-void TW_GameTimer_Free();
+void TW_GameState_Free();

@@ -7,7 +7,7 @@
 #include "engine/timer.h"
 #include "ecs/scene.h"
 #include "engine/maths.h"
-#include "engine/gametimer.h"
+#include "engine/gamestate.h"
 #include "game/player.h"
 
 // Global variables
@@ -84,8 +84,8 @@ bool init()
                 }
 
                 // Initialise the game timer
-                TW_GameTimer_Create();
-                TW_GameTimer_SetFrameLimit( SCREEN_FPS );
+                TW_GameState_Create();
+                TW_GameState_SetFrameLimit( SCREEN_FPS );
 
                 // Initialse input handler
                 TW_InputHandler_Create();
@@ -195,6 +195,8 @@ int main( int argc, char* args[] )
                 {
                     quit = true;
                 }
+                
+                TW_Scene_Run( sceneMain );
 
                 if( TW_InputHandler_CheckKeyPressed( SDLK_RETURN ) == true )
                 {
@@ -240,14 +242,14 @@ int main( int argc, char* args[] )
             TW_Text_Update( gTimeText );
 
             // Update FPS
-            snprintf( fpsText, 50, "FPS: %.2f ", TW_GameTimer_GetFPS() );
+            snprintf( fpsText, 50, "FPS: %.2f ", TW_GameState_GetFPS() );
             TW_Text_Update( gFPSText );
 
             // Update the surface
             SDL_RenderClear( TW_GetRenderer() );
-            TW_GameTimer_Update();
+            TW_GameState_Update();
 
-            snprintf( deltaTimeText, 50, "Delta Time: %.5f ms", TW_GameTimer_GetTimeDelta() );
+            snprintf( deltaTimeText, 50, "Delta Time: %.5f ms", TW_GameState_GetTimeDelta() );
             TW_Text_Update( gDeltaTimeText );
 
             TW_Scene_Run( sceneMain );
@@ -257,14 +259,14 @@ int main( int argc, char* args[] )
 
             // // Update screen
             SDL_RenderPresent( TW_GetRenderer() );
-            TW_GameTimer_LimitFrameRate();
+            TW_GameState_LimitFrameRate();
         }
 
         // Free resources
         TW_Vector2_Free( mousePosition );
         // TW_Timer_Free( &mainTimer );
         TW_Scene_Free( sceneMain );
-        TW_GameTimer_Free();
+        TW_GameState_Free();
     }
 
     // Free resources and close SDL
