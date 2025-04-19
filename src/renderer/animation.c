@@ -10,7 +10,7 @@ TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int frameCount, int* 
     animation->frameCount = frameCount;
     animation->animationFrames = animationFrames;
     animation->currentFrame = 0;
-    animation->animationSpeed = 200;
+    animation->animationSpeed = 100;
     animation->timeSinceLastFrame = 0.0;
     animation->paused = false;
 

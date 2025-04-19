@@ -18,7 +18,7 @@ typedef struct TW_InputHandler {
 TW_InputHandler* TW_InputHandler_Create();
 
 
-void TW_InputHandler_Poll();
+bool TW_InputHandler_Poll();
 
 
 bool TW_InputHandler_CheckEvents();
@@ -28,6 +28,18 @@ bool TW_InputHandler_CheckKeyboard();
 
 
 bool TW_InputHandler_CheckKeyPressed( SDL_Keycode key );
+
+
+bool TW_InputHandler_CheckMouse();
+
+
+bool TW_InputHandler_CheckMouseMoved();
+
+
+bool TW_InputHandler_CheckMousePressed();
+
+
+bool TW_InputHandler_CheckMouseDepressed();
 
 
 bool TW_InputHandler_CheckQuit();

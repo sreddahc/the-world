@@ -123,7 +123,7 @@ int main( int argc, char* args[] )
         bool quit = false;
 
         // Event handler
-        SDL_Event e;
+        SDL_Event event;
 
         // Main scene
         TW_Scene* sceneMain = TW_Scene_Create();
@@ -161,7 +161,7 @@ int main( int argc, char* args[] )
         // TW_Scene_AddEntity( sceneMain, TW_Player_Create() );
 
         // Time
-        // TW_Timer* mainTimer = TW_Timer_Create( false );
+        TW_Timer* mainTimer = TW_Timer_Create( false );
         char timeText[50] = "Time since reset: 0ms";
         TW_Text* gTimeText = TW_Text_Create( timeText, NULL, 0, NULL );
         TW_Entity* entityTimeText = TW_Entity_Create();
@@ -187,106 +187,56 @@ int main( int argc, char* args[] )
 
         while( !quit )
         {
-            // while( TW_InputHandler_Poll() )
-            // {
-            //     quit = TW_InputHandler_CheckQuit();
-
-            //     if( TW_InputHandler_CheckKeyPressed( SDLK_ESCAPE ) == true )
-            //     {
-            //         quit = true;
-            //     }
-            // }
-
-            while( SDL_PollEvent( &e ) != 0 )
+            while( TW_InputHandler_Poll() == true )
             {
-                if( e.type == SDL_QUIT )
+                quit = TW_InputHandler_CheckQuit();
+
+                if( TW_InputHandler_CheckKeyPressed( SDLK_ESCAPE ) == true )
                 {
                     quit = true;
                 }
-                // Keyboard Event
-                else if( e.type == SDL_KEYDOWN )
+
+                if( TW_InputHandler_CheckKeyPressed( SDLK_RETURN ) == true )
                 {
-                    switch( e.key.keysym.sym )
+                    TW_Timer_Reset( mainTimer );
+                }
+
+                if( TW_InputHandler_CheckKeyPressed( SDLK_SPACE ) == true )
+                {
+                    if( mainTimer->paused )
                     {
-                        case SDLK_ESCAPE:
-                            quit = true;
-                            break;
+                        TW_Timer_Resume( mainTimer );
+                    }
+                    else
+                    {
+                        TW_Timer_Pause( mainTimer );
+                    }
+
+                    for( int index = 0; index < sceneMain->size; index++ )
+                    {
+                        TW_Component* tempAnimation = TW_Entity_GetComponent( sceneMain->entities[ index ], TW_COMPONENT_ANIMATION );
+                        if( tempAnimation != NULL )
+                        {
+                            tempAnimation->animation->paused = mainTimer->paused;
+                        }
                     }
                 }
-            
-            // {
-            //     // Window Event
-            //     if( e.type == SDL_QUIT )
-            //     {
-            //         quit = true;
-            //     }
-            //     // Keyboard Event
-            //     else if( e.type == SDL_KEYDOWN )
-            //     {
-            //         switch( e.key.keysym.sym )
-            //         {
-            //         case SDLK_ESCAPE:
-            //             quit = true;
-            //             break;
-                    
-            //         // Reset clock
-            //         case SDLK_RETURN:
-            //         TW_Timer_Reset( &mainTimer );
-            //         break;
 
-            //         // Pause/resume clock
-            //         case SDLK_SPACE:
-            //         if( mainTimer.paused )
-            //         {
-            //             TW_Timer_Resume( &mainTimer );
-            //             for( int i = 0; i < sceneMain->size; i++ )
-            //             {
-            //                 TW_Component* tempAnimation = TW_Entity_GetComponent( sceneMain->entities[ i ], TW_COMPONENT_ANIMATION );
-            //                 if( tempAnimation != NULL )
-            //                 {
-            //                     tempAnimation->animation->paused = false;
-            //                 }
-            //             }
-            //         }
-            //         else
-            //         {
-            //             TW_Timer_Pause( &mainTimer );
-            //             for( int i = 0; i < sceneMain->size; i++ )
-            //             {
-            //                 TW_Component* tempAnimation = TW_Entity_GetComponent( sceneMain->entities[ i ], TW_COMPONENT_ANIMATION );
-            //                 if( tempAnimation != NULL )
-            //                 {
-            //                     tempAnimation->animation->paused = true;
-            //                 }
-            //             }
-            //         }
-            //         break;
-
-            //         default:
-            //             break;
-            //         }
-            //     }
-
-            //     // Mouse Event
-                else if( e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP )
+                if( TW_InputHandler_CheckMouse() == true )
                 {
                     SDL_GetMouseState( &mousePosition->x, &mousePosition->y );
-                    
                     snprintf(mousePositionText, 50, "Mouse Position: X=%d, Y=%d", mousePosition->x, mousePosition->y);
 
-                    if( e.type == SDL_MOUSEBUTTONDOWN )
+                    if( TW_InputHandler_CheckMouseDepressed() == true )
                     {
                         strcat(mousePositionText, " - KEYDOWN");
                     }
 
                     TW_Text_Update( gMouseText );
-
                 }
             }
 
-            // Update time - This thing causes RAM issues :/
-            // snprintf( timeText, 50, "Time since reset: %d ms", TW_Timer_GetTime( mainTimer ) );
-            snprintf( timeText, 50, "Time since reset: %d ms", TW_GameTimer_GetTime() );
+            snprintf( timeText, 50, "Time since reset: %d ms", TW_Timer_GetTime( mainTimer ) );
             TW_Text_Update( gTimeText );
 
             // Update FPS
