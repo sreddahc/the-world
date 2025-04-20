@@ -2,6 +2,7 @@
 
 #include "think.h"
 #include "transform.h"
+#include "velocity.h"
 #include "../renderer/renderer.h"
 #include "../renderer/text.h"
 #include "../renderer/sprite.h"
@@ -20,6 +21,7 @@ typedef struct TW_Entity TW_Entity;
 enum TW_ComponentType
 {
     TW_C_TRANSFORM,
+    TW_C_VELOCITY,
     TW_C_THINK,
     TW_C_TEXTURE,
     TW_C_TEXT,
@@ -35,6 +37,7 @@ enum TW_ComponentType
  */
 typedef union TW_ComponentValue {
     TW_Transform* transform;
+    TW_Velocity* velocity;
     TW_Think* think;
     TW_Texture* texture;
     TW_Text* text;
@@ -55,6 +58,7 @@ typedef struct TW_Component {
     TW_Entity* parent;
     union {
         TW_Transform* transform;
+        TW_Velocity* velocity;
         TW_Think* think;
         TW_Texture* texture;
         TW_Text* text;

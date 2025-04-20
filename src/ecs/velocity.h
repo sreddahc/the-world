@@ -7,6 +7,8 @@
 
 // Type definitions
 
+#define MILLISECONDS_IN_A_SEC 1000.f
+
 typedef struct TW_Component TW_Component;
 typedef struct TW_Transform TW_Transform;
 

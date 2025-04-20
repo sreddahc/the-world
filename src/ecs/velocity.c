@@ -45,9 +45,9 @@ void TW_Velocity_Run( TW_Velocity* self, TW_Transform* transform )
     if(transform != NULL )
     {
         self->timeSinceLastInterval += TW_GameState_GetDeltaTime();
-        if( self->timeSinceLastInterval >= (float)self->interval )
+        if( self->timeSinceLastInterval >= (float)self->interval  / MILLISECONDS_IN_A_SEC )
         {
-            self->timeSinceLastInterval -= (float)self->interval;
+            self->timeSinceLastInterval -= (float)self->interval  / MILLISECONDS_IN_A_SEC;
             transform->position->x += self->speed->x;
             transform->position->y += self->speed->y;
             TW_Velocity_SetSpeed(
