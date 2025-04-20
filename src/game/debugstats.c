@@ -49,7 +49,7 @@ void TW_DebugStats_FPS_Think( TW_Component* component )
 
 void TW_DebugStats_DeltaTime_Think( TW_Component* component )
 {
-    snprintf( deltaTimeStatus, 50, "Delta Time: %.5f ms", TW_GameState_GetTimeDelta() );
+    snprintf( deltaTimeStatus, 50, "Delta Time: %.5f ms", TW_GameState_GetDeltaTime() );
     if( component->parent != NULL)
     {
         TW_Component* textComponent = TW_Entity_GetComponent( component->parent, TW_C_TEXT );

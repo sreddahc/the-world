@@ -42,7 +42,7 @@ void TW_Animation_Render( TW_Animation* self, TW_Transform* transform )
     TW_Sprite_Render( self->spriteSheet, transform );
     if( self->paused == false )
     {
-        self->timeSinceLastFrame = self->timeSinceLastFrame + TW_GameState_GetTimeDelta();
+        self->timeSinceLastFrame = self->timeSinceLastFrame + TW_GameState_GetDeltaTime();
         if( self->timeSinceLastFrame >= (float)self->animationSpeed / MILLISECONDS_IN_A_SEC )
         {
             self->timeSinceLastFrame = self->timeSinceLastFrame - (float)self->animationSpeed / MILLISECONDS_IN_A_SEC;

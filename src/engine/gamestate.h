@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <stdbool.h>
 
 // Type definitions
 
@@ -10,13 +11,14 @@
 
 
 typedef struct TW_GameState {
-    float delta_time;
+    float deltaTime;
     Uint64 now;
     Uint64 previous;
     Uint64 ms;
     Uint64 frame;
     int frameCap;
     int ticksPerFrame;
+    bool paused;
 } TW_GameState;
 
 // Function definitions
@@ -35,13 +37,13 @@ void TW_GameState_Update();
 
 
 /**
- * TW_GameTimer_GetTimeDelta - Get the current time delta between now and the last time
+ * TW_GameState_GetDeltaTime - Get the current time delta between now and the last time
  *                             the game timer was updated.
  * 
  * Returns:
  * - float          - Time delta
  */
-float TW_GameState_GetTimeDelta();
+float TW_GameState_GetDeltaTime();
 
 
 /**
@@ -67,6 +69,27 @@ void TW_GameState_SetFrameLimit( int fps );
  *                               limit the frame rate.
  */
 void TW_GameState_LimitFrameRate();
+
+
+/**
+ * TW_GameState_PauseStatus - Get the current pause status of the game.
+ * 
+ * Returns:
+ * - bool           - true if paused, false if not
+ */
+bool TW_GameState_PauseStatus();
+
+
+/**
+ * TW_GameState_Pause - Pause the game.
+ */
+void TW_GameState_Pause();
+
+
+/**
+ * TW_GameState_Resume - Unpause/resume the game.
+ */
+void TW_GameState_Resume();
 
 
 Uint64 TW_GameState_GetTime();
