@@ -1,11 +1,14 @@
 #pragma once
 
+#include "transform.h"
+#include "../engine/gamestate.h"
 #include "../engine/maths.h"
 
 
 // Type definitions
 
 typedef struct TW_Component TW_Component;
+typedef struct TW_Transform TW_Transform;
 
 
 /**
@@ -75,7 +78,7 @@ void TW_Velocity_SetInterval( TW_Velocity* self, int interval );
  * - TW_Velocity*       - self          - The velocity object to run
  * - TW_Component*      - transform     - The transform object to operate on
  */
-void TW_Velocity_Run( TW_Velocity* self, TW_Component* transform );
+void TW_Velocity_Run( TW_Velocity* self, TW_Transform* transform );
 
 
 /**

@@ -16,31 +16,51 @@ TW_Velocity* TW_Velocity_Create( int xS, int yS, int xA, int yA )
 }
 
 
-// Run the velocity object. This should be done every loop as long as the game is not paused.
-void TW_Velocity_Run( TW_Velocity* self, TW_Component* transform )
-{
-
-}
-
-
 // Change the speed of a velocity object
 void TW_Velocity_SetSpeed( TW_Velocity* self, int x, int y )
 {
-
+    self->speed->x = x;
+    self->speed->y = y;
 }
 
 
 // Change the speed of a acceleration object
 void TW_Velocity_SetAcceleration( TW_Velocity* self, int x, int y )
 {
-
+    self->acceleration->x = x;
+    self->acceleration->y = y;
 }
 
 
 // Set the interval of a velocity object
 void TW_Velocity_SetInterval( TW_Velocity* self, int interval )
 {
-    
+    self->interval = interval;
+}
+
+
+// Run the velocity object. This should be done every loop as long as the game is not paused.
+void TW_Velocity_Run( TW_Velocity* self, TW_Transform* transform )
+{
+    if(transform != NULL )
+    {
+        self->timeSinceLastInterval += TW_GameState_GetDeltaTime();
+        if( self->timeSinceLastInterval >= (float)self->interval )
+        {
+            self->timeSinceLastInterval -= (float)self->interval;
+            transform->position->x += self->speed->x;
+            transform->position->y += self->speed->y;
+            TW_Velocity_SetSpeed(
+                self,
+                self->speed->x + self->acceleration->x,
+                self->speed->y + self->acceleration->y
+            );
+        }
+    }
+    else
+    {
+        printf( "ERROR - TW_Velocity_Run - There is not transform to operate on." );
+    }
 }
 
 
