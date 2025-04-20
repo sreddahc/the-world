@@ -8,13 +8,14 @@ static TW_GameState* gameState = NULL;
 void TW_GameState_Create()
 {
     gameState = malloc( sizeof( TW_GameState ) );
-    gameState->delta_time = 0.0;
+    gameState->deltaTime = 0.0;
     gameState->now = 0;
     gameState->previous = 0;
     gameState->ms = SDL_GetTicks64();
     gameState->frame = 0;
     gameState->frameCap = 0;
     gameState->ticksPerFrame = 0;
+    gameState->paused = false;
 }
 
 
@@ -24,19 +25,19 @@ void TW_GameState_Update()
     gameState->ms = SDL_GetTicks64();
     gameState->frame++;
     gameState->now = SDL_GetPerformanceCounter();
-    gameState->delta_time = (float)( gameState->now - gameState->previous ) / (float)SDL_GetPerformanceFrequency();
-    if( gameState->delta_time >= TIME_DELTA_CAP )
+    gameState->deltaTime = (float)( gameState->now - gameState->previous ) / (float)SDL_GetPerformanceFrequency();
+    if( gameState->deltaTime >= TIME_DELTA_CAP )
     {
-        gameState->delta_time = 0.0;
+        gameState->deltaTime = 0.0;
     }
     gameState->previous = gameState->now;
 }
 
 
 // Get the current time delta.
-float TW_GameState_GetTimeDelta()
+float TW_GameState_GetDeltaTime()
 {
-    return gameState->delta_time;
+    return gameState->deltaTime;
 }
 
 
@@ -75,9 +76,31 @@ void TW_GameState_LimitFrameRate()
 }
 
 
+// Get the current time in ms.
 Uint64 TW_GameState_GetTime()
 {
     return gameState->ms;
+}
+
+
+// Get the current pause status of the game.
+bool TW_GameState_PauseStatus()
+{
+    return gameState->paused;
+}
+
+
+// Pause the game.
+void TW_GameState_Pause()
+{
+    gameState->paused = true;
+}
+
+
+// Unpause/resume the game.
+void TW_GameState_Resume()
+{
+    gameState->paused = false;
 }
 
 
@@ -88,6 +111,7 @@ void TW_GameState_Free()
     gameState->ms = 0;
     gameState->previous = 0;
     gameState->now = 0;
-    gameState->delta_time = 0.0;
+    gameState->deltaTime = 0.0;
+    gameState->paused = false;
     free( gameState );
 }

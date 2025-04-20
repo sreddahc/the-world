@@ -145,12 +145,6 @@ int main( int argc, char* args[] )
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
         // Player Entity
-        // TW_Animation* gPlayer = TW_Animation_Create( TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 ), 4, (int[]){ 0, 1, 2, 3 } );
-        // TW_Entity* entityPlayer = TW_Entity_Create();
-        // TW_Entity_AddComponent( entityPlayer, TW_Component_Create( TW_COMPONENT_ANIMATION, gPlayer ) );
-        // TW_Entity_AddComponent( entityPlayer, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 200, 200, 0.0, 1.0 ) ) );
-        // TW_Scene_AddEntity( sceneMain, entityPlayer );
-        // TW_Player_Create( sceneMain );
         TW_Scene_AddEntity( sceneMain, TW_Player_Create() );
 
         // Time

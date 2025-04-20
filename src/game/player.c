@@ -1,6 +1,5 @@
 #include "player.h"
 
-// HERE BE SEGFAULTS
 
 void TW_Player_Think( TW_Component* component )
 {
@@ -35,21 +34,14 @@ void TW_Player_Think( TW_Component* component )
 
 TW_Entity* TW_Player_Create()
 {
-    // Create player entity
     TW_Entity* entityPlayer = TW_Entity_Create();
 
-    // Animations and sprites when called from here currently cause segfaults.
-    // Temporary sprite based player created.
-
-    // TW_Animation* gPlayer = TW_Animation_Create(
-    //     TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 ), 4, (int[]){ 0, 1, 2, 3 }
-    // );
-
     TW_Sprite* spritePlayer = TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 );
-    TW_Component* cPlayerSprite = TW_Component_Create( TW_C_SPRITE, spritePlayer );
-    TW_Entity_AddComponent( entityPlayer, cPlayerSprite );
+    TW_Animation* animationPlayer = TW_Animation_Create( spritePlayer, 4, (int[]){ 0, 1, 2, 3 } );
+    TW_Component* cPlayerAnimation = TW_Component_Create( TW_C_ANIMATION, animationPlayer );
+    TW_Entity_AddComponent( entityPlayer, cPlayerAnimation );
 
-    TW_Transform* transformPlayer = TW_Transform_Create( 100, 100, 0.0, 1.0 );
+    TW_Transform* transformPlayer = TW_Transform_Create( 230, 230, 0.0, 1.0 );
     TW_Component* cPlayerTransform = TW_Component_Create( TW_C_TRANSFORM, transformPlayer );
     TW_Entity_AddComponent( entityPlayer, cPlayerTransform );
 
