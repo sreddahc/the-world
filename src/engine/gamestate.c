@@ -76,6 +76,7 @@ void TW_GameState_LimitFrameRate()
 }
 
 
+// Get the current time in ms.
 Uint64 TW_GameState_GetTime()
 {
     return gameState->ms;

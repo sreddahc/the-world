@@ -72,6 +72,15 @@ void TW_GameState_LimitFrameRate();
 
 
 /**
+ * TW_GameState_GetTime - Get the current time in ms.
+ * 
+ * Returns:
+ * - Uint64         - The current time in ms.
+ */
+Uint64 TW_GameState_GetTime();
+
+
+/**
  * TW_GameState_PauseStatus - Get the current pause status of the game.
  * 
  * Returns:
@@ -90,9 +99,6 @@ void TW_GameState_Pause();
  * TW_GameState_Resume - Unpause/resume the game.
  */
 void TW_GameState_Resume();
-
-
-Uint64 TW_GameState_GetTime();
 
 
 /**

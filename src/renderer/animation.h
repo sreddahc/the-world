@@ -25,7 +25,7 @@ typedef struct TW_Component TW_Component;
  */
 typedef struct TW_Animation {
     TW_Sprite* spriteSheet;     // The sprite object with all the texture information
-    int frameCount;             // Number of frames in the animation
+    int animationSize;          // Number of frames in the animation
     int* animationFrames;       // Sprite frames that form part of the animation
     int currentFrame;           // The current frame of the animation
     int animationSpeed;         // Speed of the animation
