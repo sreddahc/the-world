@@ -58,3 +58,12 @@ void TW_Scene_Free( TW_Scene* self );
  * - TW_Scene*      - self          - The scene to render
  */
 void TW_Scene_Render( TW_Scene* self );
+
+
+/**
+ * TW_Scene_Run - Run logic components in scene entities.
+ * 
+ * Args:
+ * - TW_Scene*      - self          - The scene to run logic components from
+ */
+void TW_Scene_Run( TW_Scene* self );

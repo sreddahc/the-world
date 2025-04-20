@@ -2,32 +2,37 @@
 
 
 // Creates a pointer to a component of specified type and value
-TW_Component* TW_Component_Create( int type, TW_Component_Value* value ){
+TW_Component* TW_Component_Create( int type, TW_ComponentValue* value ){
     TW_Component* component = malloc( sizeof( TW_Component ) );
     component->type = type;
     switch ( component->type )
     {
-        case TW_COMPONENT_TRANSFORM:
+        case TW_C_TRANSFORM:
             component->transform = value;
             component->transform->parent = component;
             break;
+        
+        case TW_C_THINK:
+            component->think = value;
+            component->think->parent = component;
+            break;
 
-        case TW_COMPONENT_TEXTURE:
+        case TW_C_TEXTURE:
             component->texture = value;
             component->texture->parent = component;
             break;
 
-        case TW_COMPONENT_TEXT:
+        case TW_C_TEXT:
             component->text = value;
             component->text->parent = component;
             break;
 
-            case TW_COMPONENT_SPRITE:
+            case TW_C_SPRITE:
             component->sprite = value;
             component->sprite->parent = component;
             break;
 
-        case TW_COMPONENT_ANIMATION:
+        case TW_C_ANIMATION:
             component->animation = value;
             component->animation->parent = component;
             break;
@@ -45,24 +50,34 @@ void TW_Component_Render( TW_Component* self, TW_Transform* transform )
 {
     switch ( self->type )
     {
-        case TW_COMPONENT_TEXTURE:
+        case TW_C_TEXTURE:
             TW_Texture_Render( self->texture, transform );
             break;
 
-        case TW_COMPONENT_TEXT:
+        case TW_C_TEXT:
             TW_Text_Render( self->text, transform );
             break;
 
-            case TW_COMPONENT_SPRITE:
+            case TW_C_SPRITE:
             TW_Sprite_Render( self->sprite, transform );
             break;
 
-        case TW_COMPONENT_ANIMATION:
+        case TW_C_ANIMATION:
             TW_Animation_Render( self->animation, transform );
             break;
 
         default:
             break;
+    }
+}
+
+
+// Run logic components
+void TW_Component_Run( TW_Component* self )
+{
+    if( self->type == TW_C_THINK )
+    {
+        TW_Think_Run( self->think );
     }
 }
 
@@ -75,7 +90,6 @@ TW_Entity* TW_Component_GetParent( TW_Component* self )
     {
         return self->parent;
     }
-
     return NULL;
 }
 
@@ -85,27 +99,33 @@ void TW_Component_Free( TW_Component* self )
 {
     switch ( self->type )
     {
-        case TW_COMPONENT_TRANSFORM:
+        case TW_C_TRANSFORM:
             TW_Transform_Free( self->transform );
             break;
 
-        case TW_COMPONENT_TEXTURE:
+        case TW_C_THINK:
+            TW_Think_Free( self->think );
+            break;
+
+        case TW_C_TEXTURE:
             TW_Texture_Free( self->texture );
             break;
 
-        case TW_COMPONENT_TEXT:
+        case TW_C_TEXT:
             TW_Text_Free( self->text );
             break;
 
-            case TW_COMPONENT_SPRITE:
+            case TW_C_SPRITE:
             TW_Sprite_Free( self->sprite );
             break;
 
-        case TW_COMPONENT_ANIMATION:
+        case TW_C_ANIMATION:
             TW_Animation_Free( self->animation );
             break;
 
         default:
             break;
     }
+    self->type = 0;
+    free(self);
 }

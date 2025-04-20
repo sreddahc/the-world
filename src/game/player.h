@@ -1,11 +1,17 @@
-// #pragma once
+#pragma once
 
-// #include "../ecs/entity.h"
+#include "../ecs/scene.h"
+#include "../renderer/animation.h"
+#include "../engine/inputhandler.h"
 
 
 // // Function definitions
 
-// /**
-//  * TW_Player_Create - Creates a player entity... fill in the rest when time allows...
-//  */
-// TW_Entity* TW_Player_Create();
+
+void TW_Player_Think( TW_Component* component );
+
+
+/**
+ * TW_Player_Create - Creates a player entity... fill in the rest when time allows...
+ */
+TW_Entity* TW_Player_Create();

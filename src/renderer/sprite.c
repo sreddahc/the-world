@@ -11,8 +11,6 @@ TW_Sprite* TW_Sprite_Create( char* path, int width, int height )
 
     sprite->texture = TW_Texture_CreateTexture();
     TW_Texture_LoadImage( sprite->texture, path );
-    // sprite->texture->width = sprite->width;
-    // sprite->texture->height = sprite->height;
 
     int rows = sprite->texture->height / sprite->height;
     int cols = sprite->texture->width / sprite->width;

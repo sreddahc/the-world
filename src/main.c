@@ -5,17 +5,17 @@
 #include "renderer/text.h"
 #include "renderer/animation.h"
 #include "engine/timer.h"
-#include "engine/fpstimer.h"
 #include "ecs/scene.h"
 #include "engine/maths.h"
-#include "engine/gametimer.h"
+#include "engine/gamestate.h"
+#include "game/player.h"
+#include "game/debugstats.h"
 
 // Global variables
 // Screen dimensions
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 768;
 const int SCREEN_FPS = 60;
-const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
 
 // Key press surface constants
 enum KeyPressSurfaces
@@ -84,7 +84,12 @@ bool init()
                     success = false;
                 }
 
-                TW_GameTimer_Create();
+                // Initialise the game timer
+                TW_GameState_Create();
+                TW_GameState_SetFrameLimit( SCREEN_FPS );
+
+                // Initialse input handler
+                TW_InputHandler_Create();
             }
         }
     }
@@ -118,30 +123,9 @@ int main( int argc, char* args[] )
         // Main loop flag
         bool quit = false;
 
-        // Delta Time
-        Uint64 now = SDL_GetPerformanceCounter();
-        Uint64 previous = SDL_GetPerformanceCounter();
-        float delta_time = 0.0;
-        char deltaTimeText[50] = "Delta Time: 0.00000 ms";
-
-        // Mouse
-        TW_Vector2* mousePosition = TW_Vector2_Create( 0, 0 );
-        char mousePositionText[50] = "Mouse Position: X=0, Y=0";
-
-        // Frame counter
-        TW_FPSTimer fpsTimer;
-        TW_FPSTimer_Init( &fpsTimer );
-        int countedFrames = 0;
-        char fpsText[50] = "FPS: 0.00";
-
         // Event handler
-        SDL_Event e;
+        SDL_Event event;
 
-        // Time
-        TW_Timer mainTimer;
-        TW_Timer_Init( &mainTimer, false );
-        char timeText[50] = "Time since reset: 0ms";
-        
         // Main scene
         TW_Scene* sceneMain = TW_Scene_Create();
 
@@ -149,164 +133,99 @@ int main( int argc, char* args[] )
         TW_Texture* gBackground = TW_Texture_CreateTexture();
         TW_Texture_LoadImage( gBackground, "src/images/backgrounds/day.png" );
         TW_Entity* entityBackground = TW_Entity_Create();
-        TW_Entity_AddComponent( entityBackground, TW_Component_Create( TW_COMPONENT_TEXTURE, gBackground ) );
+        TW_Entity_AddComponent( entityBackground, TW_Component_Create( TW_C_TEXTURE, gBackground ) );
         TW_Scene_AddEntity( sceneMain, entityBackground );
 
         // Title Entity
         TW_Text* gTitle = TW_Text_Create( "PROBS A COOL GAME", NULL, 32, TW_Colour_Create( 0x80, 0x00, 0x80, 0xff ) );
         TW_Entity* entityTitle = TW_Entity_Create();
-        TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_COMPONENT_TEXT, gTitle ) );
-        TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( SCREEN_WIDTH / 2, 30, 0.0, 1.0 ) ) );
-        TW_Vector2_Set(TW_Entity_GetComponent( entityTitle, TW_COMPONENT_TRANSFORM )->transform->centre, gTitle->texture->width / 2, gTitle->texture->height / 2 );
+        TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_C_TEXT, gTitle ) );
+        TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_C_TRANSFORM, TW_Transform_Create( SCREEN_WIDTH / 2, 30, 0.0, 1.0 ) ) );
+        TW_Vector2_Set(TW_Entity_GetComponent( entityTitle, TW_C_TRANSFORM )->transform->centre, gTitle->texture->width / 2, gTitle->texture->height / 2 );
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
-        // Mouse Position Entity
-        TW_Text* gMouseText = TW_Text_Create( mousePositionText, NULL, 0, NULL );
-        TW_Entity* entityMouseText = TW_Entity_Create();
-        TW_Entity_AddComponent( entityMouseText, TW_Component_Create( TW_COMPONENT_TEXT, gMouseText ) );
-        TW_Entity_AddComponent( entityMouseText, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 5, 5, 0.0, 1.0 ) ) );
-        TW_Scene_AddEntity( sceneMain, entityMouseText );
-
         // Player Entity
-        TW_Animation* gPlayer = TW_Animation_Create( TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 ), 4, (int[]){ 0, 1, 2, 3 } );
-        TW_Entity* entityPlayer = TW_Entity_Create();
-        TW_Entity_AddComponent( entityPlayer, TW_Component_Create( TW_COMPONENT_ANIMATION, gPlayer ) );
-        TW_Entity_AddComponent( entityPlayer, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 200, 200, 0.0, 1.0 ) ) );
-        TW_Scene_AddEntity( sceneMain, entityPlayer );
+        // TW_Animation* gPlayer = TW_Animation_Create( TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 ), 4, (int[]){ 0, 1, 2, 3 } );
+        // TW_Entity* entityPlayer = TW_Entity_Create();
+        // TW_Entity_AddComponent( entityPlayer, TW_Component_Create( TW_COMPONENT_ANIMATION, gPlayer ) );
+        // TW_Entity_AddComponent( entityPlayer, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 200, 200, 0.0, 1.0 ) ) );
+        // TW_Scene_AddEntity( sceneMain, entityPlayer );
+        // TW_Player_Create( sceneMain );
+        TW_Scene_AddEntity( sceneMain, TW_Player_Create() );
 
         // Time
+        TW_Timer* mainTimer = TW_Timer_Create( false );
+        char timeText[50] = "Time since reset: 0ms";
         TW_Text* gTimeText = TW_Text_Create( timeText, NULL, 0, NULL );
         TW_Entity* entityTimeText = TW_Entity_Create();
-        TW_Entity_AddComponent( entityTimeText, TW_Component_Create( TW_COMPONENT_TEXT, gTimeText ) );
-        TW_Entity_AddComponent(entityTimeText, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 5, 25, 0.0, 1.0 ) ) );
+        TW_Entity_AddComponent( entityTimeText, TW_Component_Create( TW_C_TEXT, gTimeText ) );
+        TW_Entity_AddComponent(entityTimeText, TW_Component_Create( TW_C_TRANSFORM, TW_Transform_Create( 500, 125, 0.0, 1.0 ) ) );
         TW_Scene_AddEntity( sceneMain, entityTimeText );
 
-        // FPS
-        TW_Text* gFPSText = TW_Text_Create( fpsText, NULL, 0, NULL );
-        TW_Entity* entityFPSText = TW_Entity_Create();
-        TW_Entity_AddComponent( entityFPSText, TW_Component_Create( TW_COMPONENT_TEXT, gFPSText ) );
-        TW_Entity_AddComponent(entityFPSText, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 5, 45, 0.0, 1.0 ) ) );
-        TW_Scene_AddEntity( sceneMain, entityFPSText );
-
-        // Delta Time
-        TW_Text* gDeltaTimeText = TW_Text_Create( deltaTimeText, NULL, 0, NULL );
-        TW_Entity* entityDeltaTimeText = TW_Entity_Create();
-        TW_Entity_AddComponent( entityDeltaTimeText, TW_Component_Create( TW_COMPONENT_TEXT, gDeltaTimeText ) );
-        TW_Entity_AddComponent(entityDeltaTimeText, TW_Component_Create( TW_COMPONENT_TRANSFORM, TW_Transform_Create( 5, 65, 0.0, 1.0 ) ) );
-        TW_Scene_AddEntity( sceneMain, entityDeltaTimeText );
+        // Debug Status
+        TW_DebugStats_Create( sceneMain );
 
         while( !quit )
         {
-            while( SDL_PollEvent( &e ) != 0 )
+            while( TW_InputHandler_Poll() == true )
             {
-                // Window Event
-                if( e.type == SDL_QUIT )
+                quit = TW_InputHandler_CheckQuit();
+
+                if( TW_InputHandler_CheckKeyPressed( SDLK_ESCAPE ) == true )
                 {
                     quit = true;
                 }
-                // Keyboard Event
-                else if( e.type == SDL_KEYDOWN )
-                {
-                    switch( e.key.keysym.sym )
-                    {
-                    case SDLK_ESCAPE:
-                        quit = true;
-                        break;
-                    
-                    // Reset clock
-                    case SDLK_RETURN:
-                    TW_Timer_Reset( &mainTimer );
-                    break;
+                
+                TW_Scene_Run( sceneMain );
 
-                    // Pause/resume clock
-                    case SDLK_SPACE:
-                    if( mainTimer.paused )
+                if( TW_InputHandler_CheckKeyPressed( SDLK_RETURN ) == true )
+                {
+                    TW_Timer_Reset( mainTimer );
+                }
+
+                if( TW_InputHandler_CheckKeyPressed( SDLK_SPACE ) == true )
+                {
+                    if( mainTimer->paused )
                     {
-                        TW_Timer_Resume( &mainTimer );
-                        for( int i = 0; i < sceneMain->size; i++ )
-                        {
-                            TW_Component* tempAnimation = TW_Entity_GetComponent( sceneMain->entities[ i ], TW_COMPONENT_ANIMATION );
-                            if( tempAnimation != NULL )
-                            {
-                                tempAnimation->animation->paused = false;
-                            }
-                        }
+                        TW_Timer_Resume( mainTimer );
                     }
                     else
                     {
-                        TW_Timer_Pause( &mainTimer );
-                        for( int i = 0; i < sceneMain->size; i++ )
+                        TW_Timer_Pause( mainTimer );
+                    }
+
+                    for( int index = 0; index < sceneMain->size; index++ )
+                    {
+                        TW_Component* tempAnimation = TW_Entity_GetComponent( sceneMain->entities[ index ], TW_C_ANIMATION );
+                        if( tempAnimation != NULL )
                         {
-                            TW_Component* tempAnimation = TW_Entity_GetComponent( sceneMain->entities[ i ], TW_COMPONENT_ANIMATION );
-                            if( tempAnimation != NULL )
-                            {
-                                tempAnimation->animation->paused = true;
-                            }
+                            tempAnimation->animation->paused = mainTimer->paused;
                         }
                     }
-                    break;
-
-                    default:
-                        break;
-                    }
-                }
-
-                // Mouse Event
-                else if( e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP )
-                {
-                    SDL_GetMouseState( &mousePosition->x, &mousePosition->y );
-                    
-                    snprintf(mousePositionText, 50, "Mouse Position: X=%d, Y=%d", mousePosition->x, mousePosition->y);
-
-                    if( e.type == SDL_MOUSEBUTTONDOWN )
-                    {
-                        strcat(mousePositionText, " - KEYDOWN");
-                    }
-
-                    TW_Text_Update( gMouseText );
-
                 }
             }
 
-            // Update time
-            snprintf( timeText, 50, "Time since reset: %d ms", TW_Timer_GetTime( &mainTimer ) );
+            snprintf( timeText, 50, "Time since reset: %d ms", TW_Timer_GetTime( mainTimer ) );
             TW_Text_Update( gTimeText );
-
-            // Update FPS
-            snprintf( fpsText, 50, "FPS: %.2f", TW_FPSTimer_GetFPS( &fpsTimer ) );
-            TW_Text_Update( gFPSText );
 
             // Update the surface
             SDL_RenderClear( TW_GetRenderer() );
-            TW_GameTimer_Update();
+            TW_GameState_Update();
 
-            snprintf( deltaTimeText, 50, "Delta Time: %.5f ms", TW_GameTimer_GetTimeDelta() );
-            TW_Text_Update( gDeltaTimeText );
+            TW_Scene_Run( sceneMain );
 
             // For each Entity in a Scene
             TW_Scene_Render( sceneMain );
 
             // // Update screen
             SDL_RenderPresent( TW_GetRenderer() );
-
-            // Update frames counter
-            TW_FPSTimer_Update( &fpsTimer );
-
-            // Cap framerate at 60fps
-            int frameTicks = TW_FPSTimer_GetFPS( &fpsTimer );
-
-            if( frameTicks < SCREEN_TICKS_PER_FRAME )
-            {
-                SDL_Delay( SCREEN_TICKS_PER_FRAME - frameTicks );
-            }
+            TW_GameState_LimitFrameRate();
         }
 
         // Free resources
-        TW_Vector2_Free( mousePosition );
-        TW_Timer_Free( &fpsTimer );
-        TW_Timer_Free( &mainTimer );
+        TW_Timer_Free( mainTimer );
         TW_Scene_Free( sceneMain );
-        TW_GameTimer_Free();
+        TW_GameState_Free();
     }
 
     // Free resources and close SDL
