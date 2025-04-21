@@ -1,6 +1,6 @@
 #pragma once
 
-#include "think.h"
+#include "components/think.h"
 #include "components/transform.h"
 #include "components/velocity.h"
 #include "../renderer/renderer.h"
