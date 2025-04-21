@@ -41,7 +41,7 @@ bool TW_InputHandler_CheckQuit()
 }
 
 
-bool TW_InputHandler_CheckKeyboard()
+bool TW_InputHandler_CheckKeyDown()
 {
     if( TW_InputHandler_CheckEvents() == true )
     {
@@ -56,11 +56,30 @@ bool TW_InputHandler_CheckKeyboard()
 
 bool TW_InputHandler_CheckKeyPressed( SDL_Keycode key )
 {
-    if( TW_InputHandler_CheckKeyboard() == true )
+    if( TW_InputHandler_CheckEvents() == true )
     {
-        if( inputHandler->events.key.keysym.sym == key )
-        {
-            return true;
+        if( inputHandler->events.type == SDL_KEYDOWN && inputHandler->events.key.repeat == 0 )
+            {
+            if( inputHandler->events.key.keysym.sym == key )
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+bool TW_InputHandler_CheckKeyDepressed( SDL_Keycode key )
+{
+    if( TW_InputHandler_CheckEvents() == true )
+    {
+        if( inputHandler->events.type == SDL_KEYUP && inputHandler->events.key.repeat == 0 )
+            {
+            if( inputHandler->events.key.keysym.sym == key )
+            {
+                return true;
+            }
         }
     }
     return false;

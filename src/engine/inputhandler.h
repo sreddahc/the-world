@@ -24,10 +24,13 @@ bool TW_InputHandler_Poll();
 bool TW_InputHandler_CheckEvents();
 
 
-bool TW_InputHandler_CheckKeyboard();
+bool TW_InputHandler_CheckKeyDown();
 
 
 bool TW_InputHandler_CheckKeyPressed( SDL_Keycode key );
+
+
+bool TW_InputHandler_CheckKeyDepressed( SDL_Keycode key );
 
 
 bool TW_InputHandler_CheckMouse();
