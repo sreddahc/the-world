@@ -26,7 +26,7 @@ bool TW_Text_SetFont( TW_Text* self, char* fontName, int fontSize )
 // Updates a TW_Text texture to match TW_Text values
 bool TW_Text_Update( TW_Text* self )
 {
-    SDL_Surface* textSurface = TTF_RenderText_Solid( self->fontObject, self->textValue, self->fontColour );
+    SDL_Surface* textSurface = TTF_RenderText_Blended( self->fontObject, self->textValue, self->fontColour );
     
     // -- BEGIN: Refactor - Fixes a memory leak... but free perhaps shouldn't be here.
     if( self->texture != NULL )
