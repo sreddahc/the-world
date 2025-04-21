@@ -1,6 +1,7 @@
 #include "transform.h"
 
 
+// Creates a TW_Transform object with the specified values
 TW_Transform* TW_Transform_Create( int x, int y, double angle, double scale )
 {
     TW_Transform* transform = malloc( sizeof( TW_Transform ) );
@@ -16,6 +17,15 @@ TW_Transform* TW_Transform_Create( int x, int y, double angle, double scale )
 }
 
 
+// Set the position of the transform.
+void TW_Transform_SetPosition( TW_Transform* self, int x, int y )
+{
+    self->position->x = x;
+    self->position->y = y;
+}
+
+
+// Frees the resources used by a TW_Transform object
 void TW_Transform_Free( TW_Transform* self )
 {
     self->scale = 0.0;

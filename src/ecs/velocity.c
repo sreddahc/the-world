@@ -48,8 +48,11 @@ void TW_Velocity_Run( TW_Velocity* self, TW_Transform* transform )
         if( self->timeSinceLastInterval >= (float)self->interval  / MILLISECONDS_IN_A_SEC )
         {
             self->timeSinceLastInterval -= (float)self->interval  / MILLISECONDS_IN_A_SEC;
-            transform->position->x += self->speed->x;
-            transform->position->y += self->speed->y;
+            TW_Transform_SetPosition(
+                transform,
+                transform->position->x + self->speed->x,
+                transform->position->y + self->speed->y
+            );
             TW_Velocity_SetSpeed(
                 self,
                 self->speed->x + self->acceleration->x,
@@ -59,7 +62,7 @@ void TW_Velocity_Run( TW_Velocity* self, TW_Transform* transform )
     }
     else
     {
-        printf( "ERROR - TW_Velocity_Run - There is not transform to operate on." );
+        printf( "ERROR - TW_Velocity_Run - There is no transform to operate on." );
     }
 }
 
