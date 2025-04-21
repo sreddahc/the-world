@@ -1,9 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include <stdbool.h>
-#include "texture.h"
-
+#include "texture.h" // RENDERER Doesn't need this but something that depends on it does...
 
 // Type definitions
 

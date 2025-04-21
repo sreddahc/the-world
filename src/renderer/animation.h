@@ -1,6 +1,7 @@
 #pragma once
 
 #include "sprite.h"
+#include "../engine/gamestate.h"
 
 
 // Type definitions
