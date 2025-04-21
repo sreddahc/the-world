@@ -115,9 +115,6 @@ int main( int argc, char* args[] )
         // Main loop flag
         bool quit = false;
 
-        // Event handler
-        SDL_Event event;
-
         // Main scene
         TW_Scene* sceneMain = TW_Scene_Create();
 
@@ -191,7 +188,7 @@ int main( int argc, char* args[] )
                 }
             }
 
-            snprintf( timeText, 50, "Time since reset: %d ms", TW_Timer_GetTime( mainTimer ) );
+            snprintf( timeText, 50, "Time since reset: %ld ms", TW_Timer_GetTime( mainTimer ) );
             TW_Text_Update( gTimeText );
 
             // Update the surface

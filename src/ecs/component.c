@@ -2,29 +2,24 @@
 
 
 // Creates a pointer to a component of specified type and value
-TW_Component* TW_Component_Create( int type, TW_ComponentValue* value ){
+TW_Component* TW_Component_Create( int type, void* value ){
     TW_Component* component = malloc( sizeof( TW_Component ) );
     component->type = type;
     switch ( component->type )
     {
-        case TW_C_TRANSFORM:
-            component->transform = value;
-            component->transform->parent = component;
-            break;
-        
-        case TW_C_VELOCITY:
-            component->velocity = value;
-            component->velocity->parent = component;
+        case TW_C_ANIMATION:
+            component->animation = value;
+            component->animation->parent = component;
             break;
 
-        case TW_C_THINK:
-            component->think = value;
-            component->think->parent = component;
+        case TW_C_COLLISION:
+            component->collision = value;
+            component->collision->parent = component;
             break;
 
-        case TW_C_TEXTURE:
-            component->texture = value;
-            component->texture->parent = component;
+        case TW_C_SPRITE:
+            component->sprite = value;
+            component->sprite->parent = component;
             break;
 
         case TW_C_TEXT:
@@ -32,14 +27,24 @@ TW_Component* TW_Component_Create( int type, TW_ComponentValue* value ){
             component->text->parent = component;
             break;
 
-            case TW_C_SPRITE:
-            component->sprite = value;
-            component->sprite->parent = component;
+        case TW_C_TEXTURE:
+            component->texture = value;
+            component->texture->parent = component;
             break;
 
-        case TW_C_ANIMATION:
-            component->animation = value;
-            component->animation->parent = component;
+        case TW_C_THINK:
+            component->think = value;
+            component->think->parent = component;
+            break;
+
+        case TW_C_TRANSFORM:
+            component->transform = value;
+            component->transform->parent = component;
+            break;
+
+        case TW_C_VELOCITY:
+            component->velocity = value;
+            component->velocity->parent = component;
             break;
 
         default:
@@ -50,11 +55,16 @@ TW_Component* TW_Component_Create( int type, TW_ComponentValue* value ){
 }
 
 
-// If there is a visual aspect to the component... renders it
+// If there is a visual aspect to the component... render it
 void TW_Component_Render( TW_Component* self, TW_Transform* transform )
 {
     switch ( self->type )
     {
+        // // This also...
+        // case TW_C_COLLISION:
+        //     TW_Collision_Run( self->collision, transform );
+        //     break;
+        
         // This probably belongs in TW_Component_Run... but convenient transform reference
         case TW_C_VELOCITY:
             TW_Velocity_Run( self->velocity, transform );
@@ -68,7 +78,7 @@ void TW_Component_Render( TW_Component* self, TW_Transform* transform )
             TW_Text_Render( self->text, transform );
             break;
 
-            case TW_C_SPRITE:
+        case TW_C_SPRITE:
             TW_Sprite_Render( self->sprite, transform );
             break;
 
@@ -90,6 +100,10 @@ void TW_Component_Run( TW_Component* self )
         // // This probably belongs here...
         // case TW_C_VELOCITY:
         //     TW_Velocity_Run( self->velocity, transform );
+        //     break;
+        //
+        // case TW_C_COLLISION:
+        //     TW_Collision_Run( self->collision, transform );
         //     break;
 
         case TW_C_THINK:
@@ -120,37 +134,42 @@ void TW_Component_Free( TW_Component* self )
 {
     switch ( self->type )
     {
-        case TW_C_TRANSFORM:
-            TW_Transform_Free( self->transform );
-            break;
-        
-        case TW_C_VELOCITY:
-            TW_Velocity_Free( self->transform );
+        case TW_C_ANIMATION:
+            TW_Animation_Free( self->animation );
             break;
 
-        case TW_C_THINK:
-            TW_Think_Free( self->think );
+        case TW_C_COLLISION:
+            TW_Collision_Free( self->collision );
             break;
 
-        case TW_C_TEXTURE:
-            TW_Texture_Free( self->texture );
+        case TW_C_SPRITE:
+            TW_Sprite_Free( self->sprite );
             break;
 
         case TW_C_TEXT:
             TW_Text_Free( self->text );
             break;
 
-            case TW_C_SPRITE:
-            TW_Sprite_Free( self->sprite );
+        case TW_C_TEXTURE:
+            TW_Texture_Free( self->texture );
             break;
 
-        case TW_C_ANIMATION:
-            TW_Animation_Free( self->animation );
+        case TW_C_THINK:
+            TW_Think_Free( self->think );
+            break;
+
+        case TW_C_TRANSFORM:
+            TW_Transform_Free( self->transform );
+            break;
+
+        case TW_C_VELOCITY:
+            TW_Velocity_Free( self->velocity );
             break;
 
         default:
             break;
     }
+
     self->type = 0;
     free(self);
 }

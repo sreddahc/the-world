@@ -53,7 +53,7 @@ bool TW_Text_SetFont( TW_Text* self, char* fontName, int fontSize );
  * Args:
  * - TW_Text        - self              - The TW_Text object to render as a SDL_Texture
  */
-bool TW_Text_Update( TW_Text* self );
+void TW_Text_Update( TW_Text* self );
 
 
 /**

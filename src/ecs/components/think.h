@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stddef.h>
+#include <stdlib.h>
 
 
 // Type definitions
@@ -14,7 +14,7 @@ typedef struct TW_Component TW_Component;
  * - void           - (*think)()    - A pointer to a function to execute when thinking
  */
 typedef struct TW_Think {
-    void (*think)();
+    void (*think)( TW_Component* );
     TW_Component* parent;
 } TW_Think;
 

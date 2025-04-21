@@ -24,18 +24,15 @@ bool TW_Text_SetFont( TW_Text* self, char* fontName, int fontSize )
 
 
 // Updates a TW_Text texture to match TW_Text values
-bool TW_Text_Update( TW_Text* self )
+void TW_Text_Update( TW_Text* self )
 {
     SDL_Surface* textSurface = TTF_RenderText_Blended( self->fontObject, self->textValue, self->fontColour );
-    
-    // -- BEGIN: Refactor - Fixes a memory leak... but free perhaps shouldn't be here.
+
     if( self->texture != NULL )
     {
         TW_Texture_Free( self->texture );
     }
     self->texture = TW_Texture_CreateTexture();
-    // -- END: Refactor - Instead might be better to update the existing texture rather
-    //                    than make a new one.
 
     TW_Texture_LoadSurface( self->texture, textSurface );
     SDL_FreeSurface( textSurface );

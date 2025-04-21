@@ -1,5 +1,6 @@
 #pragma once
 
+#include "components/collision.h"
 #include "components/think.h"
 #include "components/transform.h"
 #include "components/velocity.h"
@@ -20,13 +21,14 @@ typedef struct TW_Entity TW_Entity;
  */
 enum TW_ComponentType
 {
-    TW_C_TRANSFORM,
-    TW_C_VELOCITY,
-    TW_C_THINK,
+    TW_C_ANIMATION,
+    TW_C_COLLISION,
+    TW_C_SPRITE,    
     TW_C_TEXTURE,
     TW_C_TEXT,
-    TW_C_SPRITE,
-    TW_C_ANIMATION,
+    TW_C_TRANSFORM,
+    TW_C_THINK,
+    TW_C_VELOCITY,
     TW_C_TOTAL
 };
 
@@ -35,15 +37,16 @@ enum TW_ComponentType
  * TW_Component_Value - A union of all valid component types. This union should have one
  * object matching each TW_Component_Type.
  */
-typedef union TW_ComponentValue {
-    TW_Transform* transform;
-    TW_Velocity* velocity;
-    TW_Think* think;
-    TW_Texture* texture;
-    TW_Text* text;
-    TW_Sprite* sprite;
-    TW_Animation* animation;
-} TW_ComponentValue;
+// typedef union TW_ComponentValue {
+//     TW_Animation* animation;
+//     TW_Collision* collision;
+//     TW_Sprite* sprite;
+//     TW_Text* text;
+//     TW_Texture* texture;
+//     TW_Think* think;
+//     TW_Transform* transform;
+//     TW_Velocity* velocity;
+// } TW_ComponentValue;
 
 
 /**
@@ -57,15 +60,15 @@ typedef struct TW_Component {
     enum TW_ComponentType type;
     TW_Entity* parent;
     union {
+        TW_Animation* animation;
+        TW_Collision* collision;
+        TW_Sprite* sprite;
+        TW_Text* text;
+        TW_Texture* texture;
+        TW_Think* think;
         TW_Transform* transform;
         TW_Velocity* velocity;
-        TW_Think* think;
-        TW_Texture* texture;
-        TW_Text* text;
-        TW_Sprite* sprite;
-        TW_Animation* animation;
     };
-    // TW_Component_Value* value;
 } TW_Component;
 
 
@@ -81,11 +84,11 @@ typedef struct TW_Component {
  * Returns:
  * - TW_Component*          - Returns a pointer to the component the specified type
  */
-TW_Component* TW_Component_Create( int type, TW_ComponentValue* value );
+TW_Component* TW_Component_Create( int type, void* value );
 
 
 /**
- * TW_Component_Render - If there is a visual aspect to the component... renders it
+ * TW_Component_Render - If there is a visual aspect to the component... render it
  * 
  * Args:
  * - TW_Component*          - self          - The TW_Component to render

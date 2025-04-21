@@ -2,6 +2,7 @@
 
 #include "../ecs/scene.h"
 #include "../engine/gamestate.h"
+#include "../engine/inputhandler.h"
 #include "../engine/maths.h"
 
 
