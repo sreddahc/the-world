@@ -1,13 +1,5 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
 #include "renderer/renderer.h"
-#include "renderer/text.h"
-#include "renderer/animation.h"
 #include "engine/timer.h"
-#include "ecs/scene.h"
-#include "engine/maths.h"
-#include "engine/gamestate.h"
 #include "game/player.h"
 #include "game/debugstats.h"
 
