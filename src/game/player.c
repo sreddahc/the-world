@@ -41,7 +41,7 @@ TW_Entity* TW_Player_Create()
     TW_Component* cVelocityPlayer = TW_Component_Create( TW_C_VELOCITY, velocityPlayer );
     TW_Entity_AddComponent( entityPlayer, cVelocityPlayer );
 
-    TW_Sprite* spritePlayer = TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 );
+    TW_Sprite* spritePlayer = TW_Sprite_Create( "src/assets/images/sprites/player.png", 32, 32 );
     TW_Animation* animationPlayer = TW_Animation_Create( spritePlayer, 4, (int[]){ 0, 1, 2, 3 } );
     TW_Component* cPlayerAnimation = TW_Component_Create( TW_C_ANIMATION, animationPlayer );
     TW_Entity_AddComponent( entityPlayer, cPlayerAnimation );

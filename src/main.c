@@ -131,7 +131,7 @@ int main( int argc, char* args[] )
 
         // Background
         TW_Texture* gBackground = TW_Texture_CreateTexture();
-        TW_Texture_LoadImage( gBackground, "src/images/backgrounds/day.png" );
+        TW_Texture_LoadImage( gBackground, "src/assets/images/backgrounds/day.png" );
         TW_Entity* entityBackground = TW_Entity_Create();
         TW_Entity_AddComponent( entityBackground, TW_Component_Create( TW_C_TEXTURE, gBackground ) );
         TW_Scene_AddEntity( sceneMain, entityBackground );
