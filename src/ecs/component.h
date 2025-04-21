@@ -34,22 +34,6 @@ enum TW_ComponentType
 
 
 /**
- * TW_Component_Value - A union of all valid component types. This union should have one
- * object matching each TW_Component_Type.
- */
-// typedef union TW_ComponentValue {
-//     TW_Animation* animation;
-//     TW_Collision* collision;
-//     TW_Sprite* sprite;
-//     TW_Text* text;
-//     TW_Texture* texture;
-//     TW_Think* think;
-//     TW_Transform* transform;
-//     TW_Velocity* velocity;
-// } TW_ComponentValue;
-
-
-/**
  * TW_Component - Components are a part of entities to be added to TW_Entity objects
  * 
  * Args:
