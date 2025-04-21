@@ -1,11 +1,7 @@
 #pragma once
 
-// #include <stdbool.h>
-// #include <SDL2/SDL.h>
-// #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-
-#include "renderer.h"
+#include "texture.h"
 
 
 // Type definitions
@@ -34,6 +30,7 @@ typedef struct TW_Text {
     TW_Component* parent;           // Parent component if it exists, otherwise `NULL`
 } TW_Text;
 
+
 // Function definitions
 
 /**
@@ -60,7 +57,7 @@ bool TW_Text_Update( TW_Text* self );
 
 
 /**
- * TW_Text_Create - Initialised a TW_Text object based on a series of parameters.
+ * TW_Text_Create - Initialise a TW_Text object based on a series of parameters.
  * 
  * Args:
  * - char*          - textValue         - The value to assign to the TW_Text object
