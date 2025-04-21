@@ -1,12 +1,12 @@
 #pragma once
 
 #include "sprite.h"
+#include "../engine/gamestate.h"
 
 
 // Type definitions
 
 #define MILLISECONDS_IN_A_SEC 1000.f
-
 
 typedef struct TW_Component TW_Component;
 
@@ -24,14 +24,14 @@ typedef struct TW_Component TW_Component;
  * - bool           - paused                - Pause animation? true = yes, false = no
  */
 typedef struct TW_Animation {
-    TW_Sprite* spriteSheet;     // The sprite object with all the texture information
-    int animationSize;          // Number of frames in the animation
-    int* animationFrames;       // Sprite frames that form part of the animation
-    int currentFrame;           // The current frame of the animation
-    int animationSpeed;         // Speed of the animation
-    float timeSinceLastFrame;   // Time since frame was last updated
-    bool paused;                // true = paused, false = unpaused
-    TW_Component* parent        // Parent component if it exists, otherwise `NULL`
+    TW_Sprite* spriteSheet;                 // The sprite object with all the texture information
+    int animationSize;                      // Number of frames in the animation
+    int* animationFrames;                   // Sprite frames that form part of the animation
+    int currentFrame;                       // The current frame of the animation
+    int animationSpeed;                     // Speed of the animation
+    float timeSinceLastFrame;               // Time since frame was last updated
+    bool paused;                            // true = paused, false = unpaused
+    TW_Component* parent                    // Parent component if it exists, otherwise `NULL`
 } TW_Animation;
 
 

@@ -1,6 +1,7 @@
 #include "player.h"
 
 
+// The think function for the player entity
 void TW_Player_Think( TW_Component* component )
 {
     if( component->parent != NULL )
@@ -32,11 +33,17 @@ void TW_Player_Think( TW_Component* component )
 }
 
 
-TW_Entity* TW_Player_Create()
+// Creates a player entity and adds it to target scene
+void TW_Player_Create( TW_Scene* target )
 {
     TW_Entity* entityPlayer = TW_Entity_Create();
 
-    TW_Sprite* spritePlayer = TW_Sprite_Create( "src/images/sprites/player.png", 32, 32 );
+    TW_Velocity* velocityPlayer = TW_Velocity_Create( 1, 1, 0, 0 );
+    velocityPlayer->interval = 50;
+    TW_Component* cVelocityPlayer = TW_Component_Create( TW_C_VELOCITY, velocityPlayer );
+    TW_Entity_AddComponent( entityPlayer, cVelocityPlayer );
+
+    TW_Sprite* spritePlayer = TW_Sprite_Create( "src/assets/images/sprites/player.png", 32, 32 );
     TW_Animation* animationPlayer = TW_Animation_Create( spritePlayer, 4, (int[]){ 0, 1, 2, 3 } );
     TW_Component* cPlayerAnimation = TW_Component_Create( TW_C_ANIMATION, animationPlayer );
     TW_Entity_AddComponent( entityPlayer, cPlayerAnimation );
@@ -49,5 +56,5 @@ TW_Entity* TW_Player_Create()
     TW_Component* cThinkPlayer = TW_Component_Create( TW_C_THINK, thinkPlayer );
     TW_Entity_AddComponent( entityPlayer, cThinkPlayer );
 
-    return entityPlayer;
+    TW_Scene_AddEntity( target, entityPlayer );
 }

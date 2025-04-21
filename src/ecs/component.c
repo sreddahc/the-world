@@ -12,6 +12,11 @@ TW_Component* TW_Component_Create( int type, TW_ComponentValue* value ){
             component->transform->parent = component;
             break;
         
+        case TW_C_VELOCITY:
+            component->velocity = value;
+            component->velocity->parent = component;
+            break;
+
         case TW_C_THINK:
             component->think = value;
             component->think->parent = component;
@@ -50,6 +55,11 @@ void TW_Component_Render( TW_Component* self, TW_Transform* transform )
 {
     switch ( self->type )
     {
+        // This probably belongs in TW_Component_Run... but convenient transform reference
+        case TW_C_VELOCITY:
+            TW_Velocity_Run( self->velocity, transform );
+            break;
+
         case TW_C_TEXTURE:
             TW_Texture_Render( self->texture, transform );
             break;
@@ -75,9 +85,20 @@ void TW_Component_Render( TW_Component* self, TW_Transform* transform )
 // Run logic components
 void TW_Component_Run( TW_Component* self )
 {
-    if( self->type == TW_C_THINK )
+    switch( self->type )
     {
-        TW_Think_Run( self->think );
+        // // This probably belongs here...
+        // case TW_C_VELOCITY:
+        //     TW_Velocity_Run( self->velocity, transform );
+        //     break;
+
+        case TW_C_THINK:
+            TW_Think_Run( self->think );
+            break;
+
+        default:
+            break;
+
     }
 }
 
@@ -101,6 +122,10 @@ void TW_Component_Free( TW_Component* self )
     {
         case TW_C_TRANSFORM:
             TW_Transform_Free( self->transform );
+            break;
+        
+        case TW_C_VELOCITY:
+            TW_Velocity_Free( self->transform );
             break;
 
         case TW_C_THINK:

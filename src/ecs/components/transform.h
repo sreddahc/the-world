@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include "../engine/maths.h"
+#include "../../engine/maths.h"
 
 
 // Type definitions
@@ -40,6 +40,17 @@ typedef struct TW_Transform {
  * - float              - scale         - The scale of  the entity
  */
 TW_Transform* TW_Transform_Create( int x, int y, double angle, double scale );
+
+
+/**
+ * TW_Transform_SetPosition - Set the position of the transform.
+ * 
+ * Args:
+ * - TW_Transform*      - self          - Set the position of this transform object
+ * - int                - x             - The x position
+ * - int                - y             - The y position
+ */
+void TW_Transform_SetPosition( TW_Transform* self, int x, int y );
 
 
 /**

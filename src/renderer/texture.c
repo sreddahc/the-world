@@ -1,5 +1,4 @@
 #include "texture.h"
-#include "../ecs/entity.h"
 
 
 // Create a colour object given a red, green and blue value

@@ -1,5 +1,4 @@
 #include "animation.h"
-#include "../engine/gamestate.h"
 
 // Create an animation object from a sprite object
 TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int animationSize, int* animationFrames )

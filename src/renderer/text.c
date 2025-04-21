@@ -2,6 +2,8 @@
 
 #define DEFAULT_FONT "src/assets/fonts/dejavu/DejaVuSans.ttf"
 
+
+// Sets to font of a TW_Text object
 bool TW_Text_SetFont( TW_Text* self, char* fontName, int fontSize )
 {
     bool success = true;
@@ -40,6 +42,7 @@ bool TW_Text_Update( TW_Text* self )
 }
 
 
+// Initialise a TW_Text object based on a series of parameters
 TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, TW_Colour* fontColour )
 {
     TW_Text* textObject = malloc( sizeof( TW_Text ) );
@@ -78,13 +81,15 @@ TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, TW_Colou
     return textObject;
 }
 
+
+// Renders a text object to the renderer
 void TW_Text_Render( TW_Text* self, TW_Transform* transform )
 {
     TW_Texture_Render( self->texture, transform );
 }
 
 
-// Frees resources used by a TW_Text object.
+// Frees resources used by a TW_Text object
 void TW_Text_Free( TW_Text* self )
 {
     self->textValue = NULL;

@@ -1,13 +1,5 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
 #include "renderer/renderer.h"
-#include "renderer/text.h"
-#include "renderer/animation.h"
 #include "engine/timer.h"
-#include "ecs/scene.h"
-#include "engine/maths.h"
-#include "engine/gamestate.h"
 #include "game/player.h"
 #include "game/debugstats.h"
 
@@ -131,7 +123,7 @@ int main( int argc, char* args[] )
 
         // Background
         TW_Texture* gBackground = TW_Texture_CreateTexture();
-        TW_Texture_LoadImage( gBackground, "src/images/backgrounds/day.png" );
+        TW_Texture_LoadImage( gBackground, "src/assets/images/backgrounds/day.png" );
         TW_Entity* entityBackground = TW_Entity_Create();
         TW_Entity_AddComponent( entityBackground, TW_Component_Create( TW_C_TEXTURE, gBackground ) );
         TW_Scene_AddEntity( sceneMain, entityBackground );
@@ -145,7 +137,7 @@ int main( int argc, char* args[] )
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
         // Player Entity
-        TW_Scene_AddEntity( sceneMain, TW_Player_Create() );
+        TW_Player_Create( sceneMain );
 
         // Time
         TW_Timer* mainTimer = TW_Timer_Create( false );

@@ -7,6 +7,7 @@ static char fpsStatus[50] = "FPS: 0.00";
 static char deltaTimeStatus[50] = "Delta Time: 0.00000 ms";
 
 
+// The think function for the mouse debug component
 void TW_DebugStats_Mouse_Think( TW_Component* component )
 {
     if( TW_InputHandler_CheckMouse() == true )
@@ -33,6 +34,7 @@ void TW_DebugStats_Mouse_Think( TW_Component* component )
 }
 
 
+// The think function for the FPS debug component
 void TW_DebugStats_FPS_Think( TW_Component* component )
 {
     snprintf( fpsStatus, 50, "FPS: %.2f ", TW_GameState_GetFPS() );
@@ -47,6 +49,7 @@ void TW_DebugStats_FPS_Think( TW_Component* component )
 }
 
 
+// The think function for the delta time debug component
 void TW_DebugStats_DeltaTime_Think( TW_Component* component )
 {
     snprintf( deltaTimeStatus, 50, "Delta Time: %.5f ms", TW_GameState_GetDeltaTime() );
@@ -61,6 +64,7 @@ void TW_DebugStats_DeltaTime_Think( TW_Component* component )
 }
 
 
+// Generates a number of entities and adds them to a target scene for the purposes of debugging
 void TW_DebugStats_Create( TW_Scene* self )
 {
     // Mouse
@@ -114,6 +118,7 @@ void TW_DebugStats_Create( TW_Scene* self )
     TW_Entity_AddComponent( entityDeltaTime, cThinkDeltaTime );
 }
 
+// Free the resources used by a debug status object
 void TW_DebugStats_Free()
 {
     
