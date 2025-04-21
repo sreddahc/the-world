@@ -2,7 +2,7 @@
 
 #include "think.h"
 #include "transform.h"
-#include "velocity.h"
+#include "components/velocity.h"
 #include "../renderer/renderer.h"
 #include "../renderer/text.h"
 #include "../renderer/sprite.h"

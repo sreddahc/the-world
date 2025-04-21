@@ -1,8 +1,8 @@
 #pragma once
 
-#include "transform.h"
-#include "../engine/gamestate.h"
-#include "../engine/maths.h"
+#include "../transform.h"
+#include "../../engine/gamestate.h"
+#include "../../engine/maths.h"
 
 
 // Type definitions
