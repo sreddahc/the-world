@@ -1,7 +1,7 @@
 #pragma once
 
 #include "think.h"
-#include "transform.h"
+#include "components/transform.h"
 #include "components/velocity.h"
 #include "../renderer/renderer.h"
 #include "../renderer/text.h"

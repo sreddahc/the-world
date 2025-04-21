@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include "../engine/maths.h"
+#include "../../engine/maths.h"
 
 
 // Type definitions
