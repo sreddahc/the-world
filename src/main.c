@@ -145,7 +145,7 @@ int main( int argc, char* args[] )
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
         // Player Entity
-        TW_Scene_AddEntity( sceneMain, TW_Player_Create() );
+        TW_Player_Create( sceneMain );
 
         // Time
         TW_Timer* mainTimer = TW_Timer_Create( false );

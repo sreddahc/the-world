@@ -1,6 +1,7 @@
 #include "player.h"
 
 
+// The think function for the player entity
 void TW_Player_Think( TW_Component* component )
 {
     if( component->parent != NULL )
@@ -32,7 +33,8 @@ void TW_Player_Think( TW_Component* component )
 }
 
 
-TW_Entity* TW_Player_Create()
+// Creates a player entity and adds it to target scene
+void TW_Player_Create( TW_Scene* target )
 {
     TW_Entity* entityPlayer = TW_Entity_Create();
 
@@ -54,5 +56,5 @@ TW_Entity* TW_Player_Create()
     TW_Component* cThinkPlayer = TW_Component_Create( TW_C_THINK, thinkPlayer );
     TW_Entity_AddComponent( entityPlayer, cThinkPlayer );
 
-    return entityPlayer;
+    TW_Scene_AddEntity( target, entityPlayer );
 }
