@@ -5,7 +5,7 @@ void TW_Platform_Create( TW_Scene* target, enum TW_PlatformPosition platformType
 {
     TW_Entity* platformEntity = TW_Entity_Create();
 
-    TW_Sprite* platformSprite = TW_Sprite_Create( "src/assets/images/sprites/platforms.png", 70, 70 );
+    TW_Sprite* platformSprite = TW_Sprite_Create( "src/assets/images/sprites/platform.png", 35, 35 );
     platformSprite->currentSprite = platformType;
     TW_Component* cPlatformSprite = TW_Component_Create( TW_C_SPRITE, platformSprite );
     TW_Entity_AddComponent( platformEntity, cPlatformSprite );
@@ -14,7 +14,7 @@ void TW_Platform_Create( TW_Scene* target, enum TW_PlatformPosition platformType
     TW_Component* cPlatformTransform = TW_Component_Create( TW_C_TRANSFORM, platformTransform );
     TW_Entity_AddComponent( platformEntity, cPlatformTransform );
 
-    TW_Collision* platformCollision = TW_Collision_Create( 0, 0, 70, 40 );
+    TW_Collision* platformCollision = TW_Collision_Create( 0, 0, 35, 20 );
     TW_Component* cPlatformCollision = TW_Component_Create( TW_C_COLLISION, platformCollision );
     TW_Entity_AddComponent( platformEntity, cPlatformCollision );
 

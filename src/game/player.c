@@ -55,8 +55,8 @@ void TW_Player_Create( TW_Scene* target, int x, int y )
     TW_Component* cPlayerVelocity = TW_Component_Create( TW_C_VELOCITY, playerVelocity );
     TW_Entity_AddComponent( playerEntity, cPlayerVelocity );
 
-    TW_Sprite* playerSprite = TW_Sprite_Create( "src/assets/images/sprites/player.png", 32, 32 );
-    TW_Animation* playerAnimation = TW_Animation_Create( playerSprite, 4, (int[]){ 0, 1, 2, 3 } );
+    TW_Sprite* playerSprite = TW_Sprite_Create( "src/assets/images/sprites/knight.png", 32, 32 );
+    TW_Animation* playerAnimation = TW_Animation_Create( playerSprite, 4, (int[]){ 0, 1, 2, 1 } );
     TW_Component* cPlayerAnimation = TW_Component_Create( TW_C_ANIMATION, playerAnimation );
     TW_Entity_AddComponent( playerEntity, cPlayerAnimation );
 

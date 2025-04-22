@@ -134,10 +134,25 @@ int main( int argc, char* args[] )
         TW_Vector2_Set(TW_Entity_GetComponent( entityTitle, TW_C_TRANSFORM )->transform->centre, gTitle->texture->width / 2, gTitle->texture->height / 2 );
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
-        // Platform Entity
-        TW_Platform_Create( sceneMain, TW_PLATFORM_LEFT, 200, 250 );
-        TW_Platform_Create( sceneMain, TW_PLATFORM_MIDDLE, 270, 250 );
-        TW_Platform_Create( sceneMain, TW_PLATFORM_RIGHT, 340, 250 );
+        // Platform Entities
+        for( int index = 0; index < 5; index ++ )
+        {
+            int xPosition = 200;
+            switch ( index )
+            {
+                case 0:
+                    TW_Platform_Create( sceneMain, TW_PLATFORM_LEFT, xPosition, 250 );
+                    break;
+
+                case 4:
+                    TW_Platform_Create( sceneMain, TW_PLATFORM_RIGHT, xPosition + ( index * 35 ), 250 );
+                    break;
+
+                default:
+                    TW_Platform_Create( sceneMain, TW_PLATFORM_MIDDLE, xPosition + ( index * 35 ), 250 );
+                    break;
+            }
+        }
 
         // Player Entity
         TW_Player_Create( sceneMain, 200, 200 );
