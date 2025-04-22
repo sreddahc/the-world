@@ -11,6 +11,23 @@ void TW_Player_Think( TW_Entity* entity )
         {
             // Movement keys
 
+            if( TW_InputHandler_CheckKeyPressed( SDLK_RSHIFT ) )
+            {
+                if( TW_GameState_PauseStatus() == false )
+                {
+                    TW_GameState_Pause();
+                }
+                else
+                {
+                    TW_GameState_Resume();
+                }
+                TW_Component* cTempAnimation = TW_Entity_GetComponent( entity, TW_C_ANIMATION );
+                if( cTempAnimation != NULL )
+                {
+                    cTempAnimation->animation->paused = TW_GameState_PauseStatus();
+                }
+            }
+
             if( TW_InputHandler_CheckKeyPressed( SDLK_w ) )
             {
                 velocityComponent->velocity->speed->y = -5;

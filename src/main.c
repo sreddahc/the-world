@@ -158,13 +158,13 @@ int main( int argc, char* args[] )
         TW_Player_Create( sceneMain, 200, 200 );
 
         // Time
-        TW_Timer* mainTimer = TW_Timer_Create( false );
-        char timeText[50] = "Time since reset: 0ms";
-        TW_Text* gTimeText = TW_Text_Create( timeText, NULL, 0, NULL );
-        TW_Entity* entityTimeText = TW_Entity_Create();
-        TW_Entity_AddComponent( entityTimeText, TW_Component_Create( TW_C_TEXT, gTimeText ) );
-        TW_Entity_AddComponent(entityTimeText, TW_Component_Create( TW_C_TRANSFORM, TW_Transform_Create( 500, 125, 0.0, 1.0 ) ) );
-        TW_Scene_AddEntity( sceneMain, entityTimeText );
+        // TW_Timer* mainTimer = TW_Timer_Create( false );
+        // char timeText[50] = "Time since reset: 0ms";
+        // TW_Text* gTimeText = TW_Text_Create( timeText, NULL, 0, NULL );
+        // TW_Entity* entityTimeText = TW_Entity_Create();
+        // TW_Entity_AddComponent( entityTimeText, TW_Component_Create( TW_C_TEXT, gTimeText ) );
+        // TW_Entity_AddComponent(entityTimeText, TW_Component_Create( TW_C_TRANSFORM, TW_Transform_Create( 500, 125, 0.0, 1.0 ) ) );
+        // TW_Scene_AddEntity( sceneMain, entityTimeText );
 
         // Debug Status
         TW_DebugStats_Create( sceneMain );
@@ -181,36 +181,10 @@ int main( int argc, char* args[] )
                 }
                 
                 TW_Scene_Run( sceneMain );
-
-                if( TW_InputHandler_CheckKeyPressed( SDLK_RETURN ) == true )
-                {
-                    TW_Timer_Reset( mainTimer );
-                }
-
-                if( TW_InputHandler_CheckKeyPressed( SDLK_SPACE ) == true )
-                {
-                    if( mainTimer->paused )
-                    {
-                        TW_Timer_Resume( mainTimer );
-                    }
-                    else
-                    {
-                        TW_Timer_Pause( mainTimer );
-                    }
-
-                    for( int index = 0; index < sceneMain->size; index++ )
-                    {
-                        TW_Component* tempAnimation = TW_Entity_GetComponent( sceneMain->entities[ index ], TW_C_ANIMATION );
-                        if( tempAnimation != NULL )
-                        {
-                            tempAnimation->animation->paused = mainTimer->paused;
-                        }
-                    }
-                }
             }
 
-            snprintf( timeText, 50, "Time since reset: %ld ms", TW_Timer_GetTime( mainTimer ) );
-            TW_Text_Update( gTimeText );
+            // snprintf( timeText, 50, "Time since reset: %ld ms", TW_Timer_GetTime( mainTimer ) );
+            // TW_Text_Update( gTimeText );
 
             // Update the surface
             SDL_RenderClear( TW_GetRenderer() );
@@ -227,7 +201,7 @@ int main( int argc, char* args[] )
         }
 
         // Free resources
-        TW_Timer_Free( mainTimer );
+        TW_DebugStats_Free();
         TW_Scene_Free( sceneMain );
         TW_GameState_Free();
     }

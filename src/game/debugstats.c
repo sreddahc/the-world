@@ -3,6 +3,7 @@
 
 // This is a bit ugly... I think but we can clean this later.
 static char mouseStatus[50] = "Mouse Position: X=0, Y=0";
+static char timerStatus[50] = "Game runtime: 0 ms";
 static char fpsStatus[50] = "FPS: 0.00";
 static char deltaTimeStatus[50] = "Delta Time: 0.00000 ms";
 
@@ -29,6 +30,21 @@ void TW_DebugStats_Mouse_Think( TW_Entity* entity )
             {
                 TW_Text_Update( textComponent->text );
             }
+        }
+    }
+}
+
+
+// The think function for the time debug component
+void TW_DebugStats_Time_Think( TW_Entity* entity )
+{
+    snprintf( timerStatus, 50, "Game runtime: %d ms", (int)TW_GameState_GetTime() );
+    if( entity != NULL )
+    {
+        TW_Component* textComponent = TW_Entity_GetComponent( entity, TW_C_TEXT );
+        if( textComponent != NULL )
+        {
+            TW_Text_Update( textComponent->text );
         }
     }
 }
@@ -83,12 +99,15 @@ void TW_DebugStats_Create( TW_Scene* self )
     // Timer
     TW_Entity* entityTime = TW_Entity_Create();
     TW_Scene_AddEntity( self, entityTime );
-    TW_Text* textTime = TW_Text_Create( "Time since reset: 0 ms", NULL, 0, NULL );
+    TW_Text* textTime = TW_Text_Create( timerStatus, NULL, 0, NULL );
     TW_Component* cTextTime = TW_Component_Create( TW_C_TEXT, textTime );
     TW_Entity_AddComponent( entityTime, cTextTime );
     TW_Transform* transformTime = TW_Transform_Create( 5, 25, 0.0, 1.0 );
     TW_Component* cTransformTime = TW_Component_Create( TW_C_TRANSFORM, transformTime );
     TW_Entity_AddComponent( entityTime, cTransformTime );
+    TW_Think* thinkTime = TW_Think_Create( TW_DebugStats_Time_Think );
+    TW_Component* cThinkTime = TW_Component_Create( TW_C_THINK, thinkTime );
+    TW_Entity_AddComponent( entityTime, cThinkTime );
     
     // FPS
     TW_Entity* entityFPS = TW_Entity_Create();

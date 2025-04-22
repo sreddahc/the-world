@@ -19,6 +19,14 @@ void TW_DebugStats_Mouse_Think( TW_Entity* entity );
 
 
 /**
+ * TW_DebugStats_Time_Think - The think function for the timer debug entity
+ * 
+ * Args:
+ * - TW_Component*      - component         - The component the think function belongs to
+ */
+void TW_DebugStats_Time_Think( TW_Entity* entity );
+
+/**
  * TW_DebugStats_FPS_Think - The think function for the FPS debug entity
  * 
  * Args:
