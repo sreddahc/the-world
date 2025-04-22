@@ -21,5 +21,7 @@ void TW_Player_Think( TW_Entity* entity );
  * 
  * Args:
  * - TW_Scene*          - target            - The target scene to add the player entity to
+ * - int                - x                 - Position of the player entity on the x axis
+ * - int                - y                 - Position of the player entity on the y axis
  */
-void TW_Player_Create( TW_Scene* target );
+void TW_Player_Create( TW_Scene* target, int x, int y );

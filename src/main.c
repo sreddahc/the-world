@@ -1,6 +1,7 @@
 #include "renderer/renderer.h"
 #include "engine/timer.h"
 #include "game/player.h"
+#include "game/platform.h"
 #include "game/debugstats.h"
 
 // Global variables
@@ -133,8 +134,13 @@ int main( int argc, char* args[] )
         TW_Vector2_Set(TW_Entity_GetComponent( entityTitle, TW_C_TRANSFORM )->transform->centre, gTitle->texture->width / 2, gTitle->texture->height / 2 );
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
+        // Platform Entity
+        TW_Platform_Create( sceneMain, TW_PLATFORM_LEFT, 200, 250 );
+        TW_Platform_Create( sceneMain, TW_PLATFORM_MIDDLE, 270, 250 );
+        TW_Platform_Create( sceneMain, TW_PLATFORM_RIGHT, 340, 250 );
+
         // Player Entity
-        TW_Player_Create( sceneMain );
+        TW_Player_Create( sceneMain, 200, 200 );
 
         // Time
         TW_Timer* mainTimer = TW_Timer_Create( false );

@@ -46,7 +46,7 @@ void TW_Player_Think( TW_Entity* entity )
 
 
 // Creates a player entity and adds it to target scene
-void TW_Player_Create( TW_Scene* target )
+void TW_Player_Create( TW_Scene* target, int x, int y )
 {
     TW_Entity* playerEntity = TW_Entity_Create();
 
@@ -60,7 +60,7 @@ void TW_Player_Create( TW_Scene* target )
     TW_Component* cPlayerAnimation = TW_Component_Create( TW_C_ANIMATION, playerAnimation );
     TW_Entity_AddComponent( playerEntity, cPlayerAnimation );
 
-    TW_Transform* playerTransform = TW_Transform_Create( 230, 230, 0.0, 1.0 );
+    TW_Transform* playerTransform = TW_Transform_Create( x, y, 0.0, 1.0 );
     TW_Component* cPlayerTransform = TW_Component_Create( TW_C_TRANSFORM, playerTransform );
     TW_Entity_AddComponent( playerEntity, cPlayerTransform );
 
