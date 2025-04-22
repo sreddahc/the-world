@@ -15,7 +15,7 @@
  * Args:
  * - TW_Component*      - component         - The component the think function belongs to
  */
-void TW_DebugStats_Mouse_Think( TW_Component* component );
+void TW_DebugStats_Mouse_Think( TW_Entity* entity );
 
 
 /**
@@ -24,7 +24,7 @@ void TW_DebugStats_Mouse_Think( TW_Component* component );
  * Args:
  * - TW_Component*      - component         - The component the think function belongs to
  */
-void TW_DebugStats_FPS_Think( TW_Component* component );
+void TW_DebugStats_FPS_Think( TW_Entity* entity );
 
 
 /**
@@ -33,7 +33,7 @@ void TW_DebugStats_FPS_Think( TW_Component* component );
  * Args:
  * - TW_Component*      - component         - The component the think function belongs to
  */
-void TW_DebugStats_DeltaTime_Think( TW_Component* component );
+void TW_DebugStats_DeltaTime_Think( TW_Entity* entity );
 
 
 /**

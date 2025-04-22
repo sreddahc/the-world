@@ -12,11 +12,11 @@ TW_Think* TW_Think_Create( void *some_function )
 
 
 // Run the function in the think object
-void TW_Think_Run( TW_Think* self )
+void TW_Think_Run( TW_Think* self, TW_Entity* entity )
 {
     if( self->parent != NULL )
     {
-        self->think( self->parent );
+        self->think( entity );
     }
     else
     {

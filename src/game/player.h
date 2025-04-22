@@ -13,7 +13,7 @@
  * Args:
  * - TW_Component*      - component         - The component the think function belongs to
  */
-void TW_Player_Think( TW_Component* component );
+void TW_Player_Think( TW_Entity* entity );
 
 
 /**

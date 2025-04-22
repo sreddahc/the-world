@@ -8,7 +8,7 @@ static char deltaTimeStatus[50] = "Delta Time: 0.00000 ms";
 
 
 // The think function for the mouse debug component
-void TW_DebugStats_Mouse_Think( TW_Component* component )
+void TW_DebugStats_Mouse_Think( TW_Entity* entity )
 {
     if( TW_InputHandler_CheckMouse() == true )
     {
@@ -22,9 +22,9 @@ void TW_DebugStats_Mouse_Think( TW_Component* component )
             strcat(mouseStatus, " - KEYDOWN");
         }
 
-        if( component->parent != NULL )
+        if( entity != NULL )
         {
-            TW_Component* textComponent = TW_Entity_GetComponent( component->parent, TW_C_TEXT );
+            TW_Component* textComponent = TW_Entity_GetComponent( entity, TW_C_TEXT );
             if( textComponent != NULL )
             {
                 TW_Text_Update( textComponent->text );
@@ -35,12 +35,12 @@ void TW_DebugStats_Mouse_Think( TW_Component* component )
 
 
 // The think function for the FPS debug component
-void TW_DebugStats_FPS_Think( TW_Component* component )
+void TW_DebugStats_FPS_Think( TW_Entity* entity )
 {
     snprintf( fpsStatus, 50, "FPS: %.2f ", TW_GameState_GetFPS() );
-    if( component->parent != NULL)
+    if( entity != NULL)
     {
-        TW_Component* textComponent = TW_Entity_GetComponent( component->parent, TW_C_TEXT );
+        TW_Component* textComponent = TW_Entity_GetComponent( entity, TW_C_TEXT );
         if( textComponent != NULL )
         {
             TW_Text_Update( textComponent->text );
@@ -50,12 +50,12 @@ void TW_DebugStats_FPS_Think( TW_Component* component )
 
 
 // The think function for the delta time debug component
-void TW_DebugStats_DeltaTime_Think( TW_Component* component )
+void TW_DebugStats_DeltaTime_Think( TW_Entity* entity )
 {
     snprintf( deltaTimeStatus, 50, "Delta Time: %.5f ms", TW_GameState_GetDeltaTime() );
-    if( component->parent != NULL)
+    if( entity != NULL)
     {
-        TW_Component* textComponent = TW_Entity_GetComponent( component->parent, TW_C_TEXT );
+        TW_Component* textComponent = TW_Entity_GetComponent( entity, TW_C_TEXT );
         if( textComponent != NULL )
         {
             TW_Text_Update( textComponent->text );

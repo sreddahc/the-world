@@ -94,7 +94,10 @@ void TW_Component_Run( TW_Component* self );
  * object if it exists. If not, return `NULL`.
  * 
  * Args:
- * - TW_Component*          - self          - The component to fetch the parent entity of
+ * - TW_Component*          - self          - Get parent entity of this component.
+ * 
+ * Returns:
+ * - TW_Entity*             - Parent entity if it exists. Otherwise return `NULL`.
  */
 TW_Entity* TW_Component_GetParent( TW_Component* self );
 

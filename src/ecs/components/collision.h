@@ -30,8 +30,8 @@ typedef struct TW_Collision {
  * TW_Collision_Create - Create a collision object based on provided parameters.
  * 
  * Args:
- * - int                - x                 - X position of collision object
- * - int                - y                 - Y position of collision object
+ * - int                - x                 - X position of collision object relative to the entity transform
+ * - int                - y                 - Y position of collision object relative to the entity transform
  * - int                - w                 - Width of collision object
  * - int                - h                 - Height of collision object
  *

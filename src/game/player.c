@@ -2,11 +2,11 @@
 
 
 // The think function for the player entity
-void TW_Player_Think( TW_Component* component )
+void TW_Player_Think( TW_Entity* entity )
 {
-    if( component->parent != NULL )
+    if( entity != NULL )
     {
-        TW_Component* velocityComponent = TW_Entity_GetComponent( component->parent, TW_C_VELOCITY );
+        TW_Component* velocityComponent = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
         if( velocityComponent != NULL )
         {
             // Movement keys
@@ -48,25 +48,29 @@ void TW_Player_Think( TW_Component* component )
 // Creates a player entity and adds it to target scene
 void TW_Player_Create( TW_Scene* target )
 {
-    TW_Entity* entityPlayer = TW_Entity_Create();
+    TW_Entity* playerEntity = TW_Entity_Create();
 
-    TW_Velocity* velocityPlayer = TW_Velocity_Create( 0, 0, 0, 0 );
-    velocityPlayer->interval = 50;
-    TW_Component* cVelocityPlayer = TW_Component_Create( TW_C_VELOCITY, velocityPlayer );
-    TW_Entity_AddComponent( entityPlayer, cVelocityPlayer );
+    TW_Velocity* playerVelocity = TW_Velocity_Create( 0, 0, 0, 0 );
+    playerVelocity->interval = 50;
+    TW_Component* cPlayerVelocity = TW_Component_Create( TW_C_VELOCITY, playerVelocity );
+    TW_Entity_AddComponent( playerEntity, cPlayerVelocity );
 
-    TW_Sprite* spritePlayer = TW_Sprite_Create( "src/assets/images/sprites/player.png", 32, 32 );
-    TW_Animation* animationPlayer = TW_Animation_Create( spritePlayer, 4, (int[]){ 0, 1, 2, 3 } );
-    TW_Component* cPlayerAnimation = TW_Component_Create( TW_C_ANIMATION, animationPlayer );
-    TW_Entity_AddComponent( entityPlayer, cPlayerAnimation );
+    TW_Sprite* playerSprite = TW_Sprite_Create( "src/assets/images/sprites/player.png", 32, 32 );
+    TW_Animation* playerAnimation = TW_Animation_Create( playerSprite, 4, (int[]){ 0, 1, 2, 3 } );
+    TW_Component* cPlayerAnimation = TW_Component_Create( TW_C_ANIMATION, playerAnimation );
+    TW_Entity_AddComponent( playerEntity, cPlayerAnimation );
 
-    TW_Transform* transformPlayer = TW_Transform_Create( 230, 230, 0.0, 1.0 );
-    TW_Component* cPlayerTransform = TW_Component_Create( TW_C_TRANSFORM, transformPlayer );
-    TW_Entity_AddComponent( entityPlayer, cPlayerTransform );
+    TW_Transform* playerTransform = TW_Transform_Create( 230, 230, 0.0, 1.0 );
+    TW_Component* cPlayerTransform = TW_Component_Create( TW_C_TRANSFORM, playerTransform );
+    TW_Entity_AddComponent( playerEntity, cPlayerTransform );
 
-    TW_Think* thinkPlayer = TW_Think_Create( TW_Player_Think );
-    TW_Component* cThinkPlayer = TW_Component_Create( TW_C_THINK, thinkPlayer );
-    TW_Entity_AddComponent( entityPlayer, cThinkPlayer );
+    TW_Collision* playerCollision = TW_Collision_Create( 0, 0, playerSprite->width, playerSprite->height );
+    TW_Component* cPlayerCollision = TW_Component_Create( TW_C_COLLISION, playerCollision );
+    TW_Entity_AddComponent( playerEntity, cPlayerCollision );
 
-    TW_Scene_AddEntity( target, entityPlayer );
+    TW_Think* playerThink = TW_Think_Create( TW_Player_Think );
+    TW_Component* cPlayerThink = TW_Component_Create( TW_C_THINK, playerThink );
+    TW_Entity_AddComponent( playerEntity, cPlayerThink );
+
+    TW_Scene_AddEntity( target, playerEntity );
 }

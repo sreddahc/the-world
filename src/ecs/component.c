@@ -55,21 +55,31 @@ TW_Component* TW_Component_Create( int type, void* value ){
 }
 
 
+/**
+ * TW_Component_GetParent - Given a component object, returns its parent. of one exists,
+ *                          otherwise returns `NULL`.
+ * 
+ * Args:
+ * - TW_Component*      - self          - Find the parent entity of this component
+ * 
+ * Returns:
+ * - TW_Entity*         - Returns the parent entity if found, otherwise returns `NULL`
+ */
+TW_Entity* TW_Component_GetParent( TW_Component* self )
+{
+    if( self->parent != NULL )
+    {
+        return self->parent;
+    }
+    return NULL;
+}
+
+
 // If there is a visual aspect to the component... render it
 void TW_Component_Render( TW_Component* self, TW_Transform* transform )
 {
     switch ( self->type )
     {
-        // // This also...
-        // case TW_C_COLLISION:
-        //     TW_Collision_Run( self->collision, transform );
-        //     break;
-        
-        // This probably belongs in TW_Component_Run... but convenient transform reference
-        case TW_C_VELOCITY:
-            TW_Velocity_Run( self->velocity, transform );
-            break;
-
         case TW_C_TEXTURE:
             TW_Texture_Render( self->texture, transform );
             break;
@@ -97,35 +107,17 @@ void TW_Component_Run( TW_Component* self )
 {
     switch( self->type )
     {
-        // // This probably belongs here...
-        // case TW_C_VELOCITY:
-        //     TW_Velocity_Run( self->velocity, transform );
-        //     break;
-        //
-        // case TW_C_COLLISION:
-        //     TW_Collision_Run( self->collision, transform );
-        //     break;
+        case TW_C_VELOCITY:
+            TW_Velocity_Run( self->velocity, TW_Component_GetParent( self ) );
+            break;
 
         case TW_C_THINK:
-            TW_Think_Run( self->think );
+            TW_Think_Run( self->think, TW_Component_GetParent( self ) );
             break;
 
         default:
             break;
-
     }
-}
-
-
-// Given a component, return a pointer to its parent entity object if it exists.
-// If not, return `NULL`.
-TW_Entity* TW_Component_GetParent( TW_Component* self )
-{
-    if( self->parent != NULL )
-    {
-        return self->parent;
-    }
-    return NULL;
 }
 
 

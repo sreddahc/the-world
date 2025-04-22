@@ -1,4 +1,4 @@
-#include "velocity.h"
+#include "../entity.h"
 
 
 // Create a TW_Velocity object with speed and acceleration. Interacts with a TW_Transform object.
@@ -40,9 +40,15 @@ void TW_Velocity_SetInterval( TW_Velocity* self, int interval )
 
 
 // Run the velocity object. This should be done every loop as long as the game is not paused.
-void TW_Velocity_Run( TW_Velocity* self, TW_Transform* transform )
+void TW_Velocity_Run( TW_Velocity* self, TW_Entity* entity )
 {
-    if(transform != NULL )
+    TW_Transform* transform = NULL;
+    if( entity != NULL )
+    {
+        TW_Component* transformComponent = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
+        transform = transformComponent->transform;
+    }
+    if( transform != NULL )
     {
         self->timeSinceLastInterval += TW_GameState_GetDeltaTime();
         if( self->timeSinceLastInterval >= (float)self->interval  / MILLISECONDS_IN_A_SEC )
