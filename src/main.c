@@ -157,20 +157,14 @@ int main( int argc, char* args[] )
         // Player Entity
         TW_Player_Create( sceneMain, 200, 200 );
 
-        // Time
-        // TW_Timer* mainTimer = TW_Timer_Create( false );
-        // char timeText[50] = "Time since reset: 0ms";
-        // TW_Text* gTimeText = TW_Text_Create( timeText, NULL, 0, NULL );
-        // TW_Entity* entityTimeText = TW_Entity_Create();
-        // TW_Entity_AddComponent( entityTimeText, TW_Component_Create( TW_C_TEXT, gTimeText ) );
-        // TW_Entity_AddComponent(entityTimeText, TW_Component_Create( TW_C_TRANSFORM, TW_Transform_Create( 500, 125, 0.0, 1.0 ) ) );
-        // TW_Scene_AddEntity( sceneMain, entityTimeText );
-
         // Debug Status
         TW_DebugStats_Create( sceneMain );
 
         while( !quit )
         {
+            // Run physics engine
+            TW_Scene_RunPhysics( sceneMain );
+
             while( TW_InputHandler_Poll() == true )
             {
                 quit = TW_InputHandler_CheckQuit();
@@ -180,22 +174,21 @@ int main( int argc, char* args[] )
                     quit = true;
                 }
                 
-                TW_Scene_Run( sceneMain );
+                // Run logic
+                TW_Scene_RunLogic( sceneMain );
             }
-
-            // snprintf( timeText, 50, "Time since reset: %ld ms", TW_Timer_GetTime( mainTimer ) );
-            // TW_Text_Update( gTimeText );
 
             // Update the surface
             SDL_RenderClear( TW_GetRenderer() );
             TW_GameState_Update();
 
-            TW_Scene_Run( sceneMain );
+            // Run logic again ?!? (this should be fixed... might need to be done by adding listeners to the input handlers)
+            TW_Scene_RunLogic( sceneMain );
 
-            // For each Entity in a Scene
+            // Draw the scene
             TW_Scene_Render( sceneMain );
 
-            // // Update screen
+            // Update screen
             SDL_RenderPresent( TW_GetRenderer() );
             TW_GameState_LimitFrameRate();
         }

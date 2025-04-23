@@ -85,9 +85,18 @@ void TW_Component_Render( TW_Component* self, TW_Transform* transform );
  * TW_Component_Run - Run logic components
  * 
  * Args:
- * - TW_Component*          - self          - The TW_Component to run
+ * - TW_Component*          - self          - The logic component to run
  */
-void TW_Component_Run( TW_Component* self );
+void TW_Component_RunLogic( TW_Component* self );
+
+
+/**
+ * TW_Component_RunPhysics - Run physics components
+ * 
+ * Args:
+ * - TW_Component*          - self          - The physics component to run
+ */
+void TW_Component_RunPhysics( TW_Component* self );
 
 
 /**

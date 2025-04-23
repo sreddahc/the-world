@@ -103,7 +103,22 @@ void TW_Component_Render( TW_Component* self, TW_Transform* transform )
 
 
 // Run logic components
-void TW_Component_Run( TW_Component* self )
+void TW_Component_RunLogic( TW_Component* self )
+{
+    switch( self->type )
+    {
+        case TW_C_THINK:
+            TW_Think_Run( self->think, TW_Component_GetParent( self ) );
+            break;
+
+        default:
+            break;
+    }
+}
+
+
+// Run physics components
+void TW_Component_RunPhysics( TW_Component* self )
 {
     switch( self->type )
     {
@@ -111,8 +126,8 @@ void TW_Component_Run( TW_Component* self )
             TW_Velocity_Run( self->velocity, TW_Component_GetParent( self ) );
             break;
 
-        case TW_C_THINK:
-            TW_Think_Run( self->think, TW_Component_GetParent( self ) );
+        case TW_C_COLLISION:
+            // TW_Think_Run( self->think, TW_Component_GetParent( self ) );
             break;
 
         default:

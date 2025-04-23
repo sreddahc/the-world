@@ -47,11 +47,20 @@ void TW_Scene_Render( TW_Scene* self )
 
 
 // Run logic components in scene entities
-void TW_Scene_Run( TW_Scene* self )
+void TW_Scene_RunLogic( TW_Scene* self )
 {
     for( int index = 0; index < self->size; index++ )
     {
-        TW_Entity_Run( self->entities[ index ] );
+        TW_Entity_RunLogic( self->entities[ index ] );
+    }
+}
+
+
+void TW_Scene_RunPhysics( TW_Scene* self )
+{
+    for( int index = 0; index < self->size; index++ )
+    {
+        TW_Entity_RunPhysics( self->entities[ index ] );
     }
 }
 

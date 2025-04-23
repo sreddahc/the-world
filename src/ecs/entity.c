@@ -54,11 +54,21 @@ void TW_Entity_Render( TW_Entity* self )
 
 
 // Run logic components in TW_Entity
-void TW_Entity_Run( TW_Entity* self )
+void TW_Entity_RunLogic( TW_Entity* self )
 {
     for( int index = 0; index < self->size; index++ )
     {
-        TW_Component_Run( self->components[ index ] );
+        TW_Component_RunLogic( self->components[ index ] );
+    }
+}
+
+
+// Run physics components in TW_Entity
+void TW_Entity_RunPhysics( TW_Entity* self )
+{
+    for( int index = 0; index < self->size; index++ )
+    {
+        TW_Component_RunPhysics( self->components[ index ] );
     }
 }
 
