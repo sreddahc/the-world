@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../ecs/scene.h"
-#include "../renderer/sprite.h"
+#include "../../ecs/scene.h"
+#include "../../renderer/sprite.h"
 
 
 // Type definitions

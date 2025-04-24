@@ -1,7 +1,7 @@
 #include "renderer/renderer.h"
 #include "engine/timer.h"
-#include "game/player.h"
-#include "game/platform.h"
+#include "game/components/player.h"
+#include "game/components/platform.h"
 #include "game/debugstats.h"
 
 // Global variables

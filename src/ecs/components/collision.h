@@ -20,6 +20,7 @@ typedef struct TW_Entity TW_Entity;
  */
 typedef struct TW_Collision {
     TW_Vector2* position;                   // Position relative to parent entity transform
+    TW_Vector2* centre;                     // Centre of the collision object, Default: `{ 0, 0 }`
     TW_Vector2* size;                       // Size of the collision box
     TW_Component* parent;                   // Parent component object if exists, otherwise `NULL`
 } TW_Collision;
@@ -52,13 +53,13 @@ void TW_Collision_Free( TW_Collision* self );
 
 
 /**
- * TW_Collision_GetRelativePosition - Get current position relative to target entity
+ * TW_Collision_GetAbsolutePosition - Get current position relative to target entity
  * 
  * Args:
  * - TW_Collision*      - self              - Current collision object
  * - TW_Entity*         - target            - Target entity to get relative position of
  */
-void TW_Collision_GetRelativePosition( TW_Collision* self, TW_Entity* target );
+void TW_Collision_GetAbsolutePosition( TW_Collision* self, TW_Entity* target );
 
 
 /**
@@ -67,5 +68,8 @@ void TW_Collision_GetRelativePosition( TW_Collision* self, TW_Entity* target );
  * Args:
  * - TW_Collision*      - self              - Current collision object
  * - TW_Entity*         - target            - Target entity to test collision against
+ * 
+ * Returns:
+ * - bool               - `true` if collision detected, otherwise `false`
  */
-void TW_Collision_Check( TW_Collision* self, TW_Entity* target );
+bool TW_Collision_Check( TW_Collision* self, TW_Entity* target );

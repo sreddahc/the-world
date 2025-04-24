@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../ecs/scene.h"
-#include "../renderer/animation.h"
-#include "../engine/inputhandler.h"
+#include "../../ecs/scene.h"
+#include "../../renderer/animation.h"
+#include "../../engine/inputhandler.h"
 
 
 // Function definitions
