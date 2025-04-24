@@ -34,7 +34,10 @@ void TW_Player_Think( TW_Entity* entity )
                 {
                     if( TW_Collision_Check( entity, parentScene->entities[ index ] ) == true )
                     {
-                        printf( "found collision!\n" );
+                        if( TW_Entity_GetComponent( parentScene->entities[ index ], TW_C_PLATFORM ) != NULL )
+                        {
+                            printf("> platform\n");
+                        }
                     }
                 }
             }
@@ -119,7 +122,7 @@ void TW_Scene_GeneratePlayer( TW_Scene* target, int x, int y )
     TW_Component* cPlayerTransform = TW_Component_Create( TW_C_TRANSFORM, playerTransform );
     TW_Entity_AddComponent( playerEntity, cPlayerTransform );
 
-    TW_Collision* playerCollision = TW_Collision_Create( 0, 0, playerSprite->width, playerSprite->height );
+    TW_Collision* playerCollision = TW_Collision_Create( 7, 0, 17, 32 );
     TW_Component* cPlayerCollision = TW_Component_Create( TW_C_COLLISION, playerCollision );
     TW_Entity_AddComponent( playerEntity, cPlayerCollision );
 
