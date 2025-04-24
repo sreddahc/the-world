@@ -6,6 +6,7 @@ TW_Entity* TW_Entity_Create()
 {
     TW_Entity* entity = malloc( sizeof( TW_Entity ) );
     entity->size = 0;
+    entity->parent = NULL;
     entity->components = NULL;
     return entity;
 }
@@ -95,5 +96,6 @@ void TW_Entity_Free( TW_Entity* self )
         TW_Component_Free( self->components[ index ] );
     }
     self->size = 0;
+    self->parent = NULL;
     free( self );
 }

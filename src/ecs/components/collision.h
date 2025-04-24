@@ -72,4 +72,4 @@ void TW_Collision_GetAbsolutePosition( TW_Collision* self, TW_Entity* target );
  * Returns:
  * - bool               - `true` if collision detected, otherwise `false`
  */
-bool TW_Collision_Check( TW_Collision* self, TW_Entity* target );
+bool TW_Collision_Check( TW_Entity* self, TW_Entity* target );

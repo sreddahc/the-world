@@ -24,6 +24,23 @@ void TW_Player_Think( TW_Entity* entity )
 {
     if( entity != NULL )
     {
+        // Collisions
+        TW_Scene* parentScene = entity->parent;
+        if( parentScene != NULL )
+        {
+            for( int index = 0; index < parentScene->size; index++ )
+            {
+                if( entity != parentScene->entities[ index ] )
+                {
+                    if( TW_Collision_Check( entity, parentScene->entities[ index ] ) == true )
+                    {
+                        printf( "found collision!\n" );
+                    }
+                }
+            }
+        }
+
+        // Input
         TW_Component* velocityComponent = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
         if( velocityComponent != NULL )
         {

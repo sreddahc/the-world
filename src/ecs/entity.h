@@ -5,6 +5,8 @@
 
 // Type definitions
 
+typedef struct TW_Scene TW_Scene;
+
 /**
  * TW_Entity - An entity
  * 
@@ -14,6 +16,7 @@
  */
 typedef struct TW_Entity {
     int size;
+    TW_Scene* parent;
     TW_Component** components;
 } TW_Entity;
 

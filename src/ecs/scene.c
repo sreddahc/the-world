@@ -32,6 +32,7 @@ void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity )
             self->entities[ self->size - 1 ] = entity;
         }
     }
+    entity->parent = self;
 }
 
 // --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
