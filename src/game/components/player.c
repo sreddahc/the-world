@@ -7,6 +7,7 @@ TW_Player* TW_Player_Create()
 {
     TW_Player* player = malloc( sizeof( TW_Player ) );
     player->parent = NULL;
+    player->jumping = false;
     return player;
 }
 
@@ -14,6 +15,7 @@ TW_Player* TW_Player_Create()
 // Frees resources used by a player object.
 void TW_Player_Free( TW_Player* self )
 {
+    self->jumping = false;
     self->parent = NULL;
     free( self );
 }
@@ -26,6 +28,18 @@ void TW_Player_Think( TW_Entity* entity )
     {
         // Collisions
         TW_Scene* parentScene = entity->parent;
+        TW_Component* playerPlayer = TW_Entity_GetComponent( entity, TW_C_PLAYER );
+        TW_Component* playerTransform = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
+        TW_Component* playerVelocity = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
+        TW_Component* playerAnimation = TW_Entity_GetComponent( entity, TW_C_ANIMATION );
+
+        // "Gravity"
+        playerVelocity->velocity->acceleration->y += 1;
+        if( playerVelocity->velocity->speed->y >= 12 )
+        {
+            playerVelocity->velocity->speed->y = 12;
+        }
+
         if( parentScene != NULL )
         {
             for( int index = 0; index < parentScene->size; index++ )
@@ -36,7 +50,19 @@ void TW_Player_Think( TW_Entity* entity )
                     {
                         if( TW_Entity_GetComponent( parentScene->entities[ index ], TW_C_PLATFORM ) != NULL )
                         {
-                            printf("> platform\n");
+                            // FIX THIS JANK - Not a good collision implementation
+                            TW_Component* targetTransform = TW_Entity_GetComponent( parentScene->entities[ index ], TW_C_TRANSFORM );
+                            if( playerVelocity->velocity->speed->y >= 0 )
+                            {
+                                playerTransform->transform->position->y = targetTransform->transform->position->y - playerAnimation->animation->spriteSheet->height;
+                                playerPlayer->player->jumping = false;
+                                playerVelocity->velocity->speed->y = 0;
+                                playerVelocity->velocity->acceleration->y = 2;
+                            }
+                            else
+                            {
+                                playerTransform->transform->position->y = targetTransform->transform->position->y;
+                            }
                         }
                     }
                 }
@@ -44,8 +70,7 @@ void TW_Player_Think( TW_Entity* entity )
         }
 
         // Input
-        TW_Component* velocityComponent = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
-        if( velocityComponent != NULL )
+        if( playerVelocity != NULL )
         {
             // Movement keys
             if( TW_InputHandler_CheckKeyPressed( SDLK_RSHIFT ) )
@@ -65,34 +90,45 @@ void TW_Player_Think( TW_Entity* entity )
                 }
             }
 
-            if( TW_InputHandler_CheckKeyPressed( SDLK_w ) )
-            {
-                velocityComponent->velocity->speed->y = -5;
-            }
-
             if( TW_InputHandler_CheckKeyPressed( SDLK_s ) )
             {
-                velocityComponent->velocity->speed->y = 5;
+                playerVelocity->velocity->speed->y = 15;
+            }
+
+            if( TW_InputHandler_CheckKeyPressed( SDLK_w ) )
+            {
+                playerVelocity->velocity->speed->y = -15;
             }
 
             if( TW_InputHandler_CheckKeyPressed( SDLK_d ) )
             {
-                velocityComponent->velocity->speed->x = 5;
+                playerVelocity->velocity->speed->x = 5;
             }
 
             if( TW_InputHandler_CheckKeyPressed( SDLK_a ) )
             {
-                velocityComponent->velocity->speed->x = -5;
+                playerVelocity->velocity->speed->x = -5;
             }
 
             if( TW_InputHandler_CheckKeyDepressed( SDLK_w ) || TW_InputHandler_CheckKeyDepressed( SDLK_s ) )
             {
-                velocityComponent->velocity->speed->y = 0;
+                playerVelocity->velocity->speed->y = 0;
             }
 
             if( TW_InputHandler_CheckKeyDepressed( SDLK_a ) || TW_InputHandler_CheckKeyDepressed( SDLK_d ) )
             {
-                velocityComponent->velocity->speed->x = 0;
+                playerVelocity->velocity->speed->x = 0;
+            }
+
+            // FIX THIS JANK - Jumping
+            if( TW_InputHandler_CheckKeyDepressed( SDLK_SPACE) )
+            {
+                if( playerPlayer->player->jumping == false )
+                {
+                    playerVelocity->velocity->speed->y = -10;
+                    playerVelocity->velocity->acceleration->y = -6;
+                    playerPlayer->player->jumping = true;
+                }
             }
         }
     }
@@ -108,7 +144,7 @@ void TW_Scene_GeneratePlayer( TW_Scene* target, int x, int y )
     TW_Component* cPlayerPlayer = TW_Component_Create( TW_C_PLAYER, playerPlayer );
     TW_Entity_AddComponent( playerEntity, cPlayerPlayer );
 
-    TW_Velocity* playerVelocity = TW_Velocity_Create( 0, 0, 0, 0 );
+    TW_Velocity* playerVelocity = TW_Velocity_Create( 0, 0, 0, 2 );
     playerVelocity->interval = 50;
     TW_Component* cPlayerVelocity = TW_Component_Create( TW_C_VELOCITY, playerVelocity );
     TW_Entity_AddComponent( playerEntity, cPlayerVelocity );

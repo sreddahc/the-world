@@ -33,7 +33,10 @@ bool TW_Collision_Check( TW_Entity* self, TW_Entity* target )
         TW_Component* currentCollision = TW_Entity_GetComponent( self, TW_C_COLLISION );
         TW_Component* targetTransform = TW_Entity_GetComponent( target, TW_C_TRANSFORM );
         TW_Component* targetCollision = TW_Entity_GetComponent( target, TW_C_COLLISION );
-        if( currentTransform != NULL && currentCollision != NULL && targetTransform != NULL && targetCollision != NULL )
+        if(
+            currentTransform != NULL && currentCollision != NULL &&
+            targetTransform != NULL && targetCollision != NULL
+        )
         {
             // !! Currently ignoring anything to do with "Centre" !!
 
