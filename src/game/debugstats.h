@@ -2,6 +2,7 @@
 
 #include "../ecs/scene.h"
 #include "../engine/gamestate.h"
+#include "../engine/inputhandler.h"
 #include "../engine/maths.h"
 
 
@@ -14,8 +15,16 @@
  * Args:
  * - TW_Component*      - component         - The component the think function belongs to
  */
-void TW_DebugStats_Mouse_Think( TW_Component* component );
+void TW_DebugStats_Mouse_Think( TW_Entity* entity );
 
+
+/**
+ * TW_DebugStats_Time_Think - The think function for the timer debug entity
+ * 
+ * Args:
+ * - TW_Component*      - component         - The component the think function belongs to
+ */
+void TW_DebugStats_Time_Think( TW_Entity* entity );
 
 /**
  * TW_DebugStats_FPS_Think - The think function for the FPS debug entity
@@ -23,7 +32,7 @@ void TW_DebugStats_Mouse_Think( TW_Component* component );
  * Args:
  * - TW_Component*      - component         - The component the think function belongs to
  */
-void TW_DebugStats_FPS_Think( TW_Component* component );
+void TW_DebugStats_FPS_Think( TW_Entity* entity );
 
 
 /**
@@ -32,7 +41,7 @@ void TW_DebugStats_FPS_Think( TW_Component* component );
  * Args:
  * - TW_Component*      - component         - The component the think function belongs to
  */
-void TW_DebugStats_DeltaTime_Think( TW_Component* component );
+void TW_DebugStats_DeltaTime_Think( TW_Entity* entity );
 
 
 /**

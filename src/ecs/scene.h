@@ -55,15 +55,34 @@ void TW_Scene_Free( TW_Scene* self );
  * TW_Scene_Render - Given a scene, attempts to render all entities
  * 
  * Args:
- * - TW_Scene*      - self          - The scene to render
+ * - TW_Scene*      - self          - Render graphics components from this scene
  */
 void TW_Scene_Render( TW_Scene* self );
 
 
 /**
- * TW_Scene_Run - Run logic components in scene entities.
+ * TW_Scene_RunLogic - Run logic components in scene entities.
  * 
  * Args:
- * - TW_Scene*      - self          - The scene to run logic components from
+ * - TW_Scene*      - self          - Run logic components from this scene
  */
-void TW_Scene_Run( TW_Scene* self );
+void TW_Scene_RunLogic( TW_Scene* self );
+
+
+/**
+ * TW_Scene_RunLogic - Run logic components in scene entities.
+ * 
+ * Args:
+ * - TW_Scene*      - self          - Run physics components from this scene
+ */
+void TW_Scene_RunPhysics( TW_Scene* self );
+
+
+/**
+ * TW_Scene_RunPhysics - Run physics engine on a scene.
+ *                       Calculate new positions, collisions etc...
+ * 
+ * Args:
+ * - TW_Scene*      - self          - Run physics components on this scene.
+ */
+void TW_Scene_RunPhysics( TW_Scene* self );

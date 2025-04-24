@@ -25,12 +25,14 @@ void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity )
         }
         else
         {
-            TW_Entity* oldEntities = self->entities;
+            TW_Entity** oldEntities = self->entities;
             self->entities = malloc( self->size * sizeof( TW_Entity ) );
             memcpy( self->entities, oldEntities, ( self->size - 1 ) * sizeof( TW_Entity ) );
+            free( oldEntities );
             self->entities[ self->size - 1 ] = entity;
         }
     }
+    entity->parent = self;
 }
 
 // --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
@@ -46,11 +48,20 @@ void TW_Scene_Render( TW_Scene* self )
 
 
 // Run logic components in scene entities
-void TW_Scene_Run( TW_Scene* self )
+void TW_Scene_RunLogic( TW_Scene* self )
 {
     for( int index = 0; index < self->size; index++ )
     {
-        TW_Entity_Run( self->entities[ index ] );
+        TW_Entity_RunLogic( self->entities[ index ] );
+    }
+}
+
+
+void TW_Scene_RunPhysics( TW_Scene* self )
+{
+    for( int index = 0; index < self->size; index++ )
+    {
+        TW_Entity_RunPhysics( self->entities[ index ] );
     }
 }
 

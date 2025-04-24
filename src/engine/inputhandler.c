@@ -4,7 +4,7 @@
 static TW_InputHandler* inputHandler = NULL;
 
 
-TW_InputHandler* TW_InputHandler_Create()
+void TW_InputHandler_Create()
 {
     inputHandler = malloc( sizeof( TW_InputHandler ) );
     inputHandler->eventsExist = 0;

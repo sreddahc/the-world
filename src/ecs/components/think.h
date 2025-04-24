@@ -1,20 +1,20 @@
 #pragma once
 
-#include <stddef.h>
-
+#include <stdlib.h>
 
 // Type definitions
 
+typedef struct TW_Entity TW_Entity;
 typedef struct TW_Component TW_Component;
 
 /**
  * TW_Think - A think component contains a pointer to a function to execute.
  * 
  * Elements:
- * - void           - (*think)()    - A pointer to a function to execute when thinking
+ * - void       - (*think)( TW_Entity* )    - A pointer to a function to execute
  */
 typedef struct TW_Think {
-    void (*think)();
+    void (*think)( struct TW_Entity* );
     TW_Component* parent;
 } TW_Think;
 
@@ -23,6 +23,8 @@ typedef struct TW_Think {
 
 /**
  * TW_Think_Create - Create a think object.
+ * 
+ * The think object must point to a function that takes an entity as an argument.
  * 
  * Args:
  * - void       - *thinkFunction    - Pointer to a function for the think object to run
@@ -39,7 +41,7 @@ TW_Think* TW_Think_Create( void *thinkFunction );
  * Args:
  * TW_Think*        - self          - The think object to free
  */
-void TW_Think_Run( TW_Think* self );
+void TW_Think_Run( TW_Think* self, TW_Entity* entity );
 
 
 /**

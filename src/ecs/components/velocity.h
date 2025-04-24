@@ -4,13 +4,11 @@
 #include "../../engine/gamestate.h"
 #include "../../engine/maths.h"
 
-
 // Type definitions
 
 #define MILLISECONDS_IN_A_SEC 1000.f
 
-typedef struct TW_Component TW_Component;
-typedef struct TW_Transform TW_Transform;
+typedef struct TW_Entity TW_Entity;
 
 
 /**
@@ -80,7 +78,7 @@ void TW_Velocity_SetInterval( TW_Velocity* self, int interval );
  * - TW_Velocity*       - self          - The velocity object to run
  * - TW_Component*      - transform     - The transform object to operate on
  */
-void TW_Velocity_Run( TW_Velocity* self, TW_Transform* transform );
+void TW_Velocity_Run( TW_Velocity* self, TW_Entity* entity );
 
 
 /**

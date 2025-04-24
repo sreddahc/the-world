@@ -1,5 +1,6 @@
 #pragma once
 
+#include "components/collision.h"
 #include "components/think.h"
 #include "components/transform.h"
 #include "components/velocity.h"
@@ -7,6 +8,8 @@
 #include "../renderer/text.h"
 #include "../renderer/sprite.h"
 #include "../renderer/animation.h"
+#include "../game/components/platform.h"
+#include "../game/components/player.h"
 
 
 // Type definitions
@@ -20,30 +23,22 @@ typedef struct TW_Entity TW_Entity;
  */
 enum TW_ComponentType
 {
-    TW_C_TRANSFORM,
-    TW_C_VELOCITY,
-    TW_C_THINK,
+    // Texture components
+    TW_C_ANIMATION,
+    TW_C_SPRITE,    
     TW_C_TEXTURE,
     TW_C_TEXT,
-    TW_C_SPRITE,
-    TW_C_ANIMATION,
+    // Logic components
+    TW_C_COLLISION,
+    TW_C_TRANSFORM,
+    TW_C_THINK,
+    TW_C_VELOCITY,
+    // Game components
+    TW_C_PLATFORM,
+    TW_C_PLAYER,
+    // Metadata
     TW_C_TOTAL
 };
-
-
-/**
- * TW_Component_Value - A union of all valid component types. This union should have one
- * object matching each TW_Component_Type.
- */
-typedef union TW_ComponentValue {
-    TW_Transform* transform;
-    TW_Velocity* velocity;
-    TW_Think* think;
-    TW_Texture* texture;
-    TW_Text* text;
-    TW_Sprite* sprite;
-    TW_Animation* animation;
-} TW_ComponentValue;
 
 
 /**
@@ -51,21 +46,27 @@ typedef union TW_ComponentValue {
  * 
  * Args:
  * - int                    - type          - The type of component this is
- * - TW_Component_Value*    - value         - The component
+ * - TW_Entity*             - parent        - Parent entity of this component
+ * - TW_ComponentValue*     - value         - The component
  */
 typedef struct TW_Component {
     enum TW_ComponentType type;
     TW_Entity* parent;
     union {
+        // Texture components
+        TW_Animation* animation;
+        TW_Sprite* sprite;
+        TW_Text* text;
+        TW_Texture* texture;
+        // Logic components
+        TW_Collision* collision;
+        TW_Think* think;
         TW_Transform* transform;
         TW_Velocity* velocity;
-        TW_Think* think;
-        TW_Texture* texture;
-        TW_Text* text;
-        TW_Sprite* sprite;
-        TW_Animation* animation;
+        // Game components
+        TW_Platform* platform;
+        TW_Player* player;
     };
-    // TW_Component_Value* value;
 } TW_Component;
 
 
@@ -76,16 +77,16 @@ typedef struct TW_Component {
  * 
  * Args:
  * - int                    - type          - The type of the component value
- * - TW_Component_Value*    - value         - A pointer to the component value
+ * - void*                  - value         - A pointer to the component value (TW_ComponentType)
  * 
  * Returns:
  * - TW_Component*          - Returns a pointer to the component the specified type
  */
-TW_Component* TW_Component_Create( int type, TW_ComponentValue* value );
+TW_Component* TW_Component_Create( int type, void* value );
 
 
 /**
- * TW_Component_Render - If there is a visual aspect to the component... renders it
+ * TW_Component_Render - If there is a visual aspect to the component... render it
  * 
  * Args:
  * - TW_Component*          - self          - The TW_Component to render
@@ -97,9 +98,18 @@ void TW_Component_Render( TW_Component* self, TW_Transform* transform );
  * TW_Component_Run - Run logic components
  * 
  * Args:
- * - TW_Component*          - self          - The TW_Component to run
+ * - TW_Component*          - self          - The logic component to run
  */
-void TW_Component_Run( TW_Component* self );
+void TW_Component_RunLogic( TW_Component* self );
+
+
+/**
+ * TW_Component_RunPhysics - Run physics components
+ * 
+ * Args:
+ * - TW_Component*          - self          - The physics component to run
+ */
+void TW_Component_RunPhysics( TW_Component* self );
 
 
 /**
@@ -107,7 +117,10 @@ void TW_Component_Run( TW_Component* self );
  * object if it exists. If not, return `NULL`.
  * 
  * Args:
- * - TW_Component*          - self          - The component to fetch the parent entity of
+ * - TW_Component*          - self          - Get parent entity of this component.
+ * 
+ * Returns:
+ * - TW_Entity*             - Parent entity if it exists. Otherwise return `NULL`.
  */
 TW_Entity* TW_Component_GetParent( TW_Component* self );
 

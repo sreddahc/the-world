@@ -5,6 +5,8 @@
 
 // Type definitions
 
+typedef struct TW_Scene TW_Scene;
+
 /**
  * TW_Entity - An entity
  * 
@@ -14,6 +16,7 @@
  */
 typedef struct TW_Entity {
     int size;
+    TW_Scene* parent;
     TW_Component** components;
 } TW_Entity;
 
@@ -71,9 +74,18 @@ void TW_Entity_Render( TW_Entity* self );
 
 
 /**
- * TW_Component_Run - Run logic components in TW_Entity
+ * TW_Entity_RunLogic - Run logic components in TW_Entity
  * 
  * Args:
  * - TW_Entity*             - self          - The TW_Component to run
  */
-void TW_Entity_Run( TW_Entity* self );
+void TW_Entity_RunLogic( TW_Entity* self );
+
+
+/**
+ * TW_Entity_RunPhysics - Run logic components in TW_Entity
+ * 
+ * Args:
+ * - TW_Entity*             - self          - The TW_Component to run
+ */
+void TW_Entity_RunPhysics( TW_Entity* self );

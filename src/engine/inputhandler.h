@@ -15,7 +15,7 @@ typedef struct TW_InputHandler {
 // Function definitions
 
 
-TW_InputHandler* TW_InputHandler_Create();
+void TW_InputHandler_Create();
 
 
 bool TW_InputHandler_Poll();

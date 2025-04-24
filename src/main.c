@@ -1,6 +1,7 @@
 #include "renderer/renderer.h"
 #include "engine/timer.h"
-#include "game/player.h"
+#include "game/components/player.h"
+#include "game/components/platform.h"
 #include "game/debugstats.h"
 
 // Global variables
@@ -115,9 +116,6 @@ int main( int argc, char* args[] )
         // Main loop flag
         bool quit = false;
 
-        // Event handler
-        SDL_Event event;
-
         // Main scene
         TW_Scene* sceneMain = TW_Scene_Create();
 
@@ -136,23 +134,37 @@ int main( int argc, char* args[] )
         TW_Vector2_Set(TW_Entity_GetComponent( entityTitle, TW_C_TRANSFORM )->transform->centre, gTitle->texture->width / 2, gTitle->texture->height / 2 );
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
-        // Player Entity
-        TW_Player_Create( sceneMain );
+        // Platform Entities
+        for( int index = 0; index < 5; index ++ )
+        {
+            int xPosition = 200;
+            switch ( index )
+            {
+                case 0:
+                    TW_Scene_GeneratePlatform( sceneMain, TW_PLATFORM_LEFT, xPosition, 250 );
+                    break;
 
-        // Time
-        TW_Timer* mainTimer = TW_Timer_Create( false );
-        char timeText[50] = "Time since reset: 0ms";
-        TW_Text* gTimeText = TW_Text_Create( timeText, NULL, 0, NULL );
-        TW_Entity* entityTimeText = TW_Entity_Create();
-        TW_Entity_AddComponent( entityTimeText, TW_Component_Create( TW_C_TEXT, gTimeText ) );
-        TW_Entity_AddComponent(entityTimeText, TW_Component_Create( TW_C_TRANSFORM, TW_Transform_Create( 500, 125, 0.0, 1.0 ) ) );
-        TW_Scene_AddEntity( sceneMain, entityTimeText );
+                case 4:
+                    TW_Scene_GeneratePlatform( sceneMain, TW_PLATFORM_RIGHT, xPosition + ( index * 35 ), 250 );
+                    break;
+
+                default:
+                    TW_Scene_GeneratePlatform( sceneMain, TW_PLATFORM_MIDDLE, xPosition + ( index * 35 ), 250 );
+                    break;
+            }
+        }
+
+        // Player Entity
+        TW_Scene_GeneratePlayer( sceneMain, 200, 200 );
 
         // Debug Status
         TW_DebugStats_Create( sceneMain );
 
         while( !quit )
         {
+            // Run physics engine
+            TW_Scene_RunPhysics( sceneMain );
+
             while( TW_InputHandler_Poll() == true )
             {
                 quit = TW_InputHandler_CheckQuit();
@@ -162,54 +174,27 @@ int main( int argc, char* args[] )
                     quit = true;
                 }
                 
-                TW_Scene_Run( sceneMain );
-
-                if( TW_InputHandler_CheckKeyPressed( SDLK_RETURN ) == true )
-                {
-                    TW_Timer_Reset( mainTimer );
-                }
-
-                if( TW_InputHandler_CheckKeyPressed( SDLK_SPACE ) == true )
-                {
-                    if( mainTimer->paused )
-                    {
-                        TW_Timer_Resume( mainTimer );
-                    }
-                    else
-                    {
-                        TW_Timer_Pause( mainTimer );
-                    }
-
-                    for( int index = 0; index < sceneMain->size; index++ )
-                    {
-                        TW_Component* tempAnimation = TW_Entity_GetComponent( sceneMain->entities[ index ], TW_C_ANIMATION );
-                        if( tempAnimation != NULL )
-                        {
-                            tempAnimation->animation->paused = mainTimer->paused;
-                        }
-                    }
-                }
+                // Run logic
+                TW_Scene_RunLogic( sceneMain );
             }
-
-            snprintf( timeText, 50, "Time since reset: %d ms", TW_Timer_GetTime( mainTimer ) );
-            TW_Text_Update( gTimeText );
 
             // Update the surface
             SDL_RenderClear( TW_GetRenderer() );
             TW_GameState_Update();
 
-            TW_Scene_Run( sceneMain );
+            // Run logic again ?!? (this should be fixed... might need to be done by adding listeners to the input handlers)
+            TW_Scene_RunLogic( sceneMain );
 
-            // For each Entity in a Scene
+            // Draw the scene
             TW_Scene_Render( sceneMain );
 
-            // // Update screen
+            // Update screen
             SDL_RenderPresent( TW_GetRenderer() );
             TW_GameState_LimitFrameRate();
         }
 
         // Free resources
-        TW_Timer_Free( mainTimer );
+        TW_DebugStats_Free();
         TW_Scene_Free( sceneMain );
         TW_GameState_Free();
     }
