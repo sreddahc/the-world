@@ -1,9 +1,31 @@
-#include "platform.h"
+#include "../../ecs/scene.h"
 
 
-void TW_Platform_Create( TW_Scene* target, enum TW_PlatformPosition platformType, int x, int y )
+// Platform object initialised
+TW_Platform* TW_Platform_Create()
+{
+    TW_Platform* platform = malloc( sizeof( TW_Platform ) );
+    platform->parent = NULL;
+    return platform;
+}
+
+
+// Free the resources used by a platform object
+void TW_Platform_Free( TW_Platform* self )
+{
+    self->parent = NULL;
+    free( self );
+}
+
+
+// Create a platform entity at position x and y in target scene
+void TW_Scene_GeneratePlatform( TW_Scene* target, enum TW_PlatformPosition platformType, int x, int y )
 {
     TW_Entity* platformEntity = TW_Entity_Create();
+
+    TW_Platform* platformPlatform = TW_Platform_Create();
+    TW_Component* cPlatformPlatform = TW_Component_Create( TW_C_PLATFORM, platformPlatform );
+    TW_Entity_AddComponent( platformEntity, cPlatformPlatform );
 
     TW_Sprite* platformSprite = TW_Sprite_Create( "src/assets/images/sprites/platform.png", 35, 35 );
     platformSprite->currentSprite = platformType;

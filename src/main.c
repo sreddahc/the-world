@@ -141,15 +141,15 @@ int main( int argc, char* args[] )
             switch ( index )
             {
                 case 0:
-                    TW_Platform_Create( sceneMain, TW_PLATFORM_LEFT, xPosition, 250 );
+                    TW_Scene_GeneratePlatform( sceneMain, TW_PLATFORM_LEFT, xPosition, 250 );
                     break;
 
                 case 4:
-                    TW_Platform_Create( sceneMain, TW_PLATFORM_RIGHT, xPosition + ( index * 35 ), 250 );
+                    TW_Scene_GeneratePlatform( sceneMain, TW_PLATFORM_RIGHT, xPosition + ( index * 35 ), 250 );
                     break;
 
                 default:
-                    TW_Platform_Create( sceneMain, TW_PLATFORM_MIDDLE, xPosition + ( index * 35 ), 250 );
+                    TW_Scene_GeneratePlatform( sceneMain, TW_PLATFORM_MIDDLE, xPosition + ( index * 35 ), 250 );
                     break;
             }
         }

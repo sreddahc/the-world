@@ -8,6 +8,7 @@
 #include "../renderer/text.h"
 #include "../renderer/sprite.h"
 #include "../renderer/animation.h"
+#include "../game/components/platform.h"
 #include "../game/components/player.h"
 
 
@@ -33,6 +34,7 @@ enum TW_ComponentType
     TW_C_THINK,
     TW_C_VELOCITY,
     // Game components
+    TW_C_PLATFORM,
     TW_C_PLAYER,
     // Metadata
     TW_C_TOTAL
@@ -62,6 +64,7 @@ typedef struct TW_Component {
         TW_Transform* transform;
         TW_Velocity* velocity;
         // Game components
+        TW_Platform* platform;
         TW_Player* player;
     };
 } TW_Component;

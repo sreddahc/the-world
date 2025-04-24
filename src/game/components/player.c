@@ -6,9 +6,7 @@
 TW_Player* TW_Player_Create()
 {
     TW_Player* player = malloc( sizeof( TW_Player ) );
-
     player->parent = NULL;
-
     return player;
 }
 

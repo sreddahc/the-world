@@ -50,6 +50,11 @@ TW_Component* TW_Component_Create( int type, void* value ){
             break;
         
         // Game components
+        case TW_C_PLATFORM:
+            component->platform = value;
+            component->platform->parent = component;
+            break;
+
         case TW_C_PLAYER:
             component->player = value;
             component->player->parent = component;
@@ -184,6 +189,10 @@ void TW_Component_Free( TW_Component* self )
             break;
 
         // Game components
+        case TW_C_PLATFORM:
+            TW_Platform_Free( self->platform );
+            break;
+
         case TW_C_PLAYER:
             TW_Player_Free( self->player );
             break;
