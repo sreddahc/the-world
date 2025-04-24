@@ -8,6 +8,7 @@
 #include "../renderer/text.h"
 #include "../renderer/sprite.h"
 #include "../renderer/animation.h"
+#include "../game/components/player.h"
 
 
 // Type definitions
@@ -21,14 +22,19 @@ typedef struct TW_Entity TW_Entity;
  */
 enum TW_ComponentType
 {
+    // Texture components
     TW_C_ANIMATION,
-    TW_C_COLLISION,
     TW_C_SPRITE,    
     TW_C_TEXTURE,
     TW_C_TEXT,
+    // Logic components
+    TW_C_COLLISION,
     TW_C_TRANSFORM,
     TW_C_THINK,
     TW_C_VELOCITY,
+    // Game components
+    TW_C_PLAYER,
+    // Metadata
     TW_C_TOTAL
 };
 
@@ -45,14 +51,18 @@ typedef struct TW_Component {
     enum TW_ComponentType type;
     TW_Entity* parent;
     union {
+        // Texture components
         TW_Animation* animation;
-        TW_Collision* collision;
         TW_Sprite* sprite;
         TW_Text* text;
         TW_Texture* texture;
+        // Logic components
+        TW_Collision* collision;
         TW_Think* think;
         TW_Transform* transform;
         TW_Velocity* velocity;
+        // Game components
+        TW_Player* player;
     };
 } TW_Component;
 

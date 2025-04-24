@@ -155,7 +155,7 @@ int main( int argc, char* args[] )
         }
 
         // Player Entity
-        TW_Player_Create( sceneMain, 200, 200 );
+        TW_Scene_GeneratePlayer( sceneMain, 200, 200 );
 
         // Debug Status
         TW_DebugStats_Create( sceneMain );

@@ -13,6 +13,10 @@ enum TW_PlatformPosition {
 };
 
 
+typedef struct TW_Platform {
+} TW_Platform;
+
+
 // Function definitions
 
 /**
@@ -24,3 +28,6 @@ enum TW_PlatformPosition {
  * - int                - y                 - The y position of the platform (anchor top-left)
  */
 void TW_Platform_Create( TW_Scene* target, enum TW_PlatformPosition platformType, int x, int y );
+
+
+void TW_Platform_Free( TW_Platform* self );

@@ -1,4 +1,24 @@
-#include "player.h"
+#include "../../ecs/scene.h"
+
+
+// Creates a player component object.
+
+TW_Player* TW_Player_Create()
+{
+    TW_Player* player = malloc( sizeof( TW_Player ) );
+
+    player->parent = NULL;
+
+    return player;
+}
+
+
+// Frees resources used by a player object.
+void TW_Player_Free( TW_Player* self )
+{
+    self->parent = NULL;
+    free( self );
+}
 
 
 // The think function for the player entity
@@ -10,7 +30,6 @@ void TW_Player_Think( TW_Entity* entity )
         if( velocityComponent != NULL )
         {
             // Movement keys
-
             if( TW_InputHandler_CheckKeyPressed( SDLK_RSHIFT ) )
             {
                 if( TW_GameState_PauseStatus() == false )
@@ -62,10 +81,14 @@ void TW_Player_Think( TW_Entity* entity )
 }
 
 
-// Creates a player entity and adds it to target scene
-void TW_Player_Create( TW_Scene* target, int x, int y )
+// Creates a player entity with all required components and adds it to target scene.
+void TW_Scene_GeneratePlayer( TW_Scene* target, int x, int y )
 {
     TW_Entity* playerEntity = TW_Entity_Create();
+
+    TW_Player* playerPlayer = TW_Player_Create();
+    TW_Component* cPlayerPlayer = TW_Component_Create( TW_C_PLAYER, playerPlayer );
+    TW_Entity_AddComponent( playerEntity, cPlayerPlayer );
 
     TW_Velocity* playerVelocity = TW_Velocity_Create( 0, 0, 0, 0 );
     playerVelocity->interval = 50;

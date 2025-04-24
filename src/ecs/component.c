@@ -7,14 +7,10 @@ TW_Component* TW_Component_Create( int type, void* value ){
     component->type = type;
     switch ( component->type )
     {
+        // Texture components
         case TW_C_ANIMATION:
             component->animation = value;
             component->animation->parent = component;
-            break;
-
-        case TW_C_COLLISION:
-            component->collision = value;
-            component->collision->parent = component;
             break;
 
         case TW_C_SPRITE:
@@ -32,6 +28,12 @@ TW_Component* TW_Component_Create( int type, void* value ){
             component->texture->parent = component;
             break;
 
+        // Logic components
+        case TW_C_COLLISION:
+            component->collision = value;
+            component->collision->parent = component;
+            break;
+
         case TW_C_THINK:
             component->think = value;
             component->think->parent = component;
@@ -45,6 +47,12 @@ TW_Component* TW_Component_Create( int type, void* value ){
         case TW_C_VELOCITY:
             component->velocity = value;
             component->velocity->parent = component;
+            break;
+        
+        // Game components
+        case TW_C_PLAYER:
+            component->player = value;
+            component->player->parent = component;
             break;
 
         default:
@@ -141,24 +149,26 @@ void TW_Component_Free( TW_Component* self )
 {
     switch ( self->type )
     {
+        // Texture components
         case TW_C_ANIMATION:
             TW_Animation_Free( self->animation );
-            break;
-
-        case TW_C_COLLISION:
-            TW_Collision_Free( self->collision );
             break;
 
         case TW_C_SPRITE:
             TW_Sprite_Free( self->sprite );
             break;
 
+        case TW_C_TEXTURE:
+            TW_Texture_Free( self->texture );
+            break;
+
         case TW_C_TEXT:
             TW_Text_Free( self->text );
             break;
 
-        case TW_C_TEXTURE:
-            TW_Texture_Free( self->texture );
+        // Logic components
+        case TW_C_COLLISION:
+            TW_Collision_Free( self->collision );
             break;
 
         case TW_C_THINK:
@@ -171,6 +181,11 @@ void TW_Component_Free( TW_Component* self )
 
         case TW_C_VELOCITY:
             TW_Velocity_Free( self->velocity );
+            break;
+
+        // Game components
+        case TW_C_PLAYER:
+            TW_Player_Free( self->player );
             break;
 
         default:
