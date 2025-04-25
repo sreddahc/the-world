@@ -179,3 +179,31 @@ void TW_InputHandler_AddListener( TW_Listener* listener )
         }
     }
 }
+
+
+TW_Listener* TW_InputHandler_GetListenerType( enum TW_ListenerType type )
+{
+    TW_Listener* listener = NULL;
+    for( int index = 0; index < inputHandler->size; index++ )
+    {
+        if( inputHandler->listeners[ index ]->type == type )
+        {
+            listener = inputHandler->listeners[ index ];
+        }
+    }
+    return listener;
+}
+
+
+bool TW_InputHandler_L_CheckQuit()
+{
+    TW_Listener* quitListener = TW_InputHandler_GetListenerType( TW_L_QUIT );
+    if( quitListener != NULL )
+    {
+        if( quitListener->event == true )
+        {
+            return quitListener->quit->quit;
+        }
+    }
+    return false;
+}

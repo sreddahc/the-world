@@ -117,6 +117,9 @@ int main( int argc, char* args[] )
         // Main loop flag
         bool quit = false;
 
+        // TW_Listener_Add( TW_L_QUIT, TW_Quit_Create() );
+        TW_Listener_Add( TW_L_QUIT, TW_L_Quit_Create() );
+
         // Main scene
         TW_Scene* sceneMain = TW_Scene_Create();
 

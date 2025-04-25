@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include "listeners/lquit.h"
 
 // Type definitions
 
@@ -23,6 +24,9 @@ enum TW_ListenerType
 typedef struct TW_Listener {
     enum TW_ListenerType type;
     bool event;
+    union {
+        TW_L_Quit* quit;
+    };
 } TW_Listener;
 
 
@@ -44,3 +48,9 @@ TW_Listener* TW_Listener_Create();
  * - TW_Listener*       - self          - Free the resources used by this listener
  */
 void TW_Listener_Free( TW_Listener* self );
+
+
+/**
+ * TW_Listener_Add - Add a listener of a given type
+ */
+void TW_Listener_Add( enum TW_ListenerType type, void* value );

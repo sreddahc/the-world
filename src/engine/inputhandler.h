@@ -63,3 +63,13 @@ void TW_InputHandler_Free();
  * - TW_Listener*           - listener      - The listener to add to the input handler
  */
 void TW_InputHandler_AddListener( TW_Listener* listener );
+
+
+void TW_InputHandler_PopulateListeners();
+void TW_InputHandler_ClearListeners();
+
+
+TW_Listener* TW_InputHandler_GetListenerType( enum TW_ListenerType type );
+
+
+bool TW_InputHandler_L_CheckQuit();
