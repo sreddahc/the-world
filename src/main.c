@@ -23,6 +23,7 @@ enum KeyPressSurfaces
 
 SDL_Window* gWindow = NULL;
 
+
 // Functions
 bool init();
 void closeAll();
@@ -127,7 +128,7 @@ int main( int argc, char* args[] )
         TW_Scene_AddEntity( sceneMain, entityBackground );
 
         // Title Entity
-        TW_Text* gTitle = TW_Text_Create( "PROBS A COOL GAME", NULL, 32, TW_Colour_Create( 0x80, 0x00, 0x80, 0xff ) );
+        TW_Text* gTitle = TW_Text_Create( "PROBS A JANK GAME", NULL, 32, TW_Colour_Create( 0x80, 0x00, 0x80, 0xff ) );
         TW_Entity* entityTitle = TW_Entity_Create();
         TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_C_TEXT, gTitle ) );
         TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_C_TRANSFORM, TW_Transform_Create( SCREEN_WIDTH / 2, 30, 0.0, 1.0 ) ) );
@@ -135,33 +136,58 @@ int main( int argc, char* args[] )
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
         // Platform Entities
-        for( int index = 0; index < 5; index ++ )
+
+        int tempLevel[22][36] = {
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 2, 3, 3, 4, 0, 2, 4, 0, 1, 0, 0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+        };
+
+        // Create level
+        for( int j = 0; j < 22; j++ )
         {
-            int xPosition = 200;
-            switch ( index )
+            for( int i = 0; i < 36; i++ )
             {
-                case 0:
-                    TW_Scene_GeneratePlatform( sceneMain, TW_PLATFORM_LEFT, xPosition, 250 );
-                    break;
-
-                case 4:
-                    TW_Scene_GeneratePlatform( sceneMain, TW_PLATFORM_RIGHT, xPosition + ( index * 35 ), 250 );
-                    break;
-
-                default:
-                    TW_Scene_GeneratePlatform( sceneMain, TW_PLATFORM_MIDDLE, xPosition + ( index * 35 ), 250 );
-                    break;
+                if( tempLevel[ j ][ i ] >= 1 )
+                {
+                    
+                    TW_Scene_GeneratePlatform( sceneMain, tempLevel[ j ][ i ] - 1, i * 35, j * 35 );
+                }
+                if( tempLevel[ j ][ i ] == -1 )
+                {
+                    TW_Scene_GeneratePlayer( sceneMain, i * 35, j * 35 );
+                }
             }
         }
-
-        // Player Entity
-        TW_Scene_GeneratePlayer( sceneMain, 200, 200 );
 
         // Debug Status
         TW_DebugStats_Create( sceneMain );
 
         while( !quit )
         {
+            // Update the surface
+            SDL_RenderClear( TW_GetRenderer() );
+            TW_GameState_Update();
+
             // Run physics engine
             TW_Scene_RunPhysics( sceneMain );
 
@@ -177,10 +203,6 @@ int main( int argc, char* args[] )
                 // Run logic
                 TW_Scene_RunLogic( sceneMain );
             }
-
-            // Update the surface
-            SDL_RenderClear( TW_GetRenderer() );
-            TW_GameState_Update();
 
             // Run logic again ?!? (this should be fixed... might need to be done by adding listeners to the input handlers)
             TW_Scene_RunLogic( sceneMain );
