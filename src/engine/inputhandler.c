@@ -8,6 +8,8 @@ void TW_InputHandler_Create()
 {
     inputHandler = malloc( sizeof( TW_InputHandler ) );
     inputHandler->eventsExist = 0;
+    inputHandler->size = 0;
+    inputHandler->listeners = NULL;
 }
 
 
@@ -143,8 +145,37 @@ bool TW_InputHandler_CheckMouseDepressed()
 }
 
 
+// Free the resources used by the InputHandler.
 void TW_InputHandler_Free()
 {
     inputHandler->eventsExist = 0;
+    for( int index = 0; index < inputHandler->size; index++ )
+    {
+        TW_Listener_Free( inputHandler->listeners[ index ] );
+    }
+    inputHandler->size = 0;
     free( inputHandler );
+}
+
+
+// Add a listener to the input handler.
+void TW_InputHandler_AddListener( TW_Listener* listener )
+{
+    inputHandler->size += 1;
+    if( inputHandler->size > 0 )
+    {
+        if( inputHandler->listeners == NULL )
+        {
+            inputHandler->listeners = malloc( inputHandler->size * sizeof( TW_Listener ) );
+            inputHandler->listeners[ inputHandler->size - 1 ] = listener;
+        }
+        else
+        {
+            TW_Listener** oldListeners = inputHandler->listeners;
+            inputHandler->listeners = malloc( inputHandler->size * sizeof( TW_Listener ) );
+            memcpy( inputHandler->listeners, oldListeners, ( inputHandler->size - 1 ) * sizeof( TW_Listener ) );
+            free( oldListeners );
+            inputHandler->listeners[ inputHandler->size - 1 ] = listener;
+        }
+    }
 }
