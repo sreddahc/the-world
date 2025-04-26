@@ -13,6 +13,19 @@ TW_Listener* TW_Listener_Create()
 // Free the resources used by a listener object.
 void TW_Listener_Free( TW_Listener* self )
 {
+    switch ( self->type )
+    {
+        case TW_L_KEYDOWN:
+            TW_L_KeyDown_Free( self->keydown );
+            break;
+
+        case TW_L_QUIT:
+            TW_L_Quit_Free( self->quit );
+            break;
+        
+        default:
+            break;
+    }
     self->event = false;
     free( self );
 }
@@ -27,12 +40,16 @@ TW_Listener* TW_Listener_Add( enum TW_ListenerType type, void* value )
     newListener->event = false;
     switch ( type )
     {
-    case TW_L_QUIT:
-        newListener->quit = value;
-        break;
-    
-    default:
-        break;
+        case TW_L_KEYDOWN:
+            newListener->keydown = value;
+            break;
+
+        case TW_L_QUIT:
+            newListener->quit = value;
+            break;
+        
+        default:
+            break;
     }
 
     return newListener;
@@ -42,14 +59,18 @@ TW_Listener* TW_Listener_Add( enum TW_ListenerType type, void* value )
 void TW_Listener_Check( enum TW_ListenerType type, void* value, SDL_Event event )
 {
     // printf( "quit was set! %d \n", type );
-    TW_Listener* currentListener = value;
+    TW_Listener* listener = value;
     switch ( type )
     {
-    case TW_L_QUIT:
-        currentListener->event = TW_L_Quit_Check( currentListener->quit, event );
-        break;
-    
-    default:
-        break;
+        case TW_L_KEYDOWN:
+        listener->event = TW_L_KeyDown_Check( listener->keydown, event );
+            break;
+
+        case TW_L_QUIT:
+        listener->event = TW_L_Quit_Check( listener->quit, event );
+            break;
+        
+        default:
+            break;
     }
 }

@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include "listeners/lkeydown.h"
 #include "listeners/lquit.h"
 
 // Type definitions
@@ -25,6 +26,7 @@ typedef struct TW_Listener {
     enum TW_ListenerType type;
     bool event;
     union {
+        TW_L_KeyDown* keydown;
         TW_L_Quit* quit;
     };
 } TW_Listener;

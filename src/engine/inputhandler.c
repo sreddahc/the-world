@@ -30,32 +30,6 @@ bool TW_InputHandler_Poll()
 }
 
 
-bool TW_InputHandler_CheckQuit()
-{
-    if( TW_InputHandler_CheckEvents() == true )
-    {
-        if( inputHandler->events.type == SDL_QUIT )
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-bool TW_InputHandler_CheckKeyDown()
-{
-    if( TW_InputHandler_CheckEvents() == true )
-    {
-        if( inputHandler->events.type == SDL_KEYDOWN )
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-
 bool TW_InputHandler_CheckKeyPressed( SDL_Keycode key )
 {
     if( TW_InputHandler_CheckEvents() == true )
@@ -195,26 +169,30 @@ TW_Listener* TW_InputHandler_GetListenerType( enum TW_ListenerType type )
 }
 
 
-bool TW_InputHandler_L_CheckQuit()
+bool TW_InputHandler_CheckQuit()
 {
-    TW_Listener* quitListener = TW_InputHandler_GetListenerType( TW_L_QUIT );
-    // if( quitListener != NULL )
-    // {
-        if( quitListener->event == true )
+    TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_QUIT );
+    if( listener != NULL )
+    {
+        if( listener->event == true )
         {
-            printf( "!!!\n" );
-            return quitListener->quit->quit;
+            return listener->quit->quit;
         }
-    // }
+    }
     return false;
+}
+
+
+bool TW_InputHandler_CheckKeyDown( SDL_Keycode key )
+{
+    // This needs to return an array of listers because there may be multiple keydown events...
+    TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_KEYDOWN );
 }
 
 
 // Update all listeners based on the current poll.
 void TW_InputHandler_UpdateListeners()
 {
-    // printf("> %d\n", inputHandler->size);
-    // Poll for events
     while( TW_InputHandler_Poll() == true )
     {
         for( int index = 0; index < inputHandler->size; index++ )

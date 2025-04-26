@@ -26,9 +26,6 @@ bool TW_InputHandler_Poll();
 bool TW_InputHandler_CheckEvents();
 
 
-bool TW_InputHandler_CheckKeyDown();
-
-
 bool TW_InputHandler_CheckKeyPressed( SDL_Keycode key );
 
 
@@ -46,8 +43,13 @@ bool TW_InputHandler_CheckMousePressed();
 
 bool TW_InputHandler_CheckMouseDepressed();
 
+// --
+
 
 bool TW_InputHandler_CheckQuit();
+
+
+bool TW_InputHandler_CheckKeyDown( SDL_Keycode key );
 
 
 /**

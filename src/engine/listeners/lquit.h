@@ -8,13 +8,18 @@
 typedef struct TW_Listener TW_Listener;
 
 
+/**
+ * TW_L_Quit - Quit listener object.
+ * 
+ * Elements:
+ * - bool               - quit          - Quit event been registered? `true` if so, otherwise `false`
+ */
 typedef struct TW_L_Quit {
-    bool quit;
+    bool quit;          // It might be that this is not required...
 } TW_L_Quit;
 
 
 // Function definitions
-
 
 /**
  * TW_L_Quit_Create - Creates a listener object that checks for quit events.
@@ -38,8 +43,11 @@ void TW_L_Quit_Free( TW_L_Quit* self );
  * TW_L_Quit_Check - If a quit event has been registered and updates the listener object.
  * 
  * Args:
- * - TW_L_Quit*         - self          - The quit listener object to free
+ * - TW_L_Quit*         - self          - The quit listener object to check
  * - SDL_Event          - event         - The event to check against
+ * 
+ * Returns:
+ * - bool               - `true` if quit event occurred, otherwise `false`
  */
 bool TW_L_Quit_Check( TW_L_Quit* self, SDL_Event event );
 
