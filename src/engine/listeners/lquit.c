@@ -14,3 +14,19 @@ void TW_L_Quit_Free( TW_L_Quit* self )
     self->quit = false;
     free( self );
 }
+
+
+void TW_L_Quit_Check( TW_L_Quit* self, SDL_Event event )
+{
+    if( event.type == SDL_QUIT )
+    {
+        self->quit = true;
+    }
+}
+
+
+//
+void TW_L_Quit_Clear( TW_L_Quit* self )
+{
+    self->quit = false;
+}

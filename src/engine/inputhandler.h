@@ -65,7 +65,8 @@ void TW_InputHandler_Free();
 void TW_InputHandler_AddListener( TW_Listener* listener );
 
 
-void TW_InputHandler_PopulateListeners();
+void TW_InputHandler_UpdateListeners();
+
 void TW_InputHandler_ClearListeners();
 
 
