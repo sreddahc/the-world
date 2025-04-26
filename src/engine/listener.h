@@ -53,4 +53,6 @@ void TW_Listener_Free( TW_Listener* self );
 /**
  * TW_Listener_Add - Add a listener of a given type
  */
-void TW_Listener_Add( enum TW_ListenerType type, void* value );
+TW_Listener* TW_Listener_Add( enum TW_ListenerType type, void* value );
+
+void TW_Listener_Check( enum TW_ListenerType type, void* value, SDL_Event event );

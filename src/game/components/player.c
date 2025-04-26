@@ -73,67 +73,67 @@ void TW_Player_Think( TW_Entity* entity )
         }
 
         // Input
-        if( playerVelocity != NULL )
-        {
-            // Movement keys
-            if( TW_InputHandler_CheckKeyPressed( SDLK_RSHIFT ) )
-            {
-                if( TW_GameState_PauseStatus() == false )
-                {
-                    TW_GameState_Pause();
-                }
-                else
-                {
-                    TW_GameState_Resume();
-                }
-                TW_Component* cTempAnimation = TW_Entity_GetComponent( entity, TW_C_ANIMATION );
-                if( cTempAnimation != NULL )
-                {
-                    cTempAnimation->animation->paused = TW_GameState_PauseStatus();
-                }
-            }
+        // if( playerVelocity != NULL )
+        // {
+        //     // Movement keys
+        //     if( TW_InputHandler_CheckKeyPressed( SDLK_RSHIFT ) )
+        //     {
+        //         if( TW_GameState_PauseStatus() == false )
+        //         {
+        //             TW_GameState_Pause();
+        //         }
+        //         else
+        //         {
+        //             TW_GameState_Resume();
+        //         }
+        //         TW_Component* cTempAnimation = TW_Entity_GetComponent( entity, TW_C_ANIMATION );
+        //         if( cTempAnimation != NULL )
+        //         {
+        //             cTempAnimation->animation->paused = TW_GameState_PauseStatus();
+        //         }
+        //     }
 
-            if( TW_InputHandler_CheckKeyPressed( SDLK_s ) )
-            {
-                playerVelocity->velocity->speed->y = 15;
-            }
+        //     if( TW_InputHandler_CheckKeyPressed( SDLK_s ) )
+        //     {
+        //         playerVelocity->velocity->speed->y = 15;
+        //     }
 
-            if( TW_InputHandler_CheckKeyPressed( SDLK_w ) )
-            {
-                playerVelocity->velocity->speed->y = -15;
-            }
+        //     if( TW_InputHandler_CheckKeyPressed( SDLK_w ) )
+        //     {
+        //         playerVelocity->velocity->speed->y = -15;
+        //     }
 
-            if( TW_InputHandler_CheckKeyPressed( SDLK_d ) )
-            {
-                playerVelocity->velocity->speed->x = 5;
-            }
+        //     if( TW_InputHandler_CheckKeyPressed( SDLK_d ) )
+        //     {
+        //         playerVelocity->velocity->speed->x = 5;
+        //     }
 
-            if( TW_InputHandler_CheckKeyPressed( SDLK_a ) )
-            {
-                playerVelocity->velocity->speed->x = -5;
-            }
+        //     if( TW_InputHandler_CheckKeyPressed( SDLK_a ) )
+        //     {
+        //         playerVelocity->velocity->speed->x = -5;
+        //     }
 
-            if( TW_InputHandler_CheckKeyDepressed( SDLK_w ) || TW_InputHandler_CheckKeyDepressed( SDLK_s ) )
-            {
-                playerVelocity->velocity->speed->y = 0;
-            }
+        //     if( TW_InputHandler_CheckKeyDepressed( SDLK_w ) || TW_InputHandler_CheckKeyDepressed( SDLK_s ) )
+        //     {
+        //         playerVelocity->velocity->speed->y = 0;
+        //     }
 
-            if( TW_InputHandler_CheckKeyDepressed( SDLK_a ) || TW_InputHandler_CheckKeyDepressed( SDLK_d ) )
-            {
-                playerVelocity->velocity->speed->x = 0;
-            }
+        //     if( TW_InputHandler_CheckKeyDepressed( SDLK_a ) || TW_InputHandler_CheckKeyDepressed( SDLK_d ) )
+        //     {
+        //         playerVelocity->velocity->speed->x = 0;
+        //     }
 
-            // FIX THIS JANK - Jumping
-            if( TW_InputHandler_CheckKeyDepressed( SDLK_SPACE) )
-            {
-                if( playerPlayer->player->jumping == false )
-                {
-                    playerVelocity->velocity->speed->y = -8;
-                    playerVelocity->velocity->acceleration->y = -6;
-                    playerPlayer->player->jumping = true;
-                }
-            }
-        }
+        //     // FIX THIS JANK - Jumping
+        //     if( TW_InputHandler_CheckKeyDepressed( SDLK_SPACE) )
+        //     {
+        //         if( playerPlayer->player->jumping == false )
+        //         {
+        //             playerVelocity->velocity->speed->y = -8;
+        //             playerVelocity->velocity->acceleration->y = -6;
+        //             playerPlayer->player->jumping = true;
+        //         }
+        //     }
+        // }
     }
 }
 

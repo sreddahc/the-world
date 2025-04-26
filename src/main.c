@@ -118,7 +118,7 @@ int main( int argc, char* args[] )
         bool quit = false;
 
         // TW_Listener_Add( TW_L_QUIT, TW_Quit_Create() );
-        TW_Listener_Add( TW_L_QUIT, TW_L_Quit_Create() );
+        TW_InputHandler_AddListener( TW_Listener_Add( TW_L_QUIT, TW_L_Quit_Create() ) );
 
         // Main scene
         TW_Scene* sceneMain = TW_Scene_Create();
@@ -187,25 +187,19 @@ int main( int argc, char* args[] )
 
         while( !quit )
         {
-            // Update the surface
+            // Update the surface, reset game state and update listeners with latest events.
             SDL_RenderClear( TW_GetRenderer() );
             TW_GameState_Update();
+            TW_InputHandler_UpdateListeners();
+
+            // Check if application should quit:
+            if( TW_InputHandler_L_CheckQuit() )
+            {
+                quit = true;
+            }
 
             // Run physics engine
             TW_Scene_RunPhysics( sceneMain );
-
-            while( TW_InputHandler_Poll() == true )
-            {
-                quit = TW_InputHandler_CheckQuit();
-
-                if( TW_InputHandler_CheckKeyPressed( SDLK_ESCAPE ) == true )
-                {
-                    quit = true;
-                }
-                
-                // Run logic
-                TW_Scene_RunLogic( sceneMain );
-            }
 
             // Run logic again ?!? (this should be fixed... might need to be done by adding listeners to the input handlers)
             TW_Scene_RunLogic( sceneMain );
@@ -213,14 +207,16 @@ int main( int argc, char* args[] )
             // Draw the scene
             TW_Scene_Render( sceneMain );
 
-            // Update screen
+            // Update screen, clear listeners and limit frame rate (if required).
             SDL_RenderPresent( TW_GetRenderer() );
+            TW_InputHandler_ClearListeners();
             TW_GameState_LimitFrameRate();
         }
 
         // Free resources
         TW_DebugStats_Free();
         TW_Scene_Free( sceneMain );
+        TW_InputHandler_Free();
         TW_GameState_Free();
     }
 

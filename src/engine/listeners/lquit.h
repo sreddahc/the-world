@@ -41,7 +41,7 @@ void TW_L_Quit_Free( TW_L_Quit* self );
  * - TW_L_Quit*         - self          - The quit listener object to free
  * - SDL_Event          - event         - The event to check against
  */
-void TW_L_Quit_Check( TW_L_Quit* self, SDL_Event event );
+bool TW_L_Quit_Check( TW_L_Quit* self, SDL_Event event );
 
 
 /**

@@ -65,11 +65,23 @@ void TW_InputHandler_Free();
 void TW_InputHandler_AddListener( TW_Listener* listener );
 
 
+/**
+ * TW_InputHandler_UpdateListeners - Update all listeners based on the current poll.
+ */
 void TW_InputHandler_UpdateListeners();
 
 void TW_InputHandler_ClearListeners();
 
 
+/**
+ * TW_InputHandler_GetListenerType - Retrieve a listener of the specified type.
+ * 
+ * Args:
+ * - enum TW_ListenerType   - type          - The type of listener to find
+ * 
+ * Returns:
+ * - TW_Listener*           - The listener requested (or `NULL` if not found)
+ */
 TW_Listener* TW_InputHandler_GetListenerType( enum TW_ListenerType type );
 
 

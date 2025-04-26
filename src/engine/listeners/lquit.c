@@ -1,6 +1,12 @@
 #include "../listener.h"
 
 
+/**
+ * TW_L_Quit_Create - Creates a quit listener object.
+ * 
+ * Returns:
+ * - TW_L_Quit*         - The quit listener object initialised.
+ */
 TW_L_Quit* TW_L_Quit_Create()
 {
     TW_L_Quit* quitListener = malloc( sizeof( TW_L_Quit ) );
@@ -16,12 +22,13 @@ void TW_L_Quit_Free( TW_L_Quit* self )
 }
 
 
-void TW_L_Quit_Check( TW_L_Quit* self, SDL_Event event )
+bool TW_L_Quit_Check( TW_L_Quit* self, SDL_Event event )
 {
     if( event.type == SDL_QUIT )
     {
         self->quit = true;
     }
+    return self->quit;
 }
 
 

@@ -198,12 +198,45 @@ TW_Listener* TW_InputHandler_GetListenerType( enum TW_ListenerType type )
 bool TW_InputHandler_L_CheckQuit()
 {
     TW_Listener* quitListener = TW_InputHandler_GetListenerType( TW_L_QUIT );
-    if( quitListener != NULL )
-    {
+    // if( quitListener != NULL )
+    // {
         if( quitListener->event == true )
         {
+            printf( "!!!\n" );
             return quitListener->quit->quit;
         }
-    }
+    // }
     return false;
+}
+
+
+// Update all listeners based on the current poll.
+void TW_InputHandler_UpdateListeners()
+{
+    // printf("> %d\n", inputHandler->size);
+    // Poll for events
+    for( int index = 0; index < inputHandler->size; index++ )
+    {
+        while( TW_InputHandler_Poll() == true )
+        {
+            TW_Listener_Check( inputHandler->listeners[ index ]->type, inputHandler->listeners[ index ], inputHandler->events );
+        }
+    }
+}
+
+
+void TW_InputHandler_ClearListeners()
+{
+    for( int index = 0; index < inputHandler->size; index++ )
+    {
+        switch ( inputHandler->listeners[ index ]->type )
+        {
+        case TW_L_QUIT:
+            TW_L_Quit_Clear( inputHandler->listeners[ index ]->quit );
+            break;
+        
+        default:
+            break;
+        }
+    }
 }
