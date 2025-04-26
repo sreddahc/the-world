@@ -215,9 +215,9 @@ void TW_InputHandler_UpdateListeners()
 {
     // printf("> %d\n", inputHandler->size);
     // Poll for events
-    for( int index = 0; index < inputHandler->size; index++ )
+    while( TW_InputHandler_Poll() == true )
     {
-        while( TW_InputHandler_Poll() == true )
+        for( int index = 0; index < inputHandler->size; index++ )
         {
             TW_Listener_Check( inputHandler->listeners[ index ]->type, inputHandler->listeners[ index ], inputHandler->events );
         }
