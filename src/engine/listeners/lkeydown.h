@@ -12,7 +12,7 @@ typedef struct TW_Listener TW_Listener;
  * TW_L_KeyDown - Listen for a specific key being pressed.
  */
 typedef struct TW_L_KeyDown {
-    bool eventOccurred;
+    bool event;
     SDL_Keycode key;
 } TW_L_KeyDown;
 
@@ -47,11 +47,8 @@ void TW_L_KeyDown_Free( TW_L_KeyDown* self );
  * Args:
  * - TW_L_KeyDown*      - self          - The key-down listener object to check
  * - SDL_Event          - event         - The event to check against
- * 
- * Returns:
- * - bool               - `true` if key-down event occurred, otherwise `false`
  */
-bool TW_L_KeyDown_Check( TW_L_KeyDown* self, SDL_Event event );
+void TW_L_KeyDown_Check( TW_L_KeyDown* self, SDL_Event event );
 
 
 /**

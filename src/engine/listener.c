@@ -5,7 +5,6 @@
 TW_Listener* TW_Listener_Create()
 {
     TW_Listener* listener = malloc( sizeof( TW_Listener ) );
-    listener->event = false;
     return listener;
 }
 
@@ -26,7 +25,6 @@ void TW_Listener_Free( TW_Listener* self )
         default:
             break;
     }
-    self->event = false;
     free( self );
 }
 
@@ -37,7 +35,6 @@ TW_Listener* TW_Listener_Add( enum TW_ListenerType type, void* value )
     // If not:
     TW_Listener* newListener = TW_Listener_Create();
     newListener->type = type;
-    newListener->event = false;
     switch ( type )
     {
         case TW_L_KEYDOWN:
@@ -63,11 +60,30 @@ void TW_Listener_Check( enum TW_ListenerType type, void* value, SDL_Event event 
     switch ( type )
     {
         case TW_L_KEYDOWN:
-        listener->event = TW_L_KeyDown_Check( listener->keydown, event );
+            TW_L_KeyDown_Check( listener->keydown, event );
             break;
 
         case TW_L_QUIT:
-        listener->event = TW_L_Quit_Check( listener->quit, event );
+            TW_L_Quit_Check( listener->quit, event );
+            break;
+        
+        default:
+            break;
+    }
+}
+
+
+
+void TW_Listener_Clear( TW_Listener* self )
+{
+    switch ( self->type )
+    {
+        case TW_L_KEYDOWN:
+            TW_L_KeyDown_Clear( self->keydown );
+            break;
+
+        case TW_L_QUIT:
+            TW_L_Quit_Clear( self->quit );
             break;
         
         default:

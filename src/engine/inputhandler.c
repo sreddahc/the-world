@@ -174,10 +174,7 @@ bool TW_InputHandler_CheckQuit()
     TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_QUIT );
     if( listener != NULL )
     {
-        if( listener->event == true )
-        {
-            return listener->quit->quit;
-        }
+        return listener->quit->event;
     }
     return false;
 }
@@ -185,8 +182,20 @@ bool TW_InputHandler_CheckQuit()
 
 bool TW_InputHandler_CheckKeyDown( SDL_Keycode key )
 {
-    // This needs to return an array of listers because there may be multiple keydown events...
-    TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_KEYDOWN );
+    for( int index = 0; index < inputHandler->size; index++ )
+    {
+        if( inputHandler->listeners[ index ]->type == TW_L_KEYDOWN )
+        {
+            if( inputHandler->listeners[ index ]->keydown->key == key )
+            {
+                if( inputHandler->listeners[ index ]->keydown->event == true )
+                {
+                    return inputHandler->listeners[ index ]->keydown->event;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 
@@ -207,14 +216,6 @@ void TW_InputHandler_ClearListeners()
 {
     for( int index = 0; index < inputHandler->size; index++ )
     {
-        switch ( inputHandler->listeners[ index ]->type )
-        {
-        case TW_L_QUIT:
-            TW_L_Quit_Clear( inputHandler->listeners[ index ]->quit );
-            break;
-        
-        default:
-            break;
-        }
+        TW_Listener_Clear( inputHandler->listeners[ index ] );
     }
 }

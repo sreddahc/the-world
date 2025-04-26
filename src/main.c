@@ -117,9 +117,11 @@ int main( int argc, char* args[] )
         // Main loop flag
         bool quit = false;
 
-        // TW_Listener_Add( TW_L_QUIT, TW_Quit_Create() );
+        // Input
         TW_InputHandler_AddListener( TW_Listener_Add( TW_L_QUIT, TW_L_Quit_Create() ) );
         TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYDOWN, TW_L_KeyDown_Create( SDLK_ESCAPE ) ) );
+        TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYDOWN, TW_L_KeyDown_Create( SDLK_a ) ) );
+        TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYDOWN, TW_L_KeyDown_Create( SDLK_d ) ) );
 
         // Main scene
         TW_Scene* sceneMain = TW_Scene_Create();
@@ -194,7 +196,7 @@ int main( int argc, char* args[] )
             TW_InputHandler_UpdateListeners();
 
             // Check if application should quit:
-            if( TW_InputHandler_CheckQuit() )
+            if( TW_InputHandler_CheckQuit() || TW_InputHandler_CheckKeyDown( SDLK_ESCAPE ) )
             {
                 quit = true;
             }

@@ -5,7 +5,7 @@
 TW_L_KeyDown* TW_L_KeyDown_Create( SDL_KeyCode key )
 {
     TW_L_KeyDown* listener = malloc( sizeof( TW_L_KeyDown ) );
-    listener->eventOccurred = false;
+    listener->event = false;
     listener->key = key;
     return listener;
 }
@@ -14,25 +14,27 @@ TW_L_KeyDown* TW_L_KeyDown_Create( SDL_KeyCode key )
 // Frees the resources used by a key-down listener object.
 void TW_L_KeyDown_Free( TW_L_KeyDown* self )
 {
-    self->eventOccurred = false;
+    self->event = false;
     self->key = 0;
     free( self );
 }
 
 
 // Check to see if a key-down event has been registered for the key in this key-down listener object.
-bool TW_L_KeyDown_Check( TW_L_KeyDown* self, SDL_Event event )
+void TW_L_KeyDown_Check( TW_L_KeyDown* self, SDL_Event event )
 {
     if( event.type == SDL_KEYDOWN && event.key.repeat == 0 )
     {
-        return true;
+        if( event.key.keysym.sym == self->key )
+        {
+            self->event = true;
+        }
     }
-    return false;
 }
 
 
 // Clears the key-down listener object so no events are registered.
 void TW_L_KeyDown_Clear( TW_L_KeyDown* self )
 {
-    self->eventOccurred = false;
+    self->event = false;
 }

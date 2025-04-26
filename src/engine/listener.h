@@ -24,7 +24,6 @@ enum TW_ListenerType
  */
 typedef struct TW_Listener {
     enum TW_ListenerType type;
-    bool event;
     union {
         TW_L_KeyDown* keydown;
         TW_L_Quit* quit;
@@ -58,3 +57,5 @@ void TW_Listener_Free( TW_Listener* self );
 TW_Listener* TW_Listener_Add( enum TW_ListenerType type, void* value );
 
 void TW_Listener_Check( enum TW_ListenerType type, void* value, SDL_Event event );
+
+void TW_Listener_Clear( TW_Listener* self );
