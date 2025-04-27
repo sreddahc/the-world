@@ -122,6 +122,10 @@ int main( int argc, char* args[] )
         TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYDOWN, TW_L_KeyDown_Create( SDLK_ESCAPE ) ) );
         TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYDOWN, TW_L_KeyDown_Create( SDLK_a ) ) );
         TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYDOWN, TW_L_KeyDown_Create( SDLK_d ) ) );
+        TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYDOWN, TW_L_KeyDown_Create( SDLK_SPACE ) ) );
+        TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYUP, TW_L_KeyUp_Create( SDLK_a ) ) );
+        TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYUP, TW_L_KeyUp_Create( SDLK_d ) ) );
+        TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYUP, TW_L_KeyUp_Create( SDLK_SPACE ) ) );
 
         // Main scene
         TW_Scene* sceneMain = TW_Scene_Create();

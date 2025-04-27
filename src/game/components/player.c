@@ -93,46 +93,31 @@ void TW_Player_Think( TW_Entity* entity )
         //         }
         //     }
 
-            // if( TW_InputHandler_CheckKeyDown( SDLK_s ) )
-            // {
-            //     playerVelocity->velocity->speed->y = 15;
-            // }
-
-            // if( TW_InputHandler_CheckKeyDown( SDLK_w ) )
-            // {
-            //     playerVelocity->velocity->speed->y = -15;
-            // }
+            if( TW_InputHandler_CheckKeyDown( SDLK_a ) )
+            {
+                playerVelocity->velocity->speed->x = -5;
+            }
 
             if( TW_InputHandler_CheckKeyDown( SDLK_d ) )
             {
                 playerVelocity->velocity->speed->x = 5;
             }
 
-            if( TW_InputHandler_CheckKeyDown( SDLK_a ) )
+            if( TW_InputHandler_CheckKeyUp( SDLK_a ) || TW_InputHandler_CheckKeyUp( SDLK_d ) )
             {
-                playerVelocity->velocity->speed->x = -5;
+                playerVelocity->velocity->speed->x = 0;
             }
 
-            // if( TW_InputHandler_CheckKeyDepressed( SDLK_w ) || TW_InputHandler_CheckKeyDepressed( SDLK_s ) )
-            // {
-            //     playerVelocity->velocity->speed->y = 0;
-            // }
-
-            // if( TW_InputHandler_CheckKeyDepressed( SDLK_a ) || TW_InputHandler_CheckKeyDepressed( SDLK_d ) )
-            // {
-            //     playerVelocity->velocity->speed->x = 0;
-            // }
-
-            // // FIX THIS JANK - Jumping
-            // if( TW_InputHandler_CheckKeyDepressed( SDLK_SPACE) )
-            // {
-            //     if( playerPlayer->player->jumping == false )
-            //     {
-            //         playerVelocity->velocity->speed->y = -8;
-            //         playerVelocity->velocity->acceleration->y = -6;
-            //         playerPlayer->player->jumping = true;
-            //     }
-            // }
+            // FIX THIS JANK - Jumping
+            if( TW_InputHandler_CheckKeyDown( SDLK_SPACE) )
+            {
+                if( playerPlayer->player->jumping == false )
+                {
+                    playerVelocity->velocity->speed->y = -8;
+                    playerVelocity->velocity->acceleration->y = -6;
+                    playerPlayer->player->jumping = true;
+                }
+            }
         }
     }
 }

@@ -168,6 +168,7 @@ TW_Listener* TW_InputHandler_GetListenerType( enum TW_ListenerType type )
     return listener;
 }
 
+// --
 
 bool TW_InputHandler_CheckQuit()
 {
@@ -198,6 +199,24 @@ bool TW_InputHandler_CheckKeyDown( SDL_Keycode key )
     return false;
 }
 
+
+bool TW_InputHandler_CheckKeyUp( SDL_Keycode key )
+{
+    for( int index = 0; index < inputHandler->size; index++ )
+    {
+        if( inputHandler->listeners[ index ]->type == TW_L_KEYUP )
+        {
+            if( inputHandler->listeners[ index ]->keyup->key == key )
+            {
+                if( inputHandler->listeners[ index ]->keyup->event == true )
+                {
+                    return inputHandler->listeners[ index ]->keyup->event;
+                }
+            }
+        }
+    }
+    return false;
+}
 
 // Update all listeners based on the current poll.
 void TW_InputHandler_UpdateListeners()

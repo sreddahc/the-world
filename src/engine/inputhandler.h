@@ -51,6 +51,8 @@ bool TW_InputHandler_CheckQuit();
 
 bool TW_InputHandler_CheckKeyDown( SDL_Keycode key );
 
+bool TW_InputHandler_CheckKeyUp( SDL_Keycode key );
+
 
 /**
  * TW_InputHandler_Free - Free the resources used by the InputHandler.

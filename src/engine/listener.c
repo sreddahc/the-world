@@ -18,10 +18,14 @@ void TW_Listener_Free( TW_Listener* self )
             TW_L_KeyDown_Free( self->keydown );
             break;
 
+        case TW_L_KEYUP:
+            TW_L_KeyUp_Free( self->keyup );
+            break;
+
         case TW_L_QUIT:
             TW_L_Quit_Free( self->quit );
             break;
-        
+
         default:
             break;
     }
@@ -39,6 +43,10 @@ TW_Listener* TW_Listener_Add( enum TW_ListenerType type, void* value )
     {
         case TW_L_KEYDOWN:
             newListener->keydown = value;
+            break;
+
+        case TW_L_KEYUP:
+            newListener->keyup = value;
             break;
 
         case TW_L_QUIT:
@@ -63,6 +71,10 @@ void TW_Listener_Check( enum TW_ListenerType type, void* value, SDL_Event event 
             TW_L_KeyDown_Check( listener->keydown, event );
             break;
 
+            case TW_L_KEYUP:
+            TW_L_KeyUp_Check( listener->keyup, event );
+            break;
+
         case TW_L_QUIT:
             TW_L_Quit_Check( listener->quit, event );
             break;
@@ -80,6 +92,10 @@ void TW_Listener_Clear( TW_Listener* self )
     {
         case TW_L_KEYDOWN:
             TW_L_KeyDown_Clear( self->keydown );
+            break;
+
+        case TW_L_KEYUP:
+            TW_L_KeyUp_Clear( self->keyup );
             break;
 
         case TW_L_QUIT:
