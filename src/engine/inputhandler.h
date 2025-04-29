@@ -83,20 +83,6 @@ void TW_InputHandler_UpdateListeners();
 void TW_InputHandler_ClearListeners();
 
 
-// -- REVIEW BELOW
-
-
-bool TW_InputHandler_CheckMouse();
-
-
-bool TW_InputHandler_CheckMousePressed();
-
-
-bool TW_InputHandler_CheckMouseDepressed();
-
-// -- REVIEW ABOVE
-
-
 /**
  * TW_InputHandler_CheckKeyDown - Check if a key-down event was registered for the
  *                                specified key. A listener must exist for this key.
@@ -123,6 +109,16 @@ bool TW_InputHandler_CheckKeyDown( SDL_Keycode key );
 bool TW_InputHandler_CheckKeyUp( SDL_Keycode key );
 
 
+
+/**
+ * TW_InputHandler_CheckMouseDown - Check if a mouse-down event was registered.
+ * 
+ * Returns:
+ * - bool                   - `true` if mouse-down event was registered, `false` otherwise
+ */
+bool TW_InputHandler_CheckMouseDown();
+
+
 /**
  * TW_InputHandler_CheckMouseMove - Check if a mouse-move event was registered.
  * 
@@ -130,6 +126,15 @@ bool TW_InputHandler_CheckKeyUp( SDL_Keycode key );
  * - bool                   - `true` if mouse-move event was registered, `false` otherwise
  */
 bool TW_InputHandler_CheckMouseMove();
+
+
+/**
+ * TW_InputHandler_CheckMouseDown - Check if a mouse-down event was registered.
+ * 
+ * Returns:
+ * - bool                   - `true` if mouse-down event was registered, `false` otherwise
+ */
+bool TW_InputHandler_CheckMouseUp();
 
 
 /**

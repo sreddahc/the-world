@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "listeners/lkeydown.h"
 #include "listeners/lkeyup.h"
+#include "listeners/lmousedown.h"
 #include "listeners/lmousemove.h"
 #include "listeners/lquit.h"
 
@@ -29,6 +30,7 @@ typedef struct TW_Listener {
     union {
         TW_L_KeyDown* keyDown;
         TW_L_KeyUp* keyUp;
+        TW_L_MouseDown* mouseDown;
         TW_L_MouseMove* mouseMove;
         TW_L_Quit* quit;
     };

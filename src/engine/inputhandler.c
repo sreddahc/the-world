@@ -45,51 +45,6 @@ bool TW_InputHandler_Poll()
     return TW_InputHandler_CheckEvents();
 }
 
-// -- REVIEW BELOW
-
-bool TW_InputHandler_CheckMouse()
-{
-    if( TW_InputHandler_CheckEvents() == true )
-    {
-        if
-        (
-            inputHandler->events.type == SDL_MOUSEMOTION ||
-            inputHandler->events.type == SDL_MOUSEBUTTONDOWN ||
-            inputHandler->events.type == SDL_MOUSEBUTTONUP
-        )
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-bool TW_InputHandler_CheckMousePressed()
-{
-    if( TW_InputHandler_CheckMouse() == true )
-    {
-        if( inputHandler->events.type == SDL_MOUSEBUTTONDOWN )
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-bool TW_InputHandler_CheckMouseDepressed()
-{
-    if( TW_InputHandler_CheckMouse() == true )
-    {
-        if( inputHandler->events.type == SDL_MOUSEBUTTONUP )
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
 
 // Add a listener to the input handler.
 void TW_InputHandler_AddListener( TW_Listener* listener )
@@ -128,10 +83,6 @@ TW_Listener* TW_InputHandler_GetListenerType( enum TW_ListenerType type )
     return listener;
 }
 
-// --
-
-// Check if a quit event has been registered.
-
 
 // Update all listeners based on the current poll.
 void TW_InputHandler_UpdateListeners()
@@ -153,17 +104,6 @@ void TW_InputHandler_ClearListeners()
     {
         TW_Listener_Clear( inputHandler->listeners[ index ] );
     }
-}
-
-
-bool TW_InputHandler_CheckQuit()
-{
-    TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_QUIT );
-    if( listener != NULL )
-    {
-        return listener->quit->eventExists;
-    }
-    return false;
 }
 
 
@@ -201,12 +141,44 @@ bool TW_InputHandler_CheckKeyUp( SDL_Keycode key )
 }
 
 
+// Check if a mouse-down event was registered.
+bool TW_InputHandler_CheckMouseDown()
+{
+    TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_MOUSEDOWN );
+    if( listener != NULL )
+    {
+        return listener->mouseDown->eventExists;
+    }
+    return false;
+}
+
+
+// Check if a mouse-move event was registered.
 bool TW_InputHandler_CheckMouseMove()
 {
     TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_MOUSEMOVE );
     if( listener != NULL )
     {
         return listener->mouseMove->eventExists;
+    }
+    return false;
+}
+
+
+// Check if a mouse-up event was registered.
+bool TW_InputHandler_CheckMouseUp()
+{
+    return false;
+}
+
+
+// Check if a quit event has been registered.
+bool TW_InputHandler_CheckQuit()
+{
+    TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_QUIT );
+    if( listener != NULL )
+    {
+        return listener->quit->eventExists;
     }
     return false;
 }
