@@ -1,7 +1,7 @@
 #include "listener.h"
 
 
-// Create a listener object to listen for events.
+// Create a listener object to listen for events
 TW_Listener* TW_Listener_Create()
 {
     TW_Listener* listener = malloc( sizeof( TW_Listener ) );
@@ -9,7 +9,7 @@ TW_Listener* TW_Listener_Create()
 }
 
 
-// Free the resources used by a listener object.
+// Free the resources used by a listener object
 void TW_Listener_Free( TW_Listener* self )
 {
     switch ( self->type )
@@ -37,10 +37,9 @@ void TW_Listener_Free( TW_Listener* self )
 }
 
 
+// Add a listener of a given type
 TW_Listener* TW_Listener_Add( enum TW_ListenerType type, void* value )
 {
-    // Check if listener already exists... this code needs to  be inserted...
-    // If not:
     TW_Listener* newListener = TW_Listener_Create();
     newListener->type = type;
     switch ( type )
@@ -69,9 +68,9 @@ TW_Listener* TW_Listener_Add( enum TW_ListenerType type, void* value )
 }
 
 
-void TW_Listener_Check( enum TW_ListenerType type, void* value, SDL_Event event )
+// Check an SDL event against against a listener
+void TW_Listener_Check( enum TW_ListenerType type, TW_Listener* listener, SDL_Event event )
 {
-    TW_Listener* listener = value;
     switch ( type )
     {
         case TW_L_KEYDOWN:
@@ -96,7 +95,7 @@ void TW_Listener_Check( enum TW_ListenerType type, void* value, SDL_Event event 
 }
 
 
-
+// Clear the state of a given listener such that it has no events
 void TW_Listener_Clear( TW_Listener* self )
 {
     switch ( self->type )
