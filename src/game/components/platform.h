@@ -8,9 +8,11 @@ typedef struct TW_Component TW_Component;
 
 
 enum TW_PlatformPosition {
+    TW_PLATFORM_SINGLE,
     TW_PLATFORM_LEFT,
     TW_PLATFORM_MIDDLE,
-    TW_PLATFORM_RIGHT
+    TW_PLATFORM_RIGHT,
+    TW_PLATFORM_TOTAL
 };
 
 

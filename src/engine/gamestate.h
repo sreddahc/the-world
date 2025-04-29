@@ -6,7 +6,7 @@
 // Type definitions
 
 #define MILLISECONDS_IN_A_SEC 1000.f
-#define TIME_DELTA_CAP 10000
+#define TIME_DELTA_CAP 2000
 #define FPS_FRAME_CAP 200000
 
 
