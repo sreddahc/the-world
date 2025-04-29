@@ -7,7 +7,9 @@ TW_Collision* TW_Collision_Create( int x, int y, int w, int h )
     TW_Collision* collision = malloc( sizeof( TW_Collision ) );
 
     collision->position = TW_Vector2_Create( x, y );
+    collision->centre = TW_Vector2_Create( 0, 0 );
     collision->size = TW_Vector2_Create( w, h );
+    collision->oldPosition = TW_Vector2_Create( 0, 0 );
     collision->parent = NULL;
 
     return collision;
@@ -19,7 +21,9 @@ void TW_Collision_Free( TW_Collision* self )
 {
     self->parent = NULL;
     TW_Vector2_Free( self->size );
+    TW_Vector2_Free( self->centre );
     TW_Vector2_Free( self->position );
+    TW_Vector2_Free( self->oldPosition );
     free( self );
 }
 

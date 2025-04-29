@@ -91,26 +91,29 @@ TW_Entity* TW_Component_GetParent( TW_Component* self )
 // If there is a visual aspect to the component... render it
 void TW_Component_Render( TW_Component* self, TW_Transform* transform )
 {
-    switch ( self->type )
+    if( self != NULL )
     {
-        case TW_C_TEXTURE:
-            TW_Texture_Render( self->texture, transform );
-            break;
+        switch ( self->type )
+        {
+            case TW_C_TEXTURE:
+                TW_Texture_Render( self->texture, transform );
+                break;
 
-        case TW_C_TEXT:
-            TW_Text_Render( self->text, transform );
-            break;
+            case TW_C_TEXT:
+                TW_Text_Render( self->text, transform );
+                break;
 
-        case TW_C_SPRITE:
-            TW_Sprite_Render( self->sprite, transform );
-            break;
+            case TW_C_SPRITE:
+                TW_Sprite_Render( self->sprite, transform );
+                break;
 
-        case TW_C_ANIMATION:
-            TW_Animation_Render( self->animation, transform );
-            break;
+            case TW_C_ANIMATION:
+                TW_Animation_Render( self->animation, transform );
+                break;
 
-        default:
-            break;
+            default:
+                break;
+        }
     }
 }
 
@@ -118,14 +121,17 @@ void TW_Component_Render( TW_Component* self, TW_Transform* transform )
 // Run logic components
 void TW_Component_RunLogic( TW_Component* self )
 {
-    switch( self->type )
+    if( self != NULL )
     {
-        case TW_C_THINK:
-            TW_Think_Run( self->think, TW_Component_GetParent( self ) );
-            break;
+        switch( self->type )
+        {
+            case TW_C_THINK:
+                TW_Think_Run( self->think, TW_Component_GetParent( self ) );
+                break;
 
-        default:
-            break;
+            default:
+                break;
+        }
     }
 }
 
@@ -133,18 +139,21 @@ void TW_Component_RunLogic( TW_Component* self )
 // Run physics components
 void TW_Component_RunPhysics( TW_Component* self )
 {
-    switch( self->type )
+    if( self != NULL )
     {
-        case TW_C_VELOCITY:
-            TW_Velocity_Run( self->velocity, TW_Component_GetParent( self ) );
-            break;
+        switch( self->type )
+        {
+            case TW_C_VELOCITY:
+                TW_Velocity_Run( self->velocity, TW_Component_GetParent( self ) );
+                break;
 
-        case TW_C_COLLISION:
-            // TW_Think_Run( self->think, TW_Component_GetParent( self ) );
-            break;
+            case TW_C_COLLISION:
+                // TW_Think_Run( self->think, TW_Component_GetParent( self ) );
+                break;
 
-        default:
-            break;
+            default:
+                break;
+        }
     }
 }
 

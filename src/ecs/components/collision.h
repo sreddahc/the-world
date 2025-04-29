@@ -15,13 +15,16 @@ typedef struct TW_Entity TW_Entity;
  * 
  * Elements:
  * - TW_Vector2*        - position          - Position relative to parent entity transform
+ * - TW_Vector2*        - centre            - Centre of the collision object, Default: `{ 0, 0 }`
  * - TW_Vector2*        - size              - Size of the collision box
+ * - TW_Vector2*        - oldPosition       - Old position of the transform prior to moving
  * - TW_Component*      - parent            - Parent component object if exists, otherwise `NULL`
  */
 typedef struct TW_Collision {
     TW_Vector2* position;                   // Position relative to parent entity transform
     TW_Vector2* centre;                     // Centre of the collision object, Default: `{ 0, 0 }`
     TW_Vector2* size;                       // Size of the collision box
+    TW_Vector2* oldPosition;                // Old position of the transform prior to moving
     TW_Component* parent;                   // Parent component object if exists, otherwise `NULL`
 } TW_Collision;
 

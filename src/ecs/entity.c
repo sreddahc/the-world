@@ -67,10 +67,27 @@ void TW_Entity_RunLogic( TW_Entity* self )
 // Run physics components in TW_Entity
 void TW_Entity_RunPhysics( TW_Entity* self )
 {
+    // Collect physics components to run in a specific order
+    TW_Component* collision = NULL;
+    TW_Component* velocity = NULL;
     for( int index = 0; index < self->size; index++ )
     {
-        TW_Component_RunPhysics( self->components[ index ] );
+        switch ( self->components[ index ]->type )
+        {
+            case TW_C_COLLISION:
+                collision = self->components[ index ];
+                break;
+
+            case TW_C_VELOCITY:
+                velocity = self->components[ index ];
+                break;
+
+            default:
+                break;
+        }
     }
+    TW_Component_RunPhysics( velocity );
+    TW_Component_RunPhysics( collision );
 }
 
 
