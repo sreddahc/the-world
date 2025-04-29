@@ -5,7 +5,7 @@
 TW_L_KeyUp* TW_L_KeyUp_Create( SDL_KeyCode key )
 {
     TW_L_KeyUp* listener = malloc( sizeof( TW_L_KeyUp ) );
-    listener->event = false;
+    listener->eventExists = false;
     listener->key = key;
     return listener;
 }
@@ -14,7 +14,7 @@ TW_L_KeyUp* TW_L_KeyUp_Create( SDL_KeyCode key )
 // Frees the resources used by a key-up listener object.
 void TW_L_KeyUp_Free( TW_L_KeyUp* self )
 {
-    self->event = false;
+    self->eventExists = false;
     self->key = 0;
     free( self );
 }
@@ -27,7 +27,7 @@ void TW_L_KeyUp_Check( TW_L_KeyUp* self, SDL_Event event )
     {
         if( event.key.keysym.sym == self->key )
         {
-            self->event = true;
+            self->eventExists = true;
         }
     }
 }
@@ -36,5 +36,5 @@ void TW_L_KeyUp_Check( TW_L_KeyUp* self, SDL_Event event )
 // Clears the key-up listener object so no events are registered.
 void TW_L_KeyUp_Clear( TW_L_KeyUp* self )
 {
-    self->event = false;
+    self->eventExists = false;
 }

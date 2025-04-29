@@ -12,7 +12,7 @@ typedef struct TW_Listener TW_Listener;
  * TW_L_KeyDown - Listen for a specific key being pressed.
  */
 typedef struct TW_L_KeyDown {
-    bool event;
+    bool eventExists;
     SDL_Keycode key;
 } TW_L_KeyDown;
 

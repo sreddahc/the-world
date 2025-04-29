@@ -4,6 +4,7 @@
 static TW_InputHandler* inputHandler = NULL;
 
 
+// Create the input handler. There is one in the game. No inputs are processed if it is not created.
 void TW_InputHandler_Create()
 {
     inputHandler = malloc( sizeof( TW_InputHandler ) );
@@ -13,6 +14,20 @@ void TW_InputHandler_Create()
 }
 
 
+// Free the resources used by the InputHandler.
+void TW_InputHandler_Free()
+{
+    inputHandler->eventsExist = 0;
+    for( int index = 0; index < inputHandler->size; index++ )
+    {
+        TW_Listener_Free( inputHandler->listeners[ index ] );
+    }
+    inputHandler->size = 0;
+    free( inputHandler );
+}
+
+
+// Poll for an event.
 bool TW_InputHandler_CheckEvents()
 {
     if( inputHandler->eventsExist != 0 )
@@ -23,44 +38,14 @@ bool TW_InputHandler_CheckEvents()
 }
 
 
+// Check if there are events to process.
 bool TW_InputHandler_Poll()
 {
     inputHandler->eventsExist = SDL_PollEvent( &inputHandler->events );
     return TW_InputHandler_CheckEvents();
 }
 
-
-bool TW_InputHandler_CheckKeyPressed( SDL_Keycode key )
-{
-    if( TW_InputHandler_CheckEvents() == true )
-    {
-        if( inputHandler->events.type == SDL_KEYDOWN && inputHandler->events.key.repeat == 0 )
-            {
-            if( inputHandler->events.key.keysym.sym == key )
-            {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-
-bool TW_InputHandler_CheckKeyDepressed( SDL_Keycode key )
-{
-    if( TW_InputHandler_CheckEvents() == true )
-    {
-        if( inputHandler->events.type == SDL_KEYUP && inputHandler->events.key.repeat == 0 )
-            {
-            if( inputHandler->events.key.keysym.sym == key )
-            {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
+// -- REVIEW BELOW
 
 bool TW_InputHandler_CheckMouse()
 {
@@ -72,19 +57,6 @@ bool TW_InputHandler_CheckMouse()
             inputHandler->events.type == SDL_MOUSEBUTTONDOWN ||
             inputHandler->events.type == SDL_MOUSEBUTTONUP
         )
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-bool TW_InputHandler_CheckMouseMoved()
-{
-    if( TW_InputHandler_CheckMouse() == true )
-    {
-        if( inputHandler->events.type == SDL_MOUSEMOTION )
         {
             return true;
         }
@@ -119,19 +91,6 @@ bool TW_InputHandler_CheckMouseDepressed()
 }
 
 
-// Free the resources used by the InputHandler.
-void TW_InputHandler_Free()
-{
-    inputHandler->eventsExist = 0;
-    for( int index = 0; index < inputHandler->size; index++ )
-    {
-        TW_Listener_Free( inputHandler->listeners[ index ] );
-    }
-    inputHandler->size = 0;
-    free( inputHandler );
-}
-
-
 // Add a listener to the input handler.
 void TW_InputHandler_AddListener( TW_Listener* listener )
 {
@@ -155,6 +114,7 @@ void TW_InputHandler_AddListener( TW_Listener* listener )
 }
 
 
+// Retrieve a listener of the specified type.
 TW_Listener* TW_InputHandler_GetListenerType( enum TW_ListenerType type )
 {
     TW_Listener* listener = NULL;
@@ -170,53 +130,8 @@ TW_Listener* TW_InputHandler_GetListenerType( enum TW_ListenerType type )
 
 // --
 
-bool TW_InputHandler_CheckQuit()
-{
-    TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_QUIT );
-    if( listener != NULL )
-    {
-        return listener->quit->event;
-    }
-    return false;
-}
+// Check if a quit event has been registered.
 
-
-bool TW_InputHandler_CheckKeyDown( SDL_Keycode key )
-{
-    for( int index = 0; index < inputHandler->size; index++ )
-    {
-        if( inputHandler->listeners[ index ]->type == TW_L_KEYDOWN )
-        {
-            if( inputHandler->listeners[ index ]->keydown->key == key )
-            {
-                if( inputHandler->listeners[ index ]->keydown->event == true )
-                {
-                    return inputHandler->listeners[ index ]->keydown->event;
-                }
-            }
-        }
-    }
-    return false;
-}
-
-
-bool TW_InputHandler_CheckKeyUp( SDL_Keycode key )
-{
-    for( int index = 0; index < inputHandler->size; index++ )
-    {
-        if( inputHandler->listeners[ index ]->type == TW_L_KEYUP )
-        {
-            if( inputHandler->listeners[ index ]->keyup->key == key )
-            {
-                if( inputHandler->listeners[ index ]->keyup->event == true )
-                {
-                    return inputHandler->listeners[ index ]->keyup->event;
-                }
-            }
-        }
-    }
-    return false;
-}
 
 // Update all listeners based on the current poll.
 void TW_InputHandler_UpdateListeners()
@@ -231,10 +146,67 @@ void TW_InputHandler_UpdateListeners()
 }
 
 
+// Clear all listeners such that they have registered no events. Should be done at the end of every game loop.
 void TW_InputHandler_ClearListeners()
 {
     for( int index = 0; index < inputHandler->size; index++ )
     {
         TW_Listener_Clear( inputHandler->listeners[ index ] );
     }
+}
+
+
+bool TW_InputHandler_CheckQuit()
+{
+    TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_QUIT );
+    if( listener != NULL )
+    {
+        return listener->quit->eventExists;
+    }
+    return false;
+}
+
+
+// Check if a key-down event was registered for the specified key. A listener must exist for this key.
+bool TW_InputHandler_CheckKeyDown( SDL_Keycode key )
+{
+    for( int index = 0; index < inputHandler->size; index++ )
+    {
+        if( inputHandler->listeners[ index ]->type == TW_L_KEYDOWN )
+        {
+            if( inputHandler->listeners[ index ]->keyDown->key == key )
+            {
+                return inputHandler->listeners[ index ]->keyDown->eventExists;
+            }
+        }
+    }
+    return false;
+}
+
+
+// Check if a key-up event was registered for the specified key. A listener must exist for this key.
+bool TW_InputHandler_CheckKeyUp( SDL_Keycode key )
+{
+    for( int index = 0; index < inputHandler->size; index++ )
+    {
+        if( inputHandler->listeners[ index ]->type == TW_L_KEYUP )
+        {
+            if( inputHandler->listeners[ index ]->keyUp->key == key )
+            {
+                return inputHandler->listeners[ index ]->keyUp->eventExists;
+            }
+        }
+    }
+    return false;
+}
+
+
+bool TW_InputHandler_CheckMouseMove()
+{
+    TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_MOUSEMOVE );
+    if( listener != NULL )
+    {
+        return listener->mouseMove->eventExists;
+    }
+    return false;
 }

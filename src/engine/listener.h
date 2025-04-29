@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "listeners/lkeydown.h"
 #include "listeners/lkeyup.h"
+#include "listeners/lmousemove.h"
 #include "listeners/lquit.h"
 
 // Type definitions
@@ -26,8 +27,9 @@ enum TW_ListenerType
 typedef struct TW_Listener {
     enum TW_ListenerType type;
     union {
-        TW_L_KeyDown* keydown;
-        TW_L_KeyUp* keyup;
+        TW_L_KeyDown* keyDown;
+        TW_L_KeyUp* keyUp;
+        TW_L_MouseMove* mouseMove;
         TW_L_Quit* quit;
     };
 } TW_Listener;
