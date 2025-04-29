@@ -30,6 +30,10 @@ void TW_Listener_Free( TW_Listener* self )
             TW_L_MouseMove_Free( self->mouseMove );
             break;
 
+        case TW_L_MOUSEUP:
+            TW_L_MouseUp_Free( self->mouseUp );
+            break;
+
         case TW_L_QUIT:
             TW_L_Quit_Free( self->quit );
             break;
@@ -62,6 +66,10 @@ TW_Listener* TW_Listener_Add( enum TW_ListenerType type, void* value )
 
         case TW_L_MOUSEMOVE:
             newListener->mouseMove = value;
+            break;
+
+        case TW_L_MOUSEUP:
+            newListener->mouseUp = value;
             break;
 
         case TW_L_QUIT:
@@ -97,6 +105,10 @@ void TW_Listener_Check( enum TW_ListenerType type, TW_Listener* listener, SDL_Ev
             TW_L_MouseMove_Check( listener->mouseMove, event );
             break;
 
+        case TW_L_MOUSEUP:
+            TW_L_MouseUp_Check( listener->mouseUp, event );
+            break;
+
         case TW_L_QUIT:
             TW_L_Quit_Check( listener->quit, event );
             break;
@@ -126,6 +138,10 @@ void TW_Listener_Clear( TW_Listener* self )
 
         case TW_L_MOUSEMOVE:
             TW_L_MouseMove_Clear( self->mouseMove );
+            break;
+
+        case TW_L_MOUSEUP:
+            TW_L_MouseUp_Clear( self->mouseUp );
             break;
 
         case TW_L_QUIT:

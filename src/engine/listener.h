@@ -6,6 +6,7 @@
 #include "listeners/lkeyup.h"
 #include "listeners/lmousedown.h"
 #include "listeners/lmousemove.h"
+#include "listeners/lmouseup.h"
 #include "listeners/lquit.h"
 
 // Type definitions
@@ -32,6 +33,7 @@ typedef struct TW_Listener {
         TW_L_KeyUp* keyUp;
         TW_L_MouseDown* mouseDown;
         TW_L_MouseMove* mouseMove;
+        TW_L_MouseUp* mouseUp;
         TW_L_Quit* quit;
     };
 } TW_Listener;

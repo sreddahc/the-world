@@ -168,6 +168,11 @@ bool TW_InputHandler_CheckMouseMove()
 // Check if a mouse-up event was registered.
 bool TW_InputHandler_CheckMouseUp()
 {
+    TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_MOUSEUP );
+    if( listener != NULL )
+    {
+        return listener->mouseDown->eventExists;
+    }
     return false;
 }
 

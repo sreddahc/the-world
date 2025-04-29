@@ -129,10 +129,10 @@ bool TW_InputHandler_CheckMouseMove();
 
 
 /**
- * TW_InputHandler_CheckMouseDown - Check if a mouse-down event was registered.
+ * TW_InputHandler_CheckMouseUp - Check if a mouse-up event was registered.
  * 
  * Returns:
- * - bool                   - `true` if mouse-down event was registered, `false` otherwise
+ * - bool                   - `true` if mouse-up event was registered, `false` otherwise
  */
 bool TW_InputHandler_CheckMouseUp();
 
