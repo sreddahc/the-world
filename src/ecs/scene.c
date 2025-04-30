@@ -20,14 +20,14 @@ void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity )
         // Create space and add entities. Memory handling for exisiting entities.
         if( self->entities == NULL )
         {
-            self->entities = malloc( self->size * sizeof( TW_Entity ) );
+            self->entities = malloc( self->size * sizeof( TW_Entity* ) );
             self->entities[ self->size - 1 ] = entity;
         }
         else
         {
             TW_Entity** oldEntities = self->entities;
-            self->entities = malloc( self->size * sizeof( TW_Entity ) );
-            memcpy( self->entities, oldEntities, ( self->size - 1 ) * sizeof( TW_Entity ) );
+            self->entities = malloc( self->size * sizeof( TW_Entity* ) );
+            memcpy( self->entities, oldEntities, ( self->size - 1 ) * sizeof( TW_Entity* ) );
             free( oldEntities );
             self->entities[ self->size - 1 ] = entity;
         }

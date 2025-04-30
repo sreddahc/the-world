@@ -1,4 +1,4 @@
-#include "../entity.h"
+#include "../scene.h"
 
 
 // Create a collision object based on provided parameters.
@@ -10,7 +10,10 @@ TW_Collision* TW_Collision_Create( int x, int y, int w, int h )
     collision->centre = TW_Vector2_Create( 0, 0 );
     collision->size = TW_Vector2_Create( w, h );
     collision->oldPosition = TW_Vector2_Create( 0, 0 );
+    collision->solid = false;
     collision->parent = NULL;
+    collision->collisionCount = 0;
+    collision->collisionBufferSize = 0;
 
     return collision;
 }
@@ -19,7 +22,10 @@ TW_Collision* TW_Collision_Create( int x, int y, int w, int h )
 // Frees the resources used by a collision object.
 void TW_Collision_Free( TW_Collision* self )
 {
+    self->collisionBufferSize = 0;
+    self->collisionCount = 0;
     self->parent = NULL;
+    self->solid = false;
     TW_Vector2_Free( self->size );
     TW_Vector2_Free( self->centre );
     TW_Vector2_Free( self->position );
@@ -83,3 +89,43 @@ bool TW_Collision_Check( TW_Entity* self, TW_Entity* target )
 
     return false;
 }
+
+
+// Run the collision object. This should be done every game loop as long as the game is not paused.
+void TW_Collision_Run( TW_Collision* self )
+{
+    TW_Component* collision = self->parent;
+    TW_Entity* entity = NULL;
+    TW_Scene* scene = NULL;
+
+    if( collision != NULL )
+    {
+        entity = collision->parent;
+    }
+
+    if( entity != NULL )
+    {
+        scene = entity->parent;
+    }
+
+    if( scene != NULL )
+    {
+        for( int index = 0; index < scene->size; index++ )
+        {
+            if( entity != scene->entities[ index ] )
+            {
+                if( TW_Collision_Check( entity, scene->entities[ index ] ) == true )
+                {
+                    // Stops the compiler erroring -- remove when ready to add code
+                    while( true )
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// TW_Collision

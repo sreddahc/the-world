@@ -21,14 +21,14 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
         // Create space and add components. Memory handling for existing components.
         if( self->components == NULL )
         {
-            self->components = malloc( self->size * sizeof( TW_Component ) );
+            self->components = malloc( self->size * sizeof( TW_Component* ) );
             self->components[ self->size - 1 ] = component;
         }
         else
         {
             TW_Component** oldComponents = self->components;
-            self->components = malloc( self->size * sizeof( TW_Component ) );
-            memcpy( self->components, oldComponents, ( self->size - 1 ) * sizeof( TW_Component ) );
+            self->components = malloc( self->size * sizeof( TW_Component* ) );
+            memcpy( self->components, oldComponents, ( self->size - 1 ) * sizeof( TW_Component* ) );
             free( oldComponents );
             self->components[ self->size - 1 ] = component;
         }

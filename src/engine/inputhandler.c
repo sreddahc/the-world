@@ -54,14 +54,14 @@ void TW_InputHandler_AddListener( TW_Listener* listener )
     {
         if( inputHandler->listeners == NULL )
         {
-            inputHandler->listeners = malloc( inputHandler->size * sizeof( TW_Listener ) );
+            inputHandler->listeners = malloc( inputHandler->size * sizeof( TW_Listener* ) );
             inputHandler->listeners[ inputHandler->size - 1 ] = listener;
         }
         else
         {
             TW_Listener** oldListeners = inputHandler->listeners;
-            inputHandler->listeners = malloc( inputHandler->size * sizeof( TW_Listener ) );
-            memcpy( inputHandler->listeners, oldListeners, ( inputHandler->size - 1 ) * sizeof( TW_Listener ) );
+            inputHandler->listeners = malloc( inputHandler->size * sizeof( TW_Listener* ) );
+            memcpy( inputHandler->listeners, oldListeners, ( inputHandler->size - 1 ) * sizeof( TW_Listener* ) );
             free( oldListeners );
             inputHandler->listeners[ inputHandler->size - 1 ] = listener;
         }
