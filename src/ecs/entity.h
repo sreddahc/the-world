@@ -68,7 +68,7 @@ TW_Component* TW_Entity_GetComponent( TW_Entity* self, int type );
  * TW_Component_Render - Renders any entities with visual components
  * 
  * Args:
- * - TW_Entity*             - self          - The TW_Component to render
+ * - TW_Entity*             - self          - The entity to render
  */
 void TW_Entity_Render( TW_Entity* self );
 
@@ -77,7 +77,7 @@ void TW_Entity_Render( TW_Entity* self );
  * TW_Entity_RunLogic - Run logic components in TW_Entity
  * 
  * Args:
- * - TW_Entity*             - self          - The TW_Component to run
+ * - TW_Entity*             - self          - Run logic components in this entity
  */
 void TW_Entity_RunLogic( TW_Entity* self );
 
@@ -86,9 +86,16 @@ void TW_Entity_RunLogic( TW_Entity* self );
  * TW_Entity_RunPhysics - Run logic components in TW_Entity
  * 
  * Args:
- * - TW_Entity*             - self          - The TW_Component to run
+ * - TW_Entity*             - self          - Run physics components in this entity
  */
 void TW_Entity_RunPhysics( TW_Entity* self );
 
 
-void TW_Entity_ClearCollisions( TW_Entity* self );
+/**
+ * TW_Entity_Clear - Clear state based components in TW_Entity so they're ready for the
+ *                   next game loop.
+ * 
+ * Args:
+ * - TW_Entity*             - self          - Clear components in this entity
+ */
+void TW_Entity_Clear( TW_Entity* self );

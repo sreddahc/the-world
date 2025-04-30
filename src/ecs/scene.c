@@ -66,11 +66,11 @@ void TW_Scene_RunPhysics( TW_Scene* self )
 }
 
 
-void TW_Scene_ClearCollisions( TW_Scene* self )
+void TW_Scene_Clear( TW_Scene* self )
 {
     for( int index = 0; index < self->size; index++ )
     {
-        TW_Entity_ClearCollisions( self->entities[ index ] );
+        TW_Entity_Clear( self->entities[ index ] );
     }
 }
 

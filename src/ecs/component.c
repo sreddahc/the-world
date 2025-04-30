@@ -158,12 +158,17 @@ void TW_Component_RunPhysics( TW_Component* self )
 }
 
 
-// Clear collisions
-void TW_Component_ClearCollisions( TW_Component* self )
+// Clear the state of state-based components so they're ready to be used in the next game loop.
+void TW_Component_Clear( TW_Component* self )
 {
-    if( self->type == TW_C_COLLISION )
+    switch( self->type )
     {
-        TW_Collision_ClearCollisions( self->collision );
+        case TW_C_COLLISION:
+            TW_Collision_ClearCollisions( self->collision );
+            break;
+
+        default:
+            break;
     }
 }
 

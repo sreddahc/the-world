@@ -218,7 +218,7 @@ int main( int argc, char* args[] )
             TW_Scene_Render( sceneMain );
 
             // Update screen, clear listeners and limit frame rate (if required).
-            TW_Scene_ClearCollisions( sceneMain );
+            TW_Scene_Clear( sceneMain );
             SDL_RenderPresent( TW_GetRenderer() );
             TW_InputHandler_ClearListeners();
             TW_GameState_LimitFrameRate();

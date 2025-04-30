@@ -91,12 +91,12 @@ void TW_Entity_RunPhysics( TW_Entity* self )
 }
 
 
-// Run logic components in TW_Entity
-void TW_Entity_ClearCollisions( TW_Entity* self )
+// Clear state based components in TW_Entity so they're ready for the next game loop.
+void TW_Entity_Clear( TW_Entity* self )
 {
     for( int index = 0; index < self->size; index++ )
     {
-        TW_Component_ClearCollisions( self->components[ index ] );
+        TW_Component_Clear( self->components[ index ] );
     }
 }
 
