@@ -91,6 +91,16 @@ void TW_Entity_RunPhysics( TW_Entity* self )
 }
 
 
+// Run logic components in TW_Entity
+void TW_Entity_ClearCollisions( TW_Entity* self )
+{
+    for( int index = 0; index < self->size; index++ )
+    {
+        TW_Component_ClearCollisions( self->components[ index ] );
+    }
+}
+
+
 // Given an entity and component type search the entity for that component.
 // If found, return a pointer to that component, otherwise return `NULL`.
 TW_Component* TW_Entity_GetComponent( TW_Entity* self, int type )

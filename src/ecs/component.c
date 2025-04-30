@@ -148,12 +148,22 @@ void TW_Component_RunPhysics( TW_Component* self )
                 break;
 
             case TW_C_COLLISION:
-                // TW_Think_Run( self->think, TW_Component_GetParent( self ) );
+                TW_Collision_Run( self->collision );
                 break;
 
             default:
                 break;
         }
+    }
+}
+
+
+// Clear collisions
+void TW_Component_ClearCollisions( TW_Component* self )
+{
+    if( self->type == TW_C_COLLISION )
+    {
+        TW_Collision_ClearCollisions( self->collision );
     }
 }
 

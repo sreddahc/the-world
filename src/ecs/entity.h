@@ -89,3 +89,6 @@ void TW_Entity_RunLogic( TW_Entity* self );
  * - TW_Entity*             - self          - The TW_Component to run
  */
 void TW_Entity_RunPhysics( TW_Entity* self );
+
+
+void TW_Entity_ClearCollisions( TW_Entity* self );

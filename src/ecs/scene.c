@@ -66,6 +66,15 @@ void TW_Scene_RunPhysics( TW_Scene* self )
 }
 
 
+void TW_Scene_ClearCollisions( TW_Scene* self )
+{
+    for( int index = 0; index < self->size; index++ )
+    {
+        TW_Entity_ClearCollisions( self->entities[ index ] );
+    }
+}
+
+
 // TW_Scene_Free - Free the resources used by a scene.
 void TW_Scene_Free( TW_Scene* self )
 {

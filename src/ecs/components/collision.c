@@ -14,6 +14,7 @@ TW_Collision* TW_Collision_Create( int x, int y, int w, int h )
     collision->parent = NULL;
     collision->collisionCount = 0;
     collision->collisionBufferSize = 0;
+    collision->collisions = NULL;
 
     return collision;
 }
@@ -22,6 +23,11 @@ TW_Collision* TW_Collision_Create( int x, int y, int w, int h )
 // Frees the resources used by a collision object.
 void TW_Collision_Free( TW_Collision* self )
 {
+    for( int index = 0; index < self->collisionBufferSize; index++ )
+    {
+        self->collisions[ index ] = NULL;
+    }
+    free( self->collisions );
     self->collisionBufferSize = 0;
     self->collisionCount = 0;
     self->parent = NULL;
@@ -116,10 +122,24 @@ void TW_Collision_Run( TW_Collision* self )
             {
                 if( TW_Collision_Check( entity, scene->entities[ index ] ) == true )
                 {
-                    // Stops the compiler erroring -- remove when ready to add code
-                    while( true )
+                    // Check if collision has been observed yet...
+                    TW_Component* target = TW_Entity_GetComponent( scene->entities[ index ], TW_C_COLLISION );
+                    if( target != NULL )
                     {
-                        break;
+                        bool alreadyObserved = false;
+                        for( int index = 0; index < target->collision->collisionCount; index ++ )
+                        {
+                            if( target->collision->collisions[ index ] == entity )
+                            {
+                                alreadyObserved = true;
+                            }
+                        }
+                        // If it has not, add collision reference to both entities.
+                        if( alreadyObserved == false )
+                        {
+                            TW_Collision_AddCollisions( self, scene->entities[ index ] );
+                            TW_Collision_AddCollisions( target->collision, entity );
+                        }
                     }
                 }
             }
@@ -128,4 +148,39 @@ void TW_Collision_Run( TW_Collision* self )
 }
 
 
-// TW_Collision
+// Add a references to collision objects where a collision has been observed.
+void TW_Collision_AddCollisions( TW_Collision* self, TW_Entity* target )
+{
+    self->collisionCount += 1;
+    if( self->collisionCount > self->collisionBufferSize )
+    {
+        if( self->collisions == NULL )
+        {
+            self->collisionBufferSize = self->collisionCount;
+            self->collisions = malloc( self->collisionBufferSize * sizeof( TW_Entity* ) );
+            self->collisions[ self->collisionCount - 1 ] = target;
+        }
+        else
+        {
+            TW_Entity** oldCollisions = self->collisions;
+            self->collisions = malloc( self->collisionBufferSize * sizeof( TW_Entity* ) );
+            memcpy( self->collisions, oldCollisions, ( self->collisionCount - 1 ) * sizeof( TW_Entity* ) );
+            free( oldCollisions );
+            self->collisions[ self->collisionCount - 1 ] = target;
+        }
+    }
+}
+
+
+// Clear all references to collisions.
+void TW_Collision_ClearCollisions( TW_Collision* self )
+{
+    if( self != NULL )
+    {
+        for( int index = 0; index < self->collisionCount; index++ )
+        {
+            self->collisions[ index ] = NULL;
+        }
+        self->collisionCount = 0;
+    }
+}

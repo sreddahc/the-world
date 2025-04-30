@@ -78,6 +78,8 @@ void TW_Scene_RunLogic( TW_Scene* self );
 void TW_Scene_RunPhysics( TW_Scene* self );
 
 
+void TW_Scene_ClearCollisions( TW_Scene* self );
+
 /**
  * TW_Scene_RunPhysics - Run physics engine on a scene.
  *                       Calculate new positions, collisions etc...

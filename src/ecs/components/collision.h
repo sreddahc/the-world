@@ -90,3 +90,18 @@ bool TW_Collision_Check( TW_Entity* self, TW_Entity* target );
 void TW_Collision_Run( TW_Collision* self );
 
 
+/**
+ * TW_Collision_AddCollisions - Add a references to collision objects where a collision
+ *                              has been observed.
+ * 
+ * Args:
+ * - TW_Collision*      - self              - Entities to this collision object
+ * - TW_Entity*         - target            - The entities to add
+ */
+void TW_Collision_AddCollisions( TW_Collision* self, TW_Entity* target );
+
+
+/**
+ * TW_Collision_ClearCollisions - Clear all references to collisions.
+ */
+void TW_Collision_ClearCollisions( TW_Collision* self );

@@ -113,6 +113,15 @@ void TW_Component_RunPhysics( TW_Component* self );
 
 
 /**
+ * TW_Component_ClearCollisions - Clear collisions established during the run physics step
+ * 
+ * Args:
+ * - TW_Component*          - self          - The physics component to run
+ */
+void TW_Component_ClearCollisions( TW_Component* self );
+
+
+/**
  * TW_Component_GetParent - Given a component, return a pointer to its parent entity
  * object if it exists. If not, return `NULL`.
  * 
