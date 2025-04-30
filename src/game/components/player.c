@@ -75,24 +75,6 @@ void TW_Player_Think( TW_Entity* entity )
         // Input
         if( playerVelocity != NULL )
         {
-        //     // Movement keys
-        //     if( TW_InputHandler_CheckKeyPressed( SDLK_RSHIFT ) )
-        //     {
-        //         if( TW_GameState_PauseStatus() == false )
-        //         {
-        //             TW_GameState_Pause();
-        //         }
-        //         else
-        //         {
-        //             TW_GameState_Resume();
-        //         }
-        //         TW_Component* cTempAnimation = TW_Entity_GetComponent( entity, TW_C_ANIMATION );
-        //         if( cTempAnimation != NULL )
-        //         {
-        //             cTempAnimation->animation->paused = TW_GameState_PauseStatus();
-        //         }
-        //     }
-
             if( TW_InputHandler_CheckKeyDown( SDLK_a ) )
             {
                 playerVelocity->velocity->speed->x = -5;
@@ -148,6 +130,7 @@ void TW_Scene_GeneratePlayer( TW_Scene* target, int x, int y )
     TW_Entity_AddComponent( playerEntity, cPlayerTransform );
 
     TW_Collision* playerCollision = TW_Collision_Create( 7, 0, 17, 32 );
+    playerCollision->solid = true;
     TW_Component* cPlayerCollision = TW_Component_Create( TW_C_COLLISION, playerCollision );
     TW_Entity_AddComponent( playerEntity, cPlayerCollision );
 

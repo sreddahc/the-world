@@ -26,3 +26,20 @@ void TW_Vector2_Free( TW_Vector2* self )
     self->y = 0;
     free( self );
 }
+
+
+// Given 2 points, find another point along that line.
+int TW_Vector2_GetPoint( int x1, int y1, int x2, int y2, enum TW_Axis find, int point )
+{
+    float a = ( (float)y2 - (float)y1 ) / ( (float)x2 - (float)x1 );
+    float b = (float)y1 - a * (float)x1;
+
+    if( find == TW_AXIS_X )
+    {
+        return (int)( ( (float)point - b ) / a );
+    }
+    else
+    {
+        return (int)( (float)point * a + b );
+    }
+}

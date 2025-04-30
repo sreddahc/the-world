@@ -11,6 +11,7 @@ TW_Collision* TW_Collision_Create( int x, int y, int w, int h )
     collision->size = TW_Vector2_Create( w, h );
     collision->oldPosition = TW_Vector2_Create( 0, 0 );
     collision->solid = false;
+    collision->immovable = false;
     collision->parent = NULL;
     collision->collisionCount = 0;
     collision->collisionBufferSize = 0;
@@ -31,6 +32,7 @@ void TW_Collision_Free( TW_Collision* self )
     self->collisionBufferSize = 0;
     self->collisionCount = 0;
     self->parent = NULL;
+    self->immovable = false;
     self->solid = false;
     TW_Vector2_Free( self->size );
     TW_Vector2_Free( self->centre );

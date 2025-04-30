@@ -26,6 +26,7 @@ typedef struct TW_Collision {
     TW_Vector2* centre;                     // Centre of the collision object, Default: `{ 0, 0 }`
     TW_Vector2* size;                       // Size of the collision box
     TW_Component* parent;                   // Parent component object if exists, otherwise `NULL`
+    bool immovable;                         // Is the object immovable by force?
     bool solid;                             // Is this collision box solid? `true` if so, `false` otherwise
     TW_Vector2* oldPosition;                // Old position of the transform prior to moving
     int collisionCount;                     // Number of entities that have been collided with
