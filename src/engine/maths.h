@@ -5,6 +5,12 @@
 
 // Type definitions
 
+/**
+ * TW_Axis - Describes an axis.
+ * 
+ * TW_AXIS_X = 0
+ * TW_AXIS_Y = 1
+ */
 enum TW_Axis {
     TW_AXIS_X,
     TW_AXIS_Y,

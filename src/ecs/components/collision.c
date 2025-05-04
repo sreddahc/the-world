@@ -10,8 +10,8 @@ TW_Collision* TW_Collision_Create( int x, int y, int w, int h )
     collision->centre = TW_Vector2_Create( 0, 0 );
     collision->size = TW_Vector2_Create( w, h );
     collision->oldPosition = TW_Vector2_Create( 0, 0 );
-    collision->solid = false;
-    collision->immovable = false;
+    collision->hasPhysics = false;
+    collision->fixed = false;
     collision->parent = NULL;
     collision->collisionCount = 0;
     collision->collisionBufferSize = 0;
@@ -32,8 +32,8 @@ void TW_Collision_Free( TW_Collision* self )
     self->collisionBufferSize = 0;
     self->collisionCount = 0;
     self->parent = NULL;
-    self->immovable = false;
-    self->solid = false;
+    self->fixed = false;
+    self->hasPhysics = false;
     TW_Vector2_Free( self->size );
     TW_Vector2_Free( self->centre );
     TW_Vector2_Free( self->position );
@@ -124,12 +124,12 @@ void TW_Collision_Run( TW_Collision* self )
             {
                 if( TW_Collision_Check( entity, scene->entities[ index ] ) == true )
                 {
-                    // Check if collision has been observed yet...
+                    // Record collision in collision object if it has not yet been observed.
                     TW_Component* target = TW_Entity_GetComponent( scene->entities[ index ], TW_C_COLLISION );
                     if( target != NULL )
                     {
                         bool alreadyObserved = false;
-                        for( int index = 0; index < target->collision->collisionCount; index ++ )
+                        for( int index = 0; index < target->collision->collisionCount; index++ )
                         {
                             if( target->collision->collisions[ index ] == entity )
                             {
@@ -143,7 +143,40 @@ void TW_Collision_Run( TW_Collision* self )
                             TW_Collision_AddCollisions( target->collision, entity );
                         }
                     }
+
+                    // If objects have physics... apply physics.
+                    TW_Collision_Physics( entity, scene->entities[ index ] );
                 }
+            }
+        }
+    }
+}
+
+
+// Attempt to resolve the physics of 2 entities which have physics.
+void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
+{
+    TW_Component* c1 = TW_Entity_GetComponent( entity1, TW_C_COLLISION );
+    TW_Component* t1 = TW_Entity_GetComponent( entity1, TW_C_TRANSFORM );
+    TW_Component* c2 = TW_Entity_GetComponent( entity2, TW_C_COLLISION );
+    TW_Component* t2 = TW_Entity_GetComponent( entity2, TW_C_TRANSFORM );
+
+    // Ensure that all required components exist.
+    if ( c1 != NULL && t1 != NULL && c2 != NULL && t2 != NULL )
+    {
+        // Ensure that both entities have physics.
+        if( c1->collision->hasPhysics && c2->collision->hasPhysics )
+        {
+            // Is either object fixed?
+            if( c1->collision->fixed || c2->collision->fixed )
+            {
+                while( true ){ break; }
+                printf( "this\n" );
+            }
+            else
+            {
+                while( true ){ break; }
+                printf( "not this\n" );
             }
         }
     }

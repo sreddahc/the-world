@@ -130,7 +130,7 @@ void TW_Scene_GeneratePlayer( TW_Scene* target, int x, int y )
     TW_Entity_AddComponent( playerEntity, cPlayerTransform );
 
     TW_Collision* playerCollision = TW_Collision_Create( 7, 0, 17, 32 );
-    playerCollision->solid = true;
+    playerCollision->hasPhysics = true;
     TW_Component* cPlayerCollision = TW_Component_Create( TW_C_COLLISION, playerCollision );
     TW_Entity_AddComponent( playerEntity, cPlayerCollision );
 
