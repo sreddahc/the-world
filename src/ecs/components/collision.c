@@ -283,10 +283,9 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                 tMove->transform->position->x += moveRelDirectionX * xDiff;
                 tMove->transform->position->y += moveRelDirectionY * yDiff;
 
-            }
-            else
-            {
-                while( true ){ break; }
+                // Troubleshooting begins here!!
+                tMove->velocity->speed->x = 0;
+                tMove->velocity->speed->y = 0;
             }
         }
     }
