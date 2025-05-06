@@ -139,15 +139,23 @@ void TW_Collision_Run( TW_Collision* self )
                         // If it has not, add collision reference to both entities.
                         if( alreadyObserved == false )
                         {
+                            // Add collision references to both entities
                             TW_Collision_AddCollisions( self, scene->entities[ index ] );
                             TW_Collision_AddCollisions( target->collision, entity );
+
+                            // Apply physics to both entities
+                            TW_Collision_Physics( entity, scene->entities[ index ] );
                         }
                     }
-
-                    // If objects have physics... apply physics.
-                    TW_Collision_Physics( entity, scene->entities[ index ] );
                 }
             }
+        }
+        // Update old position of collision with new position.
+        TW_Component* transform = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
+        if( transform != NULL )
+        {
+            collision->collision->oldPosition->x = transform->transform->position->x;
+            collision->collision->oldPosition->y = transform->transform->position->y;
         }
     }
 }
@@ -168,15 +176,117 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
         if( c1->collision->hasPhysics && c2->collision->hasPhysics )
         {
             // Is either object fixed?
-            if( c1->collision->fixed || c2->collision->fixed )
+            if( ( c1->collision->fixed || c2->collision->fixed ) && c1->collision->fixed != c2->collision->fixed )
             {
-                while( true ){ break; }
-                printf( "this\n" );
+                TW_Component* cFixed = NULL;
+                TW_Component* tFixed = NULL;
+                TW_Component* cMove = NULL;
+                TW_Component* tMove = NULL;
+
+                if( c1->collision->fixed )
+                {
+                    cFixed = c1;
+                    tFixed = t1;
+                    cMove = c2;
+                    tMove = t2;
+                }
+                else
+                {
+                    cFixed = c2;
+                    tFixed = t2;
+                    cMove = c1;
+                    tMove = t1;
+                }
+
+                // Establish mid point of each component (now labelled fixed and move)
+                float fixedCentreX = (float)cFixed->collision->oldPosition->x + (float)cFixed->collision->position->x + ( (float)cFixed->collision->size->x / 2 );
+                float fixedCentreY = (float)cFixed->collision->oldPosition->y + (float)cFixed->collision->position->y + ( (float)cFixed->collision->size->y / 2 );
+                
+                float moveOldCentreX = (float)cMove->collision->oldPosition->x + (float)cMove->collision->position->x + ( (float)cMove->collision->size->x / 2 );
+                float moveOldCentreY = (float)cMove->collision->oldPosition->y + (float)cMove->collision->position->y + ( (float)cMove->collision->size->y / 2 );
+
+                // Establish move entities position relative to fixed entity
+                int moveRelDirectionX = 1;
+                int moveRelDirectionY = 1;
+                
+                int innerX1 = tFixed->transform->position->x + cFixed->collision->position->x;
+                int innerY1 = tFixed->transform->position->y + cFixed->collision->position->y;
+                int innerX2 = innerX1 + cFixed->collision->size->x;
+                int innerY2 = innerY1 + cFixed->collision->size->y;
+                
+                if( moveOldCentreX <= fixedCentreX )
+                {
+                    moveRelDirectionX = -1;
+                    innerX2 = tMove->transform->position->x + cMove->collision->position->x + cMove->collision->size->x;
+                }
+                else
+                {
+                    innerX1 = tMove->transform->position->x + cMove->collision->position->x;
+                }
+                
+                if( moveOldCentreY <= fixedCentreY )
+                {
+                    moveRelDirectionY = -1;
+                    innerY2 = tMove->transform->position->x + cMove->collision->position->y + cMove->collision->size->y;
+                }
+                else
+                {
+                    innerY1 = tMove->transform->position->x + cMove->collision->position->y;
+                }
+
+                // Work out which side of the inner rectangle is bigger
+                int xDiff = 0;
+                int yDiff = 0;
+                if( innerX2 - innerX1 >= innerY2 - innerY1 )
+                {
+                    // kick in Y direction
+                    int offsetX = TW_Vector2_GetPoint(
+                        moveOldCentreX,
+                        moveOldCentreY,
+                        fixedCentreX,
+                        fixedCentreY,
+                        TW_AXIS_X,
+                        fixedCentreY + moveRelDirectionY * ( innerY2 - innerY1 )
+                    );
+                    if( offsetX >= fixedCentreX )
+                    {
+                        xDiff = abs( offsetX - fixedCentreX );
+                    }
+                    else
+                    {
+                        xDiff = abs( fixedCentreX - offsetX );
+                    }
+                    yDiff = ( innerY2 - innerY1 );
+                }
+                else
+                {
+                    int offsetY = TW_Vector2_GetPoint(
+                        moveOldCentreX,
+                        moveOldCentreY,
+                        fixedCentreX,
+                        fixedCentreY,
+                        TW_AXIS_Y,
+                        fixedCentreX + moveRelDirectionX * ( innerX2 - innerX1 )
+                    );
+                    if( offsetY >= fixedCentreX )
+                    {
+                        xDiff = abs( offsetY - fixedCentreY );
+                    }
+                    else
+                    {
+                        xDiff = abs( fixedCentreY - offsetY );
+                    }
+                    yDiff = ( innerX2 - innerX1 );
+                }
+
+                // Move movable object.
+                tMove->transform->position->x += moveRelDirectionX * xDiff;
+                tMove->transform->position->y += moveRelDirectionY * yDiff;
+
             }
             else
             {
                 while( true ){ break; }
-                printf( "not this\n" );
             }
         }
     }

@@ -54,15 +54,15 @@ void TW_Velocity_Run( TW_Velocity* self, TW_Entity* entity )
         self->timeSinceLastInterval += TW_GameState_GetDeltaTime();
         if( self->timeSinceLastInterval >= (float)self->interval  / MILLISECONDS_IN_A_SEC )
         {
-            // If a collision component exists, update the collision component to track old position
-            TW_Collision* collision = NULL;
-            TW_Component* collisionComponent = TW_Entity_GetComponent( entity, TW_C_COLLISION );
-            collision = collisionComponent->collision;
-            if( collision != NULL )
-            {
-                collision->oldPosition->x = transform->position->x;
-                collision->oldPosition->y = transform->position->y;
-            }
+            // // If a collision component exists, update the collision component to track old position
+            // TW_Collision* collision = NULL;
+            // TW_Component* collisionComponent = TW_Entity_GetComponent( entity, TW_C_COLLISION );
+            // collision = collisionComponent->collision;
+            // if( collision != NULL )
+            // {
+            //     collision->oldPosition->x = transform->position->x;
+            //     collision->oldPosition->y = transform->position->y;
+            // }
 
             self->timeSinceLastInterval -= (float)self->interval  / MILLISECONDS_IN_A_SEC;
             TW_Transform_SetPosition(

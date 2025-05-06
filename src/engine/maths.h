@@ -30,6 +30,19 @@ typedef struct TW_Vector2 {
 } TW_Vector2;
 
 
+/**
+ * TW_FVector2 - Creates a float based vector of size 2
+ * 
+ * Elements:
+ * - float          - x                 - The x value
+ * - float          - y                 - The y value
+ */
+typedef struct TW_FVector2 {
+    float x;
+    float y;
+} TW_FVector2;
+
+
 // Function definitions
 
 /**
@@ -59,6 +72,35 @@ void TW_Vector2_Set( TW_Vector2* self, int x, int y );
  * - TW_Vector2*    - self          - The vector2 object to update
  */
 void TW_Vector2_Free( TW_Vector2* self );
+
+
+/**
+ * TW_FVector2_Create - Creates an integer based vector of size 2
+ * 
+ * Args:
+ * - float          - x             - The x coordinate
+ * - float          - y             - The y coordinate
+ */
+TW_FVector2* TW_FVector2_Create( float x, float y );
+
+/**
+ * TW_FVector2_Set - Set the values of a vector2 object
+ * 
+ * Args:
+ * - TW_FVector2*   - self          - The vector2 object to update
+ * - float          - x             - The x coordinate
+ * - float          - y             - The y coordinate
+ */
+void TW_FVector2_Set( TW_FVector2* self, float x, float y );
+
+
+/**
+ * TW_FVector2_Free - Free resources used by a vector2 object
+ * 
+ * Args:
+ * - TW_FVector2*   - self          - The vector2 object to update
+ */
+void TW_FVector2_Free( TW_FVector2* self );
 
 
 // Given 2 vectors, work out the mid point given a y or x value.
