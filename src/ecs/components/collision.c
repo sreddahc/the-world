@@ -198,6 +198,8 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                     tMove = t1;
                 }
 
+                printf("! (%d, %d)\n", tMove->transform->position->x, tMove->transform->position->y );
+
                 // Establish mid point of each component (now labelled fixed and move)
                 float fixedCentreX = (float)cFixed->collision->oldPosition->x + (float)cFixed->collision->position->x + ( (float)cFixed->collision->size->x / 2 );
                 float fixedCentreY = (float)cFixed->collision->oldPosition->y + (float)cFixed->collision->position->y + ( (float)cFixed->collision->size->y / 2 );
@@ -209,11 +211,14 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                 int moveRelDirectionX = 1;
                 int moveRelDirectionY = 1;
                 
+                // (x1,y1) = top-left of fixed entity, (x2, y2) = bottom-right of fixed entity initially
                 int innerX1 = tFixed->transform->position->x + cFixed->collision->position->x;
                 int innerY1 = tFixed->transform->position->y + cFixed->collision->position->y;
                 int innerX2 = innerX1 + cFixed->collision->size->x;
                 int innerY2 = innerY1 + cFixed->collision->size->y;
                 
+                printf("! (%d, %d)\n", tMove->transform->position->x, tMove->transform->position->y );
+
                 if( moveOldCentreX <= fixedCentreX )
                 {
                     moveRelDirectionX = -1;
@@ -227,65 +232,89 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                 if( moveOldCentreY <= fixedCentreY )
                 {
                     moveRelDirectionY = -1;
-                    innerY2 = tMove->transform->position->x + cMove->collision->position->y + cMove->collision->size->y;
+                    innerY2 = tMove->transform->position->y + cMove->collision->position->y + cMove->collision->size->y;
                 }
                 else
                 {
-                    innerY1 = tMove->transform->position->x + cMove->collision->position->y;
+                    innerY1 = tMove->transform->position->y + cMove->collision->position->y;
                 }
 
+                printf("! (%d, %d)\n", tMove->transform->position->x, tMove->transform->position->y );
+                
                 // Work out which side of the inner rectangle is bigger
                 int xDiff = 0;
                 int yDiff = 0;
-                if( innerX2 - innerX1 >= innerY2 - innerY1 )
+                if( abs( innerX2 - innerX1 ) >= abs( innerY2 - innerY1 ) )
                 {
                     // kick in Y direction
+                    yDiff = innerY2 - innerY1;
                     int offsetX = TW_Vector2_GetPoint(
                         moveOldCentreX,
                         moveOldCentreY,
                         fixedCentreX,
                         fixedCentreY,
                         TW_AXIS_X,
-                        fixedCentreY + moveRelDirectionY * ( innerY2 - innerY1 )
+                        (int)( fixedCentreY + ( ( (float)( cFixed->collision->size->y ) / 2 ) + moveRelDirectionY * yDiff ) )
                     );
                     if( offsetX >= fixedCentreX )
                     {
-                        xDiff = abs( offsetX - fixedCentreX );
+                        xDiff = offsetX - fixedCentreX;
                     }
                     else
                     {
-                        xDiff = abs( fixedCentreX - offsetX );
+                        xDiff = fixedCentreX - offsetX;
                     }
-                    yDiff = ( innerY2 - innerY1 );
                 }
                 else
                 {
+                    xDiff = innerX2 - innerX1;
                     int offsetY = TW_Vector2_GetPoint(
                         moveOldCentreX,
                         moveOldCentreY,
                         fixedCentreX,
                         fixedCentreY,
                         TW_AXIS_Y,
-                        fixedCentreX + moveRelDirectionX * ( innerX2 - innerX1 )
+                        (int)( fixedCentreX + ( ( (float)( cFixed->collision->size->x ) / 2 ) + moveRelDirectionX * xDiff ) )
                     );
-                    if( offsetY >= fixedCentreX )
+                    if( offsetY >= fixedCentreY )
                     {
-                        xDiff = abs( offsetY - fixedCentreY );
+                        yDiff = offsetY - fixedCentreY;
                     }
                     else
                     {
-                        xDiff = abs( fixedCentreY - offsetY );
+                        yDiff = fixedCentreY - offsetY;
                     }
-                    yDiff = ( innerX2 - innerX1 );
+                    
                 }
 
+                printf("> Fixed Centre: (%.2f, %.2f)\n", fixedCentreX, fixedCentreY );
+                printf("> Fixed Pos: (%d, %d)\n", cFixed->collision->oldPosition->x, cFixed->collision->oldPosition->y);
+                printf("> Fixed Size: %d x %d\n", cFixed->collision->size->x, cFixed->collision->size->y);
+                
+                printf("< Move Centre: (%.2f, %.2f)\n", moveOldCentreX, moveOldCentreY );
+                printf("< Move Pos Old: (%d, %d)\n", cMove->collision->oldPosition->x, cMove->collision->oldPosition->y);
+                printf("< Move Pos New: (%d, %d)\n", tMove->transform->position->x, tMove->transform->position->y);
+                printf("< Move Size: %d x %d\n", cMove->collision->size->x, cMove->collision->size->y );
+
+                printf("- Move Dir: (%d, %d)\n", moveRelDirectionX, moveRelDirectionY);
+                printf("- inner1: (%d, %d)\n> inner2 (%d, %d)\n", innerX1, innerY1, innerX2, innerY2 );
+                printf("- Diff: (%d, %d)\n", moveRelDirectionX * xDiff, moveRelDirectionY * yDiff);
+                printf("---\n");
+
                 // Move movable object.
-                tMove->transform->position->x += moveRelDirectionX * xDiff;
-                tMove->transform->position->y += moveRelDirectionY * yDiff;
+                printf("! (%d, %d)\n", tMove->transform->position->x, tMove->transform->position->y );
+
+                tMove->transform->position->x += ( moveRelDirectionX * xDiff );
+                tMove->transform->position->y += ( moveRelDirectionY * yDiff );
+
+                printf("! (%d, %d)\n", tMove->transform->position->x, tMove->transform->position->y );
+                printf("---\n");
 
                 // Troubleshooting begins here!!
                 tMove->velocity->speed->x = 0;
                 tMove->velocity->speed->y = 0;
+                tMove->velocity->acceleration->x = 0;
+                tMove->velocity->acceleration->y = 0;
             }
         }
     }
