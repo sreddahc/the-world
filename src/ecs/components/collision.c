@@ -133,8 +133,6 @@ void TW_Collision_Run( TW_Collision* self )
                         {
                             if( target->collision->collisions[ j ] == entity )
                             {
-                                // This doesn't occur which is wrong - I think.
-                                printf("see me?\n");
                                 alreadyObserved = true;
                             }
                         }
