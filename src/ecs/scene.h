@@ -86,3 +86,12 @@ void TW_Scene_RunPhysics( TW_Scene* self );
  * - TW_Scene*      - self          - Run physics components on this scene.
  */
 void TW_Scene_RunPhysics( TW_Scene* self );
+
+
+/**
+ * TW_Scene_Clear - Clear state based components in a scene for the next game loop.
+ * 
+ * Args:
+ * - TW_Scene*      - self          - Clear components in this scene.
+ */
+void TW_Scene_Clear( TW_Scene* self );

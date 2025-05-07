@@ -21,14 +21,14 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
         // Create space and add components. Memory handling for existing components.
         if( self->components == NULL )
         {
-            self->components = malloc( self->size * sizeof( TW_Component ) );
+            self->components = malloc( self->size * sizeof( TW_Component* ) );
             self->components[ self->size - 1 ] = component;
         }
         else
         {
             TW_Component** oldComponents = self->components;
-            self->components = malloc( self->size * sizeof( TW_Component ) );
-            memcpy( self->components, oldComponents, ( self->size - 1 ) * sizeof( TW_Component ) );
+            self->components = malloc( self->size * sizeof( TW_Component* ) );
+            memcpy( self->components, oldComponents, ( self->size - 1 ) * sizeof( TW_Component* ) );
             free( oldComponents );
             self->components[ self->size - 1 ] = component;
         }
@@ -67,9 +67,36 @@ void TW_Entity_RunLogic( TW_Entity* self )
 // Run physics components in TW_Entity
 void TW_Entity_RunPhysics( TW_Entity* self )
 {
+    // Collect physics components to run in a specific order
+    TW_Component* collision = NULL;
+    TW_Component* velocity = NULL;
     for( int index = 0; index < self->size; index++ )
     {
-        TW_Component_RunPhysics( self->components[ index ] );
+        switch ( self->components[ index ]->type )
+        {
+            case TW_C_COLLISION:
+                collision = self->components[ index ];
+                break;
+
+            case TW_C_VELOCITY:
+                velocity = self->components[ index ];
+                break;
+
+            default:
+                break;
+        }
+    }
+    TW_Component_RunPhysics( velocity );
+    TW_Component_RunPhysics( collision );
+}
+
+
+// Clear state based components in TW_Entity so they're ready for the next game loop.
+void TW_Entity_Clear( TW_Entity* self )
+{
+    for( int index = 0; index < self->size; index++ )
+    {
+        TW_Component_Clear( self->components[ index ] );
     }
 }
 

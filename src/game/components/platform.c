@@ -37,6 +37,8 @@ void TW_Scene_GeneratePlatform( TW_Scene* target, enum TW_PlatformPosition platf
     TW_Entity_AddComponent( platformEntity, cPlatformTransform );
 
     TW_Collision* platformCollision = TW_Collision_Create( 0, 0, 35, 20 );
+    platformCollision->fixed = true;
+    platformCollision->hasPhysics = true;
     TW_Component* cPlatformCollision = TW_Component_Create( TW_C_COLLISION, platformCollision );
     TW_Entity_AddComponent( platformEntity, cPlatformCollision );
 

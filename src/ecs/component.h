@@ -86,6 +86,28 @@ TW_Component* TW_Component_Create( int type, void* value );
 
 
 /**
+ * TW_Component_GetParent - Given a component, return a pointer to its parent entity
+ * object if it exists. If not, return `NULL`.
+ * 
+ * Args:
+ * - TW_Component*          - self          - Get parent entity of this component.
+ * 
+ * Returns:
+ * - TW_Entity*             - Parent entity if it exists. Otherwise return `NULL`.
+ */
+TW_Entity* TW_Component_GetParent( TW_Component* self );
+
+
+/**
+ * TW_Component_Free - Frees resources for a given TW_Component
+ * 
+ * Args:
+ * - TW_Component*          - self          - The TW_Component to free
+ */
+void TW_Component_Free( TW_Component* self );
+
+
+/**
  * TW_Component_Render - If there is a visual aspect to the component... render it
  * 
  * Args:
@@ -113,22 +135,10 @@ void TW_Component_RunPhysics( TW_Component* self );
 
 
 /**
- * TW_Component_GetParent - Given a component, return a pointer to its parent entity
- * object if it exists. If not, return `NULL`.
+ * TW_Component_Clear - Clear the state of state-based components so they're ready to be
+ *                      used in the next game loop.
  * 
  * Args:
- * - TW_Component*          - self          - Get parent entity of this component.
- * 
- * Returns:
- * - TW_Entity*             - Parent entity if it exists. Otherwise return `NULL`.
+ * - TW_Component*          - self          - The component to clear
  */
-TW_Entity* TW_Component_GetParent( TW_Component* self );
-
-
-/**
- * TW_Component_Free - Frees resources for a given TW_Component
- * 
- * Args:
- * - TW_Component*          - self          - The TW_Component to free
- */
-void TW_Component_Free( TW_Component* self );
+void TW_Component_Clear( TW_Component* self );
