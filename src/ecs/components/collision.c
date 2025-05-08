@@ -289,14 +289,12 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                     
                 }
 
-                // Player and Platform logic goes here... for now
+                // Player and Platform logic goes here... this needs to be its own component
                 TW_Component* cPlatform = TW_Entity_GetComponent( eFixed, TW_C_PLATFORM );
                 TW_Component* cPlayer= TW_Entity_GetComponent( eMove, TW_C_PLAYER );
                 if( cPlatform != NULL && cPlayer != NULL )
                 {
-                    // Check if collision occurred on the floor of the platform.
-                    // This can be done better
-                    if( moveRelDirectionX == -1 && vMove->velocity->speed->y > 0 )
+                    if( moveRelDirectionY == -1 && vMove->velocity->speed->y > 0 )
                     {
                         cPlayer->player->onGround = true;
                         cPlayer->player->jumping = false;
@@ -309,22 +307,13 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                     if( cPlayer->player->onGround == true )
                     {
                         xDiff = 0;
-                        // yDiff = ( tMove->transform->position->y + cMove->transform->position->y + cMove->collision->size->y ) - ( tFixed->transform->position->y + cFixed->collision->position->y );
-                        yDiff = 0;
+                        yDiff = ( tMove->transform->position->y + cMove->transform->position->y + cMove->collision->size->y ) - ( tFixed->transform->position->y + cFixed->collision->position->y );
                     }
-                //     // elif()
-                //     // Bump position and reset speed.
-                //     tMove->transform->position->x += ( moveRelDirectionX * xDiff );
-                //     tMove->transform->position->y += ( moveRelDirectionY * yDiff );
-                //     vMove->velocity->speed->y = 0;
-                // }
-                // else
-                // {
-                    // Bump position and reset speed.
-                    tMove->transform->position->x += ( moveRelDirectionX * xDiff );
-                    tMove->transform->position->y += ( moveRelDirectionY * yDiff );
-                    vMove->velocity->speed->y = 0;
                 }
+
+                tMove->transform->position->x += ( moveRelDirectionX * xDiff );
+                tMove->transform->position->y += ( moveRelDirectionY * yDiff );
+                vMove->velocity->speed->y = 0;
             }
         }
     }
