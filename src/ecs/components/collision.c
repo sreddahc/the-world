@@ -178,25 +178,33 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
             // Is either object fixed?
             if( ( c1->collision->fixed || c2->collision->fixed ) && c1->collision->fixed != c2->collision->fixed )
             {
+                TW_Entity* eFixed = NULL;
                 TW_Component* cFixed = NULL;
                 TW_Component* tFixed = NULL;
+                TW_Entity* eMove = NULL;
                 TW_Component* cMove = NULL;
                 TW_Component* tMove = NULL;
+                TW_Component* vMove = NULL;
 
                 if( c1->collision->fixed )
                 {
+                    eFixed = entity1;
                     cFixed = c1;
                     tFixed = t1;
+                    eMove = entity2;
                     cMove = c2;
                     tMove = t2;
                 }
                 else
                 {
+                    eFixed = entity2;
                     cFixed = c2;
                     tFixed = t2;
+                    eMove = entity1;
                     cMove = c1;
                     tMove = t1;
                 }
+                vMove = TW_Entity_GetComponent( eMove, TW_C_VELOCITY );
 
                 // Establish mid point of each component (now labelled fixed and move)
                 float fixedCentreX = (float)cFixed->collision->oldPosition->x + (float)cFixed->collision->position->x + ( (float)cFixed->collision->size->x / 2 );
@@ -281,8 +289,27 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                     
                 }
 
+                // Player and Platform logic goes here... this needs to be its own component
+                TW_Component* cPlatform = TW_Entity_GetComponent( eFixed, TW_C_PLATFORM );
+                TW_Component* cPlayer= TW_Entity_GetComponent( eMove, TW_C_PLAYER );
+                if( cPlatform != NULL && cPlayer != NULL )
+                {
+                    if( moveRelDirectionY == -1 && vMove->velocity->speed->y > 0 )
+                    {
+                        cPlayer->player->onGround = true;
+                        cPlayer->player->jumping = false;
+                        vMove->velocity->speed->y = 0;
+                    }
+                    if( cPlayer->player->onGround == true )
+                    {
+                        xDiff = 0;
+                        yDiff = ( tMove->transform->position->y + cMove->transform->position->y + cMove->collision->size->y ) - ( tFixed->transform->position->y + cFixed->collision->position->y );
+                    }
+                }
+
                 tMove->transform->position->x += ( moveRelDirectionX * xDiff );
                 tMove->transform->position->y += ( moveRelDirectionY * yDiff );
+                vMove->velocity->speed->y = 0;
             }
         }
     }

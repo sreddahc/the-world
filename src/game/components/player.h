@@ -20,8 +20,8 @@ typedef struct TW_Component TW_Component;
  */
 typedef struct TW_Player {
     TW_Component* parent;               // Parent component of the player object
+    bool onGround;                      // Is the player on the ground?
     bool jumping;                       // Player jumping? `true` if so, `false` otherwise
-    bool falling;                       // Player falling? `true` if so, `false` otherwise
 } TW_Player;
 
 

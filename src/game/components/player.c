@@ -8,7 +8,6 @@ TW_Player* TW_Player_Create()
     TW_Player* player = malloc( sizeof( TW_Player ) );
     player->parent = NULL;
     player->jumping = false;
-    player->falling = false;
     return player;
 }
 
@@ -17,7 +16,6 @@ TW_Player* TW_Player_Create()
 void TW_Player_Free( TW_Player* self )
 {
     self->jumping = false;
-    self->falling = false;
     self->parent = NULL;
     free( self );
 }
@@ -28,76 +26,35 @@ void TW_Player_Think( TW_Entity* entity )
 {
     if( entity != NULL )
     {
-        // Collisions
-        // TW_Scene* parentScene = entity->parent;
-        TW_Component* playerPlayer = TW_Entity_GetComponent( entity, TW_C_PLAYER );
-        // TW_Component* playerTransform = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
-        TW_Component* playerVelocity = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
-        // TW_Component* playerAnimation = TW_Entity_GetComponent( entity, TW_C_ANIMATION );
-
-        // "Gravity"
-        playerVelocity->velocity->acceleration->y += 1;
-        if( playerVelocity->velocity->speed->y >= 12 )
-        {
-            playerVelocity->velocity->speed->y = 12;
-        }
-
-        // if( parentScene != NULL )
-        // {
-        //     for( int index = 0; index < parentScene->size; index++ )
-        //     {
-        //         if( entity != parentScene->entities[ index ] )
-        //         {
-        //             if( TW_Collision_Check( entity, parentScene->entities[ index ] ) == true )
-        //             {
-        //                 if( TW_Entity_GetComponent( parentScene->entities[ index ], TW_C_PLATFORM ) != NULL )
-        //                 {
-        //                     // FIX THIS JANK - Not a good collision implementation
-        //                     TW_Component* targetTransform = TW_Entity_GetComponent( parentScene->entities[ index ], TW_C_TRANSFORM );
-        //                     TW_Component* targetCollision = TW_Entity_GetComponent( parentScene->entities[ index ], TW_C_COLLISION );
-        //                     if( playerVelocity->velocity->speed->y <= 0 && playerPlayer->player->jumping == true )
-        //                     {
-        //                         playerTransform->transform->position->y = targetTransform->transform->position->y + targetCollision->collision->position->y + targetCollision->collision->size->y;
-        //                     }
-        //                     else
-        //                     {
-        //                         playerTransform->transform->position->y = targetTransform->transform->position->y - playerAnimation->animation->spriteSheet->height;
-        //                     }
-        //                     playerPlayer->player->jumping = false;
-        //                     playerVelocity->velocity->speed->y = 0;
-        //                     playerVelocity->velocity->speed->y = 1;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        // Components required for thinking
+        TW_Component* pPlayer = TW_Entity_GetComponent( entity, TW_C_PLAYER );
+        TW_Component* pVelocity = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
 
         // Input
-        if( playerVelocity != NULL )
+        if( pVelocity != NULL )
         {
             if( TW_InputHandler_CheckKeyDown( SDLK_a ) )
             {
-                playerVelocity->velocity->speed->x = -5;
+                pVelocity->velocity->speed->x = -5;
             }
 
             if( TW_InputHandler_CheckKeyDown( SDLK_d ) )
             {
-                playerVelocity->velocity->speed->x = 5;
+                pVelocity->velocity->speed->x = 5;
             }
 
             if( TW_InputHandler_CheckKeyUp( SDLK_a ) || TW_InputHandler_CheckKeyUp( SDLK_d ) )
             {
-                playerVelocity->velocity->speed->x = 0;
+                pVelocity->velocity->speed->x = 0;
             }
 
-            // FIX THIS JANK - Jumping
             if( TW_InputHandler_CheckKeyDown( SDLK_SPACE) )
             {
-                if( playerPlayer->player->jumping == false )
+                if( pPlayer->player->jumping == false && pPlayer->player->onGround == true )
                 {
-                    playerVelocity->velocity->speed->y = -8;
-                    playerVelocity->velocity->acceleration->y = -6;
-                    playerPlayer->player->jumping = true;
+                    pVelocity->velocity->speed->y = -8;
+                    pPlayer->player->jumping = true;
+                    pPlayer->player->onGround = false;
                 }
             }
         }
