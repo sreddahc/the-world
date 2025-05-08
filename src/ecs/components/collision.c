@@ -300,10 +300,6 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                         cPlayer->player->jumping = false;
                         vMove->velocity->speed->y = 0;
                     }
-                    if( vMove->velocity->speed->y > vMove->velocity->acceleration->y )
-                    {
-                        cPlayer->player->onGround = false;
-                    }
                     if( cPlayer->player->onGround == true )
                     {
                         xDiff = 0;
