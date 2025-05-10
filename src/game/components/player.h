@@ -22,6 +22,8 @@ typedef struct TW_Player {
     TW_Component* parent;               // Parent component of the player object
     bool onGround;                      // Is the player on the ground?
     bool jumping;                       // Player jumping? `true` if so, `false` otherwise
+    TW_Component* textureIdle;          // A pointer to the idling texture
+    TW_Component* textureWalking;       // A pointer to the walking texture
 } TW_Player;
 
 

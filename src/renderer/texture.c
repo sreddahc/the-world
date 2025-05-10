@@ -124,7 +124,7 @@ void TW_Texture_Render( TW_Texture* self, TW_Transform* transform )
         &renderZone,        // Destination SDL_Rect (NULL for entire rendering target)
         angle,              // Angle of the texture
         NULL,               // Axis centre point (NULL if centre of texture)
-        flip          // Flip the texture
+        flip                // Flip the texture
     );
 
     TW_Vector2_Free( offset );

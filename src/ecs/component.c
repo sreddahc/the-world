@@ -104,11 +104,17 @@ void TW_Component_Render( TW_Component* self, TW_Transform* transform )
                 break;
 
             case TW_C_SPRITE:
-                TW_Sprite_Render( self->sprite, transform );
+                if( self->sprite->hidden == false )
+                {
+                    TW_Sprite_Render( self->sprite, transform );
+                }
                 break;
 
             case TW_C_ANIMATION:
-                TW_Animation_Render( self->animation, transform );
+                if( self->animation->hidden == false )
+                {
+                    TW_Animation_Render( self->animation, transform );
+                }
                 break;
 
             default:

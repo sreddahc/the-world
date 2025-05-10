@@ -20,6 +20,7 @@ TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int animationSize, in
     animation->animationSpeed = 100;
     animation->timeSinceLastFrame = 0.0;
     animation->paused = false;
+    animation->hidden = false;
 
     // Checks
     for( int frame = 0; frame < animationSize; frame++ )
@@ -63,6 +64,7 @@ void TW_Animation_Render( TW_Animation* self, TW_Transform* transform )
 void TW_Animation_Free( TW_Animation* self )
 {
     self->paused = false;
+    self->hidden = false;
     self->animationSpeed = 0;
     self->currentFrame = 0;
     for( int index = 0; index < self->animationSize; index++ )

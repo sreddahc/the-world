@@ -28,6 +28,7 @@ void TW_Player_Think( TW_Entity* entity )
     {
         // Components required for thinking
         TW_Component* pPlayer = TW_Entity_GetComponent( entity, TW_C_PLAYER );
+        TW_Component* pTransform = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
         TW_Component* pVelocity = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
 
         // Input
@@ -36,11 +37,13 @@ void TW_Player_Think( TW_Entity* entity )
             if( TW_InputHandler_CheckKeyDown( SDLK_a ) )
             {
                 pVelocity->velocity->speed->x = -5;
+                pTransform->transform->flip = SDL_FLIP_HORIZONTAL;
             }
 
             if( TW_InputHandler_CheckKeyDown( SDLK_d ) )
             {
                 pVelocity->velocity->speed->x = 5;
+                pTransform->transform->flip = SDL_FLIP_NONE;
             }
 
             if( TW_InputHandler_CheckKeyUp( SDLK_a ) || TW_InputHandler_CheckKeyUp( SDLK_d ) )
@@ -57,6 +60,28 @@ void TW_Player_Think( TW_Entity* entity )
                     pPlayer->player->onGround = false;
                 }
             }
+
+            // Texture
+            if( pPlayer->player->jumping )
+            {
+                pPlayer->player->textureWalking->animation->hidden = true;
+                pPlayer->player->textureIdle->sprite->hidden = false;
+                pPlayer->player->textureIdle->sprite->currentSprite = 0;
+            }
+            else
+            {
+                if( pVelocity->velocity->speed->x == 0 )
+                {
+                    pPlayer->player->textureWalking->animation->hidden = true;
+                    pPlayer->player->textureIdle->sprite->hidden = false;
+                    pPlayer->player->textureIdle->sprite->currentSprite = 1;
+                }
+                else
+                {
+                    pPlayer->player->textureWalking->animation->hidden = false;
+                    pPlayer->player->textureIdle->sprite->hidden = true;
+                }
+            }
         }
     }
 }
@@ -71,16 +96,29 @@ void TW_Scene_GeneratePlayer( TW_Scene* target, int x, int y )
     TW_Component* cPlayerPlayer = TW_Component_Create( TW_C_PLAYER, playerPlayer );
     TW_Entity_AddComponent( playerEntity, cPlayerPlayer );
 
+    // Textures
+
+    // Idle
+    TW_Sprite* sIdle = TW_Sprite_Create( "src/assets/images/sprites/knight.png", 32, 32 );
+    sIdle->currentSprite = 1;
+    TW_Component* cIdle = TW_Component_Create( TW_C_SPRITE, sIdle );
+    playerPlayer->textureIdle = cIdle;
+    TW_Entity_AddComponent( playerEntity, cIdle );
+
+    // Walking
+    TW_Sprite* sWalking = TW_Sprite_Create( "src/assets/images/sprites/knight.png", 32, 32 );
+    TW_Animation* aWalking = TW_Animation_Create( sWalking, 4, (int[]){ 0, 1, 2, 1 } );
+    aWalking->animationSpeed = 100;
+    TW_Component* cWalking = TW_Component_Create( TW_C_ANIMATION, aWalking );
+    playerPlayer->textureWalking = cWalking;
+    TW_Entity_AddComponent( playerEntity, cWalking );
+
+    // Properties
+
     TW_Velocity* playerVelocity = TW_Velocity_Create( 0, 0, 0, 1 );
     playerVelocity->interval = 50;
     TW_Component* cPlayerVelocity = TW_Component_Create( TW_C_VELOCITY, playerVelocity );
     TW_Entity_AddComponent( playerEntity, cPlayerVelocity );
-
-    TW_Sprite* playerSprite = TW_Sprite_Create( "src/assets/images/sprites/knight.png", 32, 32 );
-    TW_Animation* playerAnimation = TW_Animation_Create( playerSprite, 4, (int[]){ 0, 1, 2, 1 } );
-    playerAnimation->animationSpeed = 100;
-    TW_Component* cPlayerAnimation = TW_Component_Create( TW_C_ANIMATION, playerAnimation );
-    TW_Entity_AddComponent( playerEntity, cPlayerAnimation );
 
     TW_Transform* playerTransform = TW_Transform_Create( x, y, 0.0, 1.0 );
     TW_Component* cPlayerTransform = TW_Component_Create( TW_C_TRANSFORM, playerTransform );
