@@ -21,8 +21,7 @@ typedef struct TW_Entity TW_Entity;
  * TW_Component_Type - An enumeration of all the types of components so that they may be
  * uniquely identified.
  */
-enum TW_ComponentType
-{
+enum TW_ComponentType {
     // Texture components
     TW_C_ANIMATION,
     TW_C_SPRITE,    
