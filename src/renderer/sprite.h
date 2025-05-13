@@ -26,6 +26,7 @@ typedef struct TW_Sprite {
     SDL_Rect* grid;         // Texture grid based on the height and width of the sprite
     int gridSize;           // Number of grids/subdivisions of the parent texture
     int currentSprite;      // The sprite to display
+    bool hidden;            // If `true` don't render this texture.
     TW_Component* parent;   // Parent component if it exists, otherwise `NULL`
 } TW_Sprite;
 

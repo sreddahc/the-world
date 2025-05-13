@@ -31,6 +31,7 @@ typedef struct TW_Animation {
     int animationSpeed;                     // Speed of the animation
     float timeSinceLastFrame;               // Time since frame was last updated
     bool paused;                            // true = paused, false = unpaused
+    bool hidden;                            // hide texture if `true`.
     TW_Component* parent;                   // Parent component if it exists, otherwise `NULL`
 } TW_Animation;
 

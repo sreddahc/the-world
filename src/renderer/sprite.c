@@ -27,6 +27,7 @@ TW_Sprite* TW_Sprite_Create( char* path, int width, int height )
     }
     
     sprite->currentSprite = 0;
+    sprite->hidden = false;
     sprite->parent = NULL;
 
     return sprite;
@@ -36,6 +37,7 @@ TW_Sprite* TW_Sprite_Create( char* path, int width, int height )
 // Free the resources used by a sprite object
 void TW_Sprite_Free( TW_Sprite* self )
 {
+    self->hidden = false;
     self->currentSprite = 0;
     for( int frame = 0; frame < self->gridSize; frame++ )
     {

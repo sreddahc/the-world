@@ -8,6 +8,7 @@ TW_Component* TW_Component_Create( int type, void* value ){
     switch ( component->type )
     {
         // Texture components
+
         case TW_C_ANIMATION:
             component->animation = value;
             component->animation->parent = component;
@@ -29,6 +30,7 @@ TW_Component* TW_Component_Create( int type, void* value ){
             break;
 
         // Logic components
+
         case TW_C_COLLISION:
             component->collision = value;
             component->collision->parent = component;
@@ -50,6 +52,7 @@ TW_Component* TW_Component_Create( int type, void* value ){
             break;
         
         // Game components
+        
         case TW_C_PLATFORM:
             component->platform = value;
             component->platform->parent = component;
@@ -60,6 +63,10 @@ TW_Component* TW_Component_Create( int type, void* value ){
             component->player->parent = component;
             break;
 
+        case TW_C_SPELL:
+            component->spell = value;
+            component->spell->parent = component;
+
         default:
             break;
     }
@@ -68,16 +75,7 @@ TW_Component* TW_Component_Create( int type, void* value ){
 }
 
 
-/**
- * TW_Component_GetParent - Given a component object, returns its parent. of one exists,
- *                          otherwise returns `NULL`.
- * 
- * Args:
- * - TW_Component*      - self          - Find the parent entity of this component
- * 
- * Returns:
- * - TW_Entity*         - Returns the parent entity if found, otherwise returns `NULL`
- */
+// TW_Component_GetParent - Given a component object, returns its parent. of one exists, otherwise returns `NULL`.
 TW_Entity* TW_Component_GetParent( TW_Component* self )
 {
     if( self->parent != NULL )
@@ -104,11 +102,17 @@ void TW_Component_Render( TW_Component* self, TW_Transform* transform )
                 break;
 
             case TW_C_SPRITE:
-                TW_Sprite_Render( self->sprite, transform );
+                if( self->sprite->hidden == false )
+                {
+                    TW_Sprite_Render( self->sprite, transform );
+                }
                 break;
 
             case TW_C_ANIMATION:
-                TW_Animation_Render( self->animation, transform );
+                if( self->animation->hidden == false )
+                {
+                    TW_Animation_Render( self->animation, transform );
+                }
                 break;
 
             default:
@@ -220,6 +224,9 @@ void TW_Component_Free( TW_Component* self )
         case TW_C_PLAYER:
             TW_Player_Free( self->player );
             break;
+
+        case TW_C_SPELL:
+            TW_Spell_Free( self->spell );
 
         default:
             break;

@@ -6,10 +6,7 @@
 // Type definitions
 
 /**
- * TW_Axis - Describes an axis.
- * 
- * TW_AXIS_X = 0
- * TW_AXIS_Y = 1
+ * \brief Describes an axis.
  */
 enum TW_Axis {
     TW_AXIS_X,
@@ -18,11 +15,21 @@ enum TW_Axis {
 
 
 /**
- * TW_Vector2 - Creates an integer based vector of size 2
+ * \brief A representation of position using flags.
+ */
+enum TW_PositionFlags {
+    TW_RELPOS_TOP = 0x1,
+    TW_RELPOS_BOTTOM = 0x2,
+    TW_RELPOS_LEFT = 0x4,
+    TW_RELPOS_RIGHT = 0x8
+};
+
+
+/**
+ * \brief Creates an integer based vector of size 2
  * 
- * Elements:
- * - int            - x                 - The x value
- * - int            - y                 - The y value
+ * \param x `int` – The x value
+ * \param y `int` – The y value
  */
 typedef struct TW_Vector2 {
     int x;
@@ -31,11 +38,10 @@ typedef struct TW_Vector2 {
 
 
 /**
- * TW_FVector2 - Creates a float based vector of size 2
+ * \brief Creates a float based vector of size 2
  * 
- * Elements:
- * - float          - x                 - The x value
- * - float          - y                 - The y value
+ * \param x `float` – The x value
+ * \param y `float` – The y value
  */
 typedef struct TW_FVector2 {
     float x;
@@ -46,73 +52,69 @@ typedef struct TW_FVector2 {
 // Function definitions
 
 /**
- * TW_Vector2_Create - Creates an integer based vector of size 2
+ * \brief Creates an integer based vector of size 2
  * 
  * Args:
- * - int            - x             - The x coordinate
- * - int            - y             - The y coordinate
+ * \param x `int` – The x coordinate
+ * \param y `int` – The y coordinate
  */
 TW_Vector2* TW_Vector2_Create( int x, int y );
 
 /**
- * TW_Vector2_Set - Set the values of a vector2 object
+ * \brief Set the values of a vector2 object
  * 
- * Args:
- * - TW_Vector2*    - self          - The vector2 object to update
- * - int            - x             - The x coordinate
- * - int            - y             - The y coordinate
+ * \param self `TW_Vector2*` – The vector2 object to update
+ * \param x `int` – The x coordinate
+ * \param y `int` – The y coordinate
  */
 void TW_Vector2_Set( TW_Vector2* self, int x, int y );
 
 
 /**
- * TW_Vector2_Free - Free resources used by a vector2 object
+ * \brief Free resources used by a vector2 object
  * 
- * Args:
- * - TW_Vector2*    - self          - The vector2 object to update
+ * \param self `TW_Vector2*` – The vector2 object to update
  */
 void TW_Vector2_Free( TW_Vector2* self );
 
 
 /**
- * TW_FVector2_Create - Creates an integer based vector of size 2
+ * \brief Creates an integer based vector of size 2
  * 
- * Args:
- * - float          - x             - The x coordinate
- * - float          - y             - The y coordinate
+ * \param x float – The x coordinate
+ * \param y float – The y coordinate
  */
 TW_FVector2* TW_FVector2_Create( float x, float y );
 
 /**
- * TW_FVector2_Set - Set the values of a vector2 object
+ * \brief Set the values of a vector2 object
  * 
- * Args:
- * - TW_FVector2*   - self          - The vector2 object to update
- * - float          - x             - The x coordinate
- * - float          - y             - The y coordinate
+ * \param self `TW_FVector2*` – The vector2 object to update
+ * \param x `float` – The x coordinate
+ * \param y `float` – The y coordinate
  */
 void TW_FVector2_Set( TW_FVector2* self, float x, float y );
 
 
 /**
- * TW_FVector2_Free - Free resources used by a vector2 object
+ * \brief Free resources used by a vector2 object
  * 
- * Args:
- * - TW_FVector2*   - self          - The vector2 object to update
+ * \param self `TW_FVector2*` – The vector2 object to update
  */
 void TW_FVector2_Free( TW_FVector2* self );
 
 
 // Given 2 vectors, work out the mid point given a y or x value.
 /**
- * TW_Vector2_GetPoint - Given 2 points, find another point along that line.
+ * \brief Given 2 points, find another point along that line.
  * 
- * Args:
- * - int            - x1            - X value for the first point
- * - int            - y1            - Y value for the first point
- * - int            - x2            - X value for the second point
- * - int            - y2            - Y value for the second point
- * - enum TW_Axis   - find          - Find this value (TW_AXIS_X or TW_AXIS_Y)
- * - int            - point         - Given point on other axis
+ * \param x1 `int` – X value for the first point
+ * \param y1 `int` – Y value for the first point
+ * \param x2 `int` – X value for the second point
+ * \param y2 `int` – Y value for the second point
+ * \param find `enum TW_Axis` – Axis to find (TW_AXIS_X or TW_AXIS_Y)
+ * \param point `int` – position on axis opposite to the one that's being found
+ * 
+ * \returns `int` – Y if `point` is X or X if `point` is Y
  */
 int TW_Vector2_GetPoint( int x1, int y1, int x2, int y2, enum TW_Axis find, int point );

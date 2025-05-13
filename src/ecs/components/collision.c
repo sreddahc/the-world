@@ -56,8 +56,6 @@ bool TW_Collision_Check( TW_Entity* self, TW_Entity* target )
             targetTransform != NULL && targetCollision != NULL
         )
         {
-            // !! Currently ignoring anything to do with "Centre" !!
-
             // Current dimensions
             int currentTop = currentTransform->transform->position->y + currentCollision->collision->position->y;
             int currentBot = currentTransform->transform->position->y + currentCollision->collision->position->y + currentCollision->collision->size->y;
@@ -214,6 +212,7 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                 float moveOldCentreY = (float)cMove->collision->oldPosition->y + (float)cMove->collision->position->y + ( (float)cMove->collision->size->y / 2 );
 
                 // Establish move entities position relative to fixed entity
+                enum TW_PositionFlags collisionSide = 0;
                 int moveRelDirectionX = 1;
                 int moveRelDirectionY = 1;
                 
@@ -225,21 +224,25 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
 
                 if( moveOldCentreX <= fixedCentreX )
                 {
+                    collisionSide |= TW_RELPOS_LEFT;
                     moveRelDirectionX = -1;
                     innerX2 = tMove->transform->position->x + cMove->collision->position->x + cMove->collision->size->x;
                 }
                 else
                 {
+                    collisionSide |= TW_RELPOS_RIGHT;
                     innerX1 = tMove->transform->position->x + cMove->collision->position->x;
                 }
                 
                 if( moveOldCentreY <= fixedCentreY )
                 {
+                    collisionSide |= TW_RELPOS_TOP;
                     moveRelDirectionY = -1;
                     innerY2 = tMove->transform->position->y + cMove->collision->position->y + cMove->collision->size->y;
                 }
                 else
                 {
+                    collisionSide |= TW_RELPOS_BOTTOM;
                     innerY1 = tMove->transform->position->y + cMove->collision->position->y;
                 }
                 
@@ -249,6 +252,7 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                 if( innerX2 - innerX1 >= innerY2 - innerY1 )
                 {
                     // kick in Y direction
+                    collisionSide &= TW_RELPOS_TOP | TW_RELPOS_BOTTOM;
                     yDiff = innerY2 - innerY1;
                     int offsetX = TW_Vector2_GetPoint(
                         moveOldCentreX,
@@ -269,6 +273,7 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                 }
                 else
                 {
+                    collisionSide &= TW_RELPOS_LEFT | TW_RELPOS_RIGHT;
                     xDiff = innerX2 - innerX1;
                     int offsetY = TW_Vector2_GetPoint(
                         moveOldCentreX,
@@ -286,7 +291,6 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                     {
                         yDiff = fixedCentreY - offsetY;
                     }
-                    
                 }
 
                 // Player and Platform logic goes here... this needs to be its own component
@@ -294,7 +298,7 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                 TW_Component* cPlayer= TW_Entity_GetComponent( eMove, TW_C_PLAYER );
                 if( cPlatform != NULL && cPlayer != NULL )
                 {
-                    if( moveRelDirectionY == -1 && vMove->velocity->speed->y > 0 )
+                    if( collisionSide == TW_RELPOS_TOP )
                     {
                         cPlayer->player->onGround = true;
                         cPlayer->player->jumping = false;
@@ -303,13 +307,23 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                     if( cPlayer->player->onGround == true )
                     {
                         xDiff = 0;
-                        yDiff = ( tMove->transform->position->y + cMove->transform->position->y + cMove->collision->size->y ) - ( tFixed->transform->position->y + cFixed->collision->position->y );
+                        yDiff = ( tMove->transform->position->y + cMove->collision->position->y + cMove->collision->size->y ) - ( tFixed->transform->position->y + cFixed->collision->position->y );
+                    }
+                    if( collisionSide == TW_RELPOS_LEFT ) 
+                    {
+                        xDiff = ( tMove->transform->position->x + cMove->collision->position->x + cMove->collision->size->x ) - ( tFixed->transform->position->x + cFixed->collision->position->x );
+                        yDiff = 0;
+                    }
+                    if( collisionSide == TW_RELPOS_RIGHT ) 
+                    {
+                        xDiff = ( tFixed->transform->position->x + cFixed->collision->position->x + cFixed->collision->size->x ) - ( tMove->transform->position->x + cMove->collision->position->x );
+                        yDiff = 0;
                     }
                 }
-
+                
                 tMove->transform->position->x += ( moveRelDirectionX * xDiff );
                 tMove->transform->position->y += ( moveRelDirectionY * yDiff );
-                vMove->velocity->speed->y = 0;
+                // vMove->velocity->speed->y = 0;
             }
         }
     }
@@ -326,7 +340,6 @@ void TW_Collision_AddCollisions( TW_Collision* self, TW_Entity* target )
         {
             self->collisionBufferSize = self->collisionCount;
             self->collisions = malloc( self->collisionBufferSize * sizeof( TW_Entity* ) );
-            self->collisions[ self->collisionCount - 1 ] = target;
         }
         else
         {
@@ -334,9 +347,9 @@ void TW_Collision_AddCollisions( TW_Collision* self, TW_Entity* target )
             self->collisions = malloc( self->collisionBufferSize * sizeof( TW_Entity* ) );
             memcpy( self->collisions, oldCollisions, ( self->collisionCount - 1 ) * sizeof( TW_Entity* ) );
             free( oldCollisions );
-            self->collisions[ self->collisionCount - 1 ] = target;
         }
     }
+    self->collisions[ self->collisionCount - 1 ] = target;
 }
 
 
