@@ -56,8 +56,6 @@ bool TW_Collision_Check( TW_Entity* self, TW_Entity* target )
             targetTransform != NULL && targetCollision != NULL
         )
         {
-            // !! Currently ignoring anything to do with "Centre" !!
-
             // Current dimensions
             int currentTop = currentTransform->transform->position->y + currentCollision->collision->position->y;
             int currentBot = currentTransform->transform->position->y + currentCollision->collision->position->y + currentCollision->collision->size->y;
@@ -322,10 +320,10 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                         yDiff = 0;
                     }
                 }
-                // printf("> collisionSide %d\n", collisionSide);
+                
                 tMove->transform->position->x += ( moveRelDirectionX * xDiff );
                 tMove->transform->position->y += ( moveRelDirectionY * yDiff );
-                vMove->velocity->speed->y = 0;
+                // vMove->velocity->speed->y = 0;
             }
         }
     }
@@ -342,7 +340,6 @@ void TW_Collision_AddCollisions( TW_Collision* self, TW_Entity* target )
         {
             self->collisionBufferSize = self->collisionCount;
             self->collisions = malloc( self->collisionBufferSize * sizeof( TW_Entity* ) );
-            self->collisions[ self->collisionCount - 1 ] = target;
         }
         else
         {
@@ -350,9 +347,9 @@ void TW_Collision_AddCollisions( TW_Collision* self, TW_Entity* target )
             self->collisions = malloc( self->collisionBufferSize * sizeof( TW_Entity* ) );
             memcpy( self->collisions, oldCollisions, ( self->collisionCount - 1 ) * sizeof( TW_Entity* ) );
             free( oldCollisions );
-            self->collisions[ self->collisionCount - 1 ] = target;
         }
     }
+    self->collisions[ self->collisionCount - 1 ] = target;
 }
 
 

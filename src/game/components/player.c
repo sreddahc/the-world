@@ -2,7 +2,6 @@
 
 
 // Creates a player component object.
-
 TW_Player* TW_Player_Create()
 {
     TW_Player* player = malloc( sizeof( TW_Player ) );
@@ -59,6 +58,11 @@ void TW_Player_Think( TW_Entity* entity )
                     pPlayer->player->jumping = true;
                     pPlayer->player->onGround = false;
                 }
+            }
+
+            if( TW_InputHandler_CheckKeyUp( SDLK_LSHIFT ) )
+            {
+                TW_Spell_GenerateSpell( pPlayer->parent->parent, entity );
             }
 
             // Texture
