@@ -22,7 +22,6 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
         if( self->components == NULL )
         {
             self->components = malloc( self->size * sizeof( TW_Component* ) );
-            self->components[ self->size - 1 ] = component;
         }
         else
         {
@@ -30,10 +29,10 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
             self->components = malloc( self->size * sizeof( TW_Component* ) );
             memcpy( self->components, oldComponents, ( self->size - 1 ) * sizeof( TW_Component* ) );
             free( oldComponents );
-            self->components[ self->size - 1 ] = component;
         }
+        self->components[ self->size - 1 ] = component;
+        component->parent = self;
     }
-    component->parent = self;
 }
 
 // --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
