@@ -9,10 +9,12 @@
  * \brief Buffer of Entities
  * 
  * \param size `int` – Size of the scene (Number of Entities in the scene)
+ * \param maxSize `int` – Maximum size of scene.
  * \param entities `TW_Entity**` – The entities
  */
 typedef struct TW_Scene {
     int size;
+    int maxSize;
     TW_Entity** entities;
 } TW_Scene;
 
@@ -44,6 +46,14 @@ void TW_Scene_Free( TW_Scene* self );
  */
 void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity );
 
+
+/**
+ * \brief Remove an entity from a scene.
+ * 
+ * \param self `TW_Scene*` – The scene to remove the entity from
+ * \param entity `TW_Entity*` - The entity to remove from the scene
+ */
+void TW_Scene_RemoveEntity( TW_Scene* self, TW_Entity* entity );
 
 /**
  * \brief Run logic components in a scene.

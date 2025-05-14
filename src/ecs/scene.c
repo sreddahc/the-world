@@ -6,6 +6,7 @@ TW_Scene* TW_Scene_Create()
 {
     TW_Scene* scene = malloc( sizeof( TW_Scene ) );
     scene->size = 0;
+    scene->maxSize = 0;
     scene->entities = NULL;
     return scene;
 }
@@ -19,6 +20,7 @@ void TW_Scene_Free( TW_Scene* self )
         TW_Entity_Free( self->entities[ index ] );
     }
     self->size = 0;
+    self->maxSize = 0;
     free( self );
 }
 
@@ -29,20 +31,54 @@ void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity )
     self->size += 1;
     if( self->size > 0 )
     {
-        // Create space and add entities. Memory handling for exisiting entities.
-        if( self->entities == NULL )
+        if( self->size > self->maxSize )
         {
-            self->entities = malloc( self->size * sizeof( TW_Entity* ) );
-        }
-        else
-        {
-            TW_Entity** oldEntities = self->entities;
-            self->entities = malloc( self->size * sizeof( TW_Entity* ) );
-            memcpy( self->entities, oldEntities, ( self->size - 1 ) * sizeof( TW_Entity* ) );
-            free( oldEntities );
+            if( self->entities == NULL )
+            {
+                self->entities = malloc( self->size * sizeof( TW_Entity* ) );
+            }
+            else
+            {
+                TW_Entity** oldEntities = self->entities;
+                self->entities = malloc( self->size * sizeof( TW_Entity* ) );
+                memcpy( self->entities, oldEntities, ( self->size - 1 ) * sizeof( TW_Entity* ) );
+                free( oldEntities );
+            }
         }
         self->entities[ self->size - 1 ] = entity;
         entity->parent = self;
+    }
+}
+
+
+// Remove an entity from a scene.
+void TW_Scene_RemoveEntity( TW_Scene* self, TW_Entity* entity )
+{
+    // Check if entity is in scene
+    int targetIndex = -1;
+    for( int index = 0; index < self->size; index++ )
+    {
+        if( self->entities[ index ] == entity )
+        {
+            targetIndex = index;
+            break;
+        }
+    }
+    // If so, remove it.
+    if( targetIndex >= 0 )
+    {
+        for( int index = targetIndex; index < self->size; index++ )
+        {
+            if( index < self->size - 1 )
+            {
+                self->entities[ index ] = self->entities[ index + 1 ];
+            }
+            else if( index == self->size - 1 )
+            {
+                self->entities[ index ] = NULL;
+            }
+        }
+        self->size -= 1;
     }
 }
 

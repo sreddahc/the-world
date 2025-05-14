@@ -37,11 +37,14 @@ void TW_Spell_Think( TW_Entity* entity )
                 }
                 if( obstacle != NULL )
                 {
-                    // I have to now cleanly destroy this object :(... this is more engine work!
-                    // Alternatively...we can reuse existing "objects" that have not yet been deleted but are off screen... this is more resource concious... but not necessarily required.
                     if( aCollision != NULL )
                     {
-                        aCollision->animation->hidden = true;
+                        // aCollision->animation->hidden = true;
+                        if( entity->parent != NULL )
+                        {
+                            TW_Scene_RemoveEntity( entity->parent, entity );
+                        }
+                        // TW_Spell_DestroySpell( entity );
                     }
                 }
             }
@@ -84,4 +87,16 @@ void TW_Spell_GenerateSpell( TW_Scene* scene, TW_Entity* caster )
 
         TW_Scene_AddEntity( scene, entity );
     }
+}
+
+
+// Destroys a spell entity and removes it from the parent scene.
+void TW_Spell_DestroySpell( TW_Entity* self )
+{
+    if( self->parent != NULL )
+    {
+        TW_Scene_RemoveEntity( self->parent, self );
+    }
+    // This will cause a segfault atm... need to re-address how I delete objects from an ecs
+    TW_Entity_Free( self );
 }
