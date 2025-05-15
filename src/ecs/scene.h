@@ -81,6 +81,7 @@ void TW_Scene_Render( TW_Scene* self );
 
 /**
  * \brief Clear the state of all entities in a scene. Run at the end of every game loop.
+ *        If an entity is marked for destruction, free the entity.
  * 
  * \param self `TW_Scene*` – Clear entities in this scene.
  */

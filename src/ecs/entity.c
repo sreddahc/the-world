@@ -6,9 +6,24 @@ TW_Entity* TW_Entity_Create()
 {
     TW_Entity* entity = malloc( sizeof( TW_Entity ) );
     entity->size = 0;
+    entity->destroy = false;
     entity->parent = NULL;
     entity->components = NULL;
     return entity;
+}
+
+
+// Free the resources used by an entity
+void TW_Entity_Free( TW_Entity* self )
+{
+    for( int index = 0; index < self->size; index++ )
+    {
+        TW_Component_Free( self->components[ index ] );
+    }
+    self->size = 0;
+    self->destroy = false;
+    self->parent = NULL;
+    free( self );
 }
 
 
@@ -35,25 +50,23 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component )
     }
 }
 
-// --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
 
-void TW_Entity_Render( TW_Entity* self )
+// Given an entity and component type search the entity for that component.
+// If found, return a pointer to that component, otherwise return `NULL`.
+TW_Component* TW_Entity_GetComponent( TW_Entity* self, enum TW_ComponentType type )
 {
-    TW_Component* transformComponent = TW_Entity_GetComponent( self, TW_C_TRANSFORM );
-    TW_Transform* transform = NULL;
-    if( transformComponent != NULL )
-    {
-        transform = transformComponent->transform;
-    }
-
     for( int index = 0; index < self->size; index++ )
     {
-        TW_Component_Render( self->components[ index ], transform );
+        if( self->components[ index ]->type == type )
+        {
+            return self->components[ index ];
+        }
     }
+    return NULL;
 }
 
 
-// Run logic components in TW_Entity
+// Run logic components in an entity
 void TW_Entity_RunLogic( TW_Entity* self )
 {
     for( int index = 0; index < self->size; index++ )
@@ -63,7 +76,7 @@ void TW_Entity_RunLogic( TW_Entity* self )
 }
 
 
-// Run physics components in TW_Entity
+// Run physics components in an entity
 void TW_Entity_RunPhysics( TW_Entity* self )
 {
     // Collect physics components to run in a specific order
@@ -90,38 +103,28 @@ void TW_Entity_RunPhysics( TW_Entity* self )
 }
 
 
-// Clear state based components in TW_Entity so they're ready for the next game loop.
+// Renders any entities with visual components
+void TW_Entity_Render( TW_Entity* self )
+{
+    TW_Component* transformComponent = TW_Entity_GetComponent( self, TW_C_TRANSFORM );
+    TW_Transform* transform = NULL;
+    if( transformComponent != NULL )
+    {
+        transform = transformComponent->transform;
+    }
+
+    for( int index = 0; index < self->size; index++ )
+    {
+        TW_Component_Render( self->components[ index ], transform );
+    }
+}
+
+
+// Clear state based components in entity so they're ready for the next game loop.
 void TW_Entity_Clear( TW_Entity* self )
 {
     for( int index = 0; index < self->size; index++ )
     {
         TW_Component_Clear( self->components[ index ] );
     }
-}
-
-
-// Given an entity and component type search the entity for that component.
-// If found, return a pointer to that component, otherwise return `NULL`.
-TW_Component* TW_Entity_GetComponent( TW_Entity* self, int type )
-{
-    for( int index = 0; index < self->size; index++ )
-    {
-        if( self->components[ index ]->type == type )
-        {
-            return self->components[ index ];
-        }
-    }
-    return NULL;
-}
-
-// Free the resources used by an entity
-void TW_Entity_Free( TW_Entity* self )
-{
-    for( int index = 0; index < self->size; index++ )
-    {
-        TW_Component_Free( self->components[ index ] );
-    }
-    self->size = 0;
-    self->parent = NULL;
-    free( self );
 }
