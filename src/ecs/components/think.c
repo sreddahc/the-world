@@ -2,10 +2,10 @@
 
 
 // Create a think object
-TW_Think* TW_Think_Create( void *some_function )
+TW_Think* TW_Think_Create( void *function )
 {
     TW_Think* thinkObject = malloc( sizeof( TW_Think ) );
-    thinkObject->think = some_function;
+    thinkObject->think = function;
     thinkObject->parent = NULL;
     return thinkObject;
 }

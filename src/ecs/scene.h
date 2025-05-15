@@ -52,6 +52,8 @@ void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity );
  * 
  * \param self `TW_Scene*` – The scene to remove the entity from
  * \param entity `TW_Entity*` - The entity to remove from the scene
+ * 
+ * \note This does not free the entity, that must be done separately.
  */
 void TW_Scene_RemoveEntity( TW_Scene* self, TW_Entity* entity );
 

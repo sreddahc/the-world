@@ -11,12 +11,14 @@ typedef struct TW_Scene TW_Scene;
  * \brief An entity
  * 
  * \param size `int` – Size of the entity
+ * \param maxSize `int` – Maximum size of entity
  * \param destroy `bool` –  Should this entity be destroyed during clean up? `true` if so
  * \param parent `TW_Scene*` – Parent scene the entity belongs to
  * \param components `TW_Component**` – Components in the entity
  */
 typedef struct TW_Entity {
     int size;
+    int maxSize;
     bool destroy;
     TW_Scene* parent;
     TW_Component** components;
@@ -42,7 +44,7 @@ void TW_Entity_Free( TW_Entity* self );
 
 
 /**
- * \brief Given an entity and component, adds a component to the entity.
+ * \brief Adds a component to an entity.
  * 
  * \param self `TW_Entity*` – The entity to add a component to
  * \param component `TW_Component*` – The component to add to the entity
@@ -51,11 +53,24 @@ void TW_Entity_AddComponent( TW_Entity* self, TW_Component* component );
 
 
 /**
+ * \brief Removes a component from an entity.
+ * 
+ * \param self `TW_Entity*` – The entity to remove the component from
+ * \param component `TW_Component*` – The component to remove from the entity
+ * 
+ * \note This does not free the component, that must be done separately.
+ */
+void TW_Entity_RemoveComponent( TW_Entity* self, TW_Component* component );
+
+
+/**
  * \brief Given an entity and component type search the entity for that component.
  *        If found, return a pointer to that component, otherwise return `NULL`.
  * 
  * \param self `TW_Entity*` – The entity to search
  * \param type `TW_ComponentType` – The `TW_Component_Type` to search for
+ * 
+ * \returns `TW_Component*` or `NULL` if no component is found
  */
 TW_Component* TW_Entity_GetComponent( TW_Entity* self, enum TW_ComponentType type );
 

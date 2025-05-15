@@ -47,11 +47,13 @@ enum TW_ComponentType {
  * 
  * Args:
  * - int                    - type          - The type of component this is
+ * - bool                   - destroy       - Should this component be destroyed during clean up? `true` if so
  * - TW_Entity*             - parent        - Parent entity of this component
  * - TW_ComponentValue*     - value         - The component
  */
 typedef struct TW_Component {
     enum TW_ComponentType type;
+    bool destroy;
     TW_Entity* parent;
     union {
         // Texture components

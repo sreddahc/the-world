@@ -33,17 +33,19 @@ void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity )
     {
         if( self->size > self->maxSize )
         {
+            // Adjust memory allocation
             if( self->entities == NULL )
             {
                 self->entities = malloc( self->size * sizeof( TW_Entity* ) );
             }
             else
-            {
+            {;
                 TW_Entity** oldEntities = self->entities;
                 self->entities = malloc( self->size * sizeof( TW_Entity* ) );
                 memcpy( self->entities, oldEntities, ( self->size - 1 ) * sizeof( TW_Entity* ) );
                 free( oldEntities );
             }
+            self->maxSize = self->size;
         }
         self->entities[ self->size - 1 ] = entity;
         entity->parent = self;
@@ -120,7 +122,7 @@ void TW_Scene_Clear( TW_Scene* self )
     {
         if( self->entities[ index ]->destroy == true )
         {
-            // If Entity wants to be destroyed
+            // If entity wants to be destroyed
             TW_Entity* target = self->entities[ index ];
             TW_Scene_RemoveEntity( self, target );
             TW_Entity_Free( target );
