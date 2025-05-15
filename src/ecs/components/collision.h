@@ -24,8 +24,8 @@ typedef struct TW_Entity TW_Entity;
  * \param parent (TW_Component*) Parent component object if exists, otherwise `NULL`
  * \param solid (bool) Is this collision box solid? `true` if so, `false` otherwise
  * \param immovable (bool) Is this collision box immovable? `true` if so, `false` otherwise
- * \param collisionCount (int) Number of entities that have been collided with
- * \param collisionBufferSize (int) Size of the collisions pointer array
+ * \param collisionSize (int) Number of entities that have been collided with
+ * \param collisionMax (int) Size of the collisions pointer array
  * \param collisions (TW_Entity**) array of pointers which point to the entities that have been collided with
  */
 typedef struct TW_Collision {
@@ -36,8 +36,8 @@ typedef struct TW_Collision {
     bool hasPhysics;                        // Is this collision box solid? `true` if so, `false` otherwise
     bool fixed;                             // Is the object immovable by force?
     TW_Vector2* oldPosition;                // Old position of the transform prior to moving
-    int collisionCount;                     // Number of entities that have been collided with
-    int collisionBufferSize;                // Size of collisions pointer array (required for cleanup)
+    int collisionSize;                     // Number of entities that have been collided with
+    int collisionMax;                       // Size of collisions pointer array (required for cleanup)
     TW_Entity** collisions;                 // array of pointers which point to entities that have been collided with
 } TW_Collision;
 
