@@ -6,14 +6,15 @@
 // Type definitions
 
 /**
- * TW_Scene - Buffer of Entities
+ * \brief Buffer of Entities
  * 
- * Elements:
- * - int            - size          - Size of the scene (Number of Entities in the scene)
- * - TW_Entity**    - entities      - The entities
+ * \param size `int` – Size of the scene (Number of Entities in the scene)
+ * \param maxSize `int` – Maximum size of scene.
+ * \param entities `TW_Entity**` – The entities
  */
 typedef struct TW_Scene {
     int size;
+    int maxSize;
     TW_Entity** entities;
 } TW_Scene;
 
@@ -21,77 +22,69 @@ typedef struct TW_Scene {
 // Function definitions
 
 /**
- * TW_Scene_Create - Creates a scene to store entities in.
+ * \brief Creates a scene to store entities in.
  * 
  * Returns:
- * TW_Scene*        - Returns an empty scene
+ * \returns `TW_Scene*` – An empty scene
  */
 TW_Scene* TW_Scene_Create();
 
 
 /**
- * TW_Scene_AddEntity - Creates a scene to store entities in.
+ * \brief Free the resources used by a scene.
  * 
- * Args:
- * - TW_Scene*      - self          - The scene to add entities to
- * - TW_Entity*     - entity        - The entity to add to a scene
+ * \param self `TW_Scene*` – The scene to free
+ */
+void TW_Scene_Free( TW_Scene* self );
+
+
+/**
+ * \brief Creates a scene to store entities in.
+ * 
+ * \param self `TW_Scene*` – The scene to add entities to
+ * \param entity `TW_Entity*` – The entity to add to a scene
  */
 void TW_Scene_AddEntity( TW_Scene* self, TW_Entity* entity );
 
 
 /**
- * TW_Scene_Free - Free the resources used by a scene.
+ * \brief Remove an entity from a scene.
  * 
- * Args:
- * - TW_Scene*      - self          - The scene to free
- */
-void TW_Scene_Free( TW_Scene* self );
-
-
-// --- DEVELOPER ZONE !! DANGER !! COMMENTS MAY NOT EXIST ---
-
-// Developers note: This should probably be broken up...
-/**
- * TW_Scene_Render - Given a scene, attempts to render all entities
+ * \param self `TW_Scene*` – The scene to remove the entity from
+ * \param entity `TW_Entity*` - The entity to remove from the scene
  * 
- * Args:
- * - TW_Scene*      - self          - Render graphics components from this scene
+ * \note This does not free the entity, that must be done separately.
  */
-void TW_Scene_Render( TW_Scene* self );
-
+void TW_Scene_RemoveEntity( TW_Scene* self, TW_Entity* entity );
 
 /**
- * TW_Scene_RunLogic - Run logic components in scene entities.
+ * \brief Run logic components in a scene.
  * 
- * Args:
- * - TW_Scene*      - self          - Run logic components from this scene
+ * \param self `TW_Scene*` – Run logic for entities in this scene
  */
 void TW_Scene_RunLogic( TW_Scene* self );
 
 
 /**
- * TW_Scene_RunLogic - Run logic components in scene entities.
+ * \brief Run physics engine on a scene.
  * 
- * Args:
- * - TW_Scene*      - self          - Run physics components from this scene
+ * \param self `TW_Scene*` – Run physics on entities in this scene.
  */
 void TW_Scene_RunPhysics( TW_Scene* self );
 
 
 /**
- * TW_Scene_RunPhysics - Run physics engine on a scene.
- *                       Calculate new positions, collisions etc...
+ * \brief Render all entities in a scene.
  * 
- * Args:
- * - TW_Scene*      - self          - Run physics components on this scene.
+ * \param `TW_Scene*` – Render entities in this scene
  */
-void TW_Scene_RunPhysics( TW_Scene* self );
+void TW_Scene_Render( TW_Scene* self );
 
 
 /**
- * TW_Scene_Clear - Clear state based components in a scene for the next game loop.
+ * \brief Clear the state of all entities in a scene. Run at the end of every game loop.
+ *        If an entity is marked for destruction, free the entity.
  * 
- * Args:
- * - TW_Scene*      - self          - Clear components in this scene.
+ * \param self `TW_Scene*` – Clear entities in this scene.
  */
 void TW_Scene_Clear( TW_Scene* self );

@@ -4,6 +4,7 @@
 // Creates a pointer to a component of specified type and value
 TW_Component* TW_Component_Create( int type, void* value ){
     TW_Component* component = malloc( sizeof( TW_Component ) );
+    component->destroy = false;
     component->type = type;
     switch ( component->type )
     {
@@ -70,12 +71,11 @@ TW_Component* TW_Component_Create( int type, void* value ){
         default:
             break;
     }
-
     return component;
 }
 
 
-// TW_Component_GetParent - Given a component object, returns its parent. of one exists, otherwise returns `NULL`.
+// TW_Component_GetParent - Given a component object, returns its parent if one exists, otherwise returns `NULL`.
 TW_Entity* TW_Component_GetParent( TW_Component* self )
 {
     if( self->parent != NULL )
@@ -231,7 +231,7 @@ void TW_Component_Free( TW_Component* self )
         default:
             break;
     }
-
+    self->destroy = false;
     self->type = 0;
     free(self);
 }

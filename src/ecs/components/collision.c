@@ -334,22 +334,25 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
 void TW_Collision_AddCollisions( TW_Collision* self, TW_Entity* target )
 {
     self->collisionCount += 1;
-    if( self->collisionCount > self->collisionBufferSize )
+    if( self->collisionCount > 0 )
     {
-        if( self->collisions == NULL )
+        if( self->collisionCount > self->collisionBufferSize )
         {
-            self->collisionBufferSize = self->collisionCount;
-            self->collisions = malloc( self->collisionBufferSize * sizeof( TW_Entity* ) );
+            if( self->collisions == NULL )
+            {
+                self->collisionBufferSize = self->collisionCount;
+                self->collisions = malloc( self->collisionBufferSize * sizeof( TW_Entity* ) );
+            }
+            else
+            {
+                TW_Entity** oldCollisions = self->collisions;
+                self->collisions = malloc( self->collisionBufferSize * sizeof( TW_Entity* ) );
+                memcpy( self->collisions, oldCollisions, ( self->collisionCount - 1 ) * sizeof( TW_Entity* ) );
+                free( oldCollisions );
+            }
         }
-        else
-        {
-            TW_Entity** oldCollisions = self->collisions;
-            self->collisions = malloc( self->collisionBufferSize * sizeof( TW_Entity* ) );
-            memcpy( self->collisions, oldCollisions, ( self->collisionCount - 1 ) * sizeof( TW_Entity* ) );
-            free( oldCollisions );
-        }
+        self->collisions[ self->collisionCount - 1 ] = target;
     }
-    self->collisions[ self->collisionCount - 1 ] = target;
 }
 
 

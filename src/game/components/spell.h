@@ -15,6 +15,8 @@ typedef struct TW_Component TW_Component;
  */
 typedef struct TW_Spell {
     TW_Component* parent;
+    TW_Component* textureImpact;
+    TW_Component* textureShoot;
 } TW_Spell;
 
 
@@ -51,3 +53,11 @@ void TW_Spell_Think( TW_Entity* entity );
  * \param caster `TW_Entity*` – The entity that's shooting the spell
  */
 void TW_Spell_GenerateSpell( TW_Scene* scene, TW_Entity* caster );
+
+
+/**
+ * \brief Destroys a spell entity and removes it from the parent scene.
+ * 
+ * \param self `TW_Entity*` – The entity to destroy
+ */
+void TW_Spell_DestroySpell( TW_Entity* self );
