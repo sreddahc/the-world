@@ -13,8 +13,8 @@ TW_Collision* TW_Collision_Create( int x, int y, int w, int h )
     collision->hasPhysics = false;
     collision->fixed = false;
     collision->parent = NULL;
-    collision->collisionCount = 0;
-    collision->collisionBufferSize = 0;
+    collision->collisionSize = 0;
+    collision->collisionMax = 0;
     collision->collisions = NULL;
 
     return collision;
@@ -24,13 +24,13 @@ TW_Collision* TW_Collision_Create( int x, int y, int w, int h )
 // Frees the resources used by a collision object.
 void TW_Collision_Free( TW_Collision* self )
 {
-    for( int index = 0; index < self->collisionBufferSize; index++ )
+    for( int index = 0; index < self->collisionMax; index++ )
     {
         self->collisions[ index ] = NULL;
     }
     free( self->collisions );
-    self->collisionBufferSize = 0;
-    self->collisionCount = 0;
+    self->collisionMax = 0;
+    self->collisionSize = 0;
     self->parent = NULL;
     self->fixed = false;
     self->hasPhysics = false;
@@ -127,7 +127,7 @@ void TW_Collision_Run( TW_Collision* self )
                     if( target != NULL )
                     {
                         bool alreadyObserved = false;
-                        for( int j = 0; j < target->collision->collisionCount; j++ )
+                        for( int j = 0; j < target->collision->collisionSize; j++ )
                         {
                             if( target->collision->collisions[ j ] == entity )
                             {
@@ -333,25 +333,25 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
 // Add a references to collision objects where a collision has been observed.
 void TW_Collision_AddCollisions( TW_Collision* self, TW_Entity* target )
 {
-    self->collisionCount += 1;
-    if( self->collisionCount > 0 )
+    self->collisionSize += 1;
+    if( self->collisionSize > 0 )
     {
-        if( self->collisionCount > self->collisionBufferSize )
+        if( self->collisionSize > self->collisionMax )
         {
+            self->collisionMax = self->collisionSize;
             if( self->collisions == NULL )
             {
-                self->collisionBufferSize = self->collisionCount;
-                self->collisions = malloc( self->collisionBufferSize * sizeof( TW_Entity* ) );
+                self->collisions = malloc( self->collisionMax * sizeof( TW_Entity* ) );
             }
             else
             {
                 TW_Entity** oldCollisions = self->collisions;
-                self->collisions = malloc( self->collisionBufferSize * sizeof( TW_Entity* ) );
-                memcpy( self->collisions, oldCollisions, ( self->collisionCount - 1 ) * sizeof( TW_Entity* ) );
+                self->collisions = malloc( self->collisionMax * sizeof( TW_Entity* ) );
+                memcpy( self->collisions, oldCollisions, ( self->collisionSize - 1 ) * sizeof( TW_Entity* ) );
                 free( oldCollisions );
             }
         }
-        self->collisions[ self->collisionCount - 1 ] = target;
+        self->collisions[ self->collisionSize - 1 ] = target;
     }
 }
 
@@ -361,10 +361,10 @@ void TW_Collision_ClearCollisions( TW_Collision* self )
 {
     if( self != NULL )
     {
-        for( int index = 0; index < self->collisionCount; index++ )
+        for( int index = 0; index < self->collisionSize; index++ )
         {
             self->collisions[ index ] = NULL;
         }
-        self->collisionCount = 0;
+        self->collisionSize = 0;
     }
 }

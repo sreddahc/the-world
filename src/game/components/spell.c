@@ -35,7 +35,7 @@ void TW_Spell_Think( TW_Entity* entity )
         {
             if( vCollision != NULL && sCollision != NULL )
             {
-                for( int index = 0; index < cCollision->collision->collisionCount; index++ )
+                for( int index = 0; index < cCollision->collision->collisionSize; index++ )
                 {
                     TW_Entity* targetEntity = cCollision->collision->collisions[ index ];
                     TW_Component* obstacle = NULL;
