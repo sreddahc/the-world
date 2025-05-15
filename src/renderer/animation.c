@@ -20,6 +20,7 @@ TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int animationSize, in
     animation->animationSpeed = 100;
     animation->timeSinceLastFrame = 0.0;
     animation->paused = false;
+    animation->loop = true;
     animation->hidden = false;
 
     // Checks
@@ -36,27 +37,9 @@ TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int animationSize, in
         }
     }
 
-    // animation->spriteSheet->parent = animation;
     animation->parent = NULL;
 
     return animation;
-}
-
-
-// Create an animation object from a sprite object
-void TW_Animation_Render( TW_Animation* self, TW_Transform* transform )
-{
-    self->spriteSheet->currentSprite = self->animationFrames[ self->currentFrame ];
-    TW_Sprite_Render( self->spriteSheet, transform );
-    if( self->paused == false )
-    {
-        self->timeSinceLastFrame = self->timeSinceLastFrame + TW_GameState_GetDeltaTime();
-        if( self->timeSinceLastFrame >= (float)self->animationSpeed / MILLISECONDS_IN_A_SEC )
-        {
-            self->timeSinceLastFrame = self->timeSinceLastFrame - (float)self->animationSpeed / MILLISECONDS_IN_A_SEC;
-            self->currentFrame = ( self->currentFrame + 1 ) % self->animationSize;
-        }
-    }
 }
 
 
@@ -64,6 +47,7 @@ void TW_Animation_Render( TW_Animation* self, TW_Transform* transform )
 void TW_Animation_Free( TW_Animation* self )
 {
     self->paused = false;
+    self->loop = false;
     self->hidden = false;
     self->animationSpeed = 0;
     self->currentFrame = 0;
@@ -75,4 +59,21 @@ void TW_Animation_Free( TW_Animation* self )
     self->animationSize = 0;
     TW_Sprite_Free( self->spriteSheet );
     free( self );
+}
+
+
+// Create an animation object from a sprite object
+void TW_Animation_Render( TW_Animation* self, TW_Transform* transform )
+{
+    self->spriteSheet->currentSprite = self->animationFrames[ self->currentFrame ];
+    TW_Sprite_Render( self->spriteSheet, transform );
+    if( !( self->paused == true || ( self->loop == false && self->currentFrame == self->animationSize - 1 ) ) )
+    {
+        self->timeSinceLastFrame = self->timeSinceLastFrame + TW_GameState_GetDeltaTime();
+        if( self->timeSinceLastFrame >= (float)self->animationSpeed / MILLISECONDS_IN_A_SEC )
+        {
+            self->timeSinceLastFrame = self->timeSinceLastFrame - (float)self->animationSpeed / MILLISECONDS_IN_A_SEC;
+            self->currentFrame = ( self->currentFrame + 1 ) % self->animationSize;
+        }
+    }
 }

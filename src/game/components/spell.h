@@ -15,6 +15,8 @@ typedef struct TW_Component TW_Component;
  */
 typedef struct TW_Spell {
     TW_Component* parent;
+    TW_Component* textureImpact;
+    TW_Component* textureShoot;
 } TW_Spell;
 
 

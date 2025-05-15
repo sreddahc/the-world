@@ -6,6 +6,8 @@ TW_Spell* TW_Spell_Create()
 {
     TW_Spell* spell = malloc( sizeof( TW_Spell ) );
     spell->parent = NULL;
+    spell->textureImpact = NULL;
+    spell->textureShoot = NULL;
     return spell;
 }
 
@@ -14,6 +16,8 @@ TW_Spell* TW_Spell_Create()
 void TW_Spell_Free( TW_Spell* self )
 {
     self->parent = NULL;
+    self->textureImpact = NULL;
+    self->textureShoot = NULL;
     free( self );
 }
 
@@ -39,13 +43,7 @@ void TW_Spell_Think( TW_Entity* entity )
                 {
                     if( aCollision != NULL )
                     {
-                        // aCollision->animation->hidden = true;
-                        // if( entity->parent != NULL )
-                        // {
-                        //     TW_Scene_RemoveEntity( entity->parent, entity );
-                        // }
-                        // TW_Spell_DestroySpell( entity );
-                        entity->destroy = true;
+                        TW_Spell_DestroySpell( entity );
                     }
                 }
             }
@@ -94,10 +92,5 @@ void TW_Spell_GenerateSpell( TW_Scene* scene, TW_Entity* caster )
 // Destroys a spell entity and removes it from the parent scene.
 void TW_Spell_DestroySpell( TW_Entity* self )
 {
-    if( self->parent != NULL )
-    {
-        TW_Scene_RemoveEntity( self->parent, self );
-    }
-    // This will cause a segfault atm... need to re-address how I delete objects from an ecs
-    TW_Entity_Free( self );
+    self->destroy = true;
 }

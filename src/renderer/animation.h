@@ -12,16 +12,18 @@ typedef struct TW_Component TW_Component;
 
 
 /**
- * TW_Animation - An animated texture.
+ * \brief An animated texture.
  * 
- * Elements:
- * - TW_Sprite*     - sprites               - A sprite sheet with all frames of the animation
- * - int            - frameCount            - Number of frames in the animation
- * - int*           - animationFrames       - The frames which form the animation
- * - int            - currentFrame          - Current frame of the animation
- * - int            - animationSpeed        - Animation speed in milliseconds. Default = 100
- * - float          - timeSinceLastUpdate   - Time since frame was last updated
- * - bool           - paused                - Pause animation? true = yes, false = no
+ * \param spriteSheet `TW_Sprite*` – The sprite object with all the texture information
+ * \param animationSize `int` – Number of frames in the animation
+ * \param animationFrames `int*` – Sprite frames that form part of the animation
+ * \param currentFrame `int` – The current frame of the animation
+ * \param animationSpeed `int` – Speed of the animation
+ * \param timeSinceLastFrame `float` – Time since frame was last updated
+ * \param paused `bool` – true = paused, false = unpaused
+ * \param loop `bool` – `true` if animation loops, otherwise `false`
+ * \param hidden `bool` – hide texture if `true`.
+ * \param parent `TW_Component*` – Parent component if it exists, otherwise `NULL`
  */
 typedef struct TW_Animation {
     TW_Sprite* spriteSheet;                 // The sprite object with all the texture information
@@ -31,6 +33,7 @@ typedef struct TW_Animation {
     int animationSpeed;                     // Speed of the animation
     float timeSinceLastFrame;               // Time since frame was last updated
     bool paused;                            // true = paused, false = unpaused
+    bool loop;                              // `true` if animation loops. default is `true`.
     bool hidden;                            // hide texture if `true`.
     TW_Component* parent;                   // Parent component if it exists, otherwise `NULL`
 } TW_Animation;
@@ -39,32 +42,29 @@ typedef struct TW_Animation {
 // Function definitions
 
 /**
- * TW_Animation_Create - Create an animation object from a sprite object
+ * \brief Create an animation object from a sprite object
  * 
- * Args:
- * - TW_Sprite*         - spriteSheet       - The sprite sheet with all possible animation frames
- * - int                - framecount        - Number of frames in the animation
- * - int*               - animationFrames   - An array of frames that form the animation
+ * \param spriteSheet `TW_Sprite*` – The sprite sheet with all possible animation frames
+ * \param framecount `int` – Number of frames in the animation
+ * \param animationFrames `int*` – An array of frames that form the animation
  * 
- * Returns:
- * - TW_Animation*      - Animation object
+ * \returns `TW_Animation*` – Animation object
  */
 TW_Animation* TW_Animation_Create( TW_Sprite* spriteSheet, int frameCount, int* animationFrames );
 
 
 /**
- * TW_Animation_Render - Renders current frame then increments to next frame if not paused
+ * \brief Frees resources used by a TW_Animation object.
  * 
- * Args:
- * - TW_Animation*      - The animation object to render
+ * \param self `TW_Animation*` – The TW_Animation object
  */
-void TW_Animation_Render( TW_Animation* self, TW_Transform* transform );
+void TW_Animation_Free( TW_Animation* self );
 
 
 /**
- * TW_Animation_Free - Frees resources used by a TW_Animation object.
+ * \brief Renders current frame then increments to next frame if not paused
  * 
- * Args:
- * - TW_Animation*      - self              - The TW_Animation object
+ * \param self `TW_Animation*` – The animation object to render
+ * \param transform `TW_Transform*` – Transform object for position, properties, etc...
  */
-void TW_Animation_Free( TW_Animation* self );
+void TW_Animation_Render( TW_Animation* self, TW_Transform* transform );
