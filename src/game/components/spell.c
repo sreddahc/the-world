@@ -40,11 +40,12 @@ void TW_Spell_Think( TW_Entity* entity )
                     if( aCollision != NULL )
                     {
                         // aCollision->animation->hidden = true;
-                        if( entity->parent != NULL )
-                        {
-                            TW_Scene_RemoveEntity( entity->parent, entity );
-                        }
+                        // if( entity->parent != NULL )
+                        // {
+                        //     TW_Scene_RemoveEntity( entity->parent, entity );
+                        // }
                         // TW_Spell_DestroySpell( entity );
+                        entity->destroy = true;
                     }
                 }
             }

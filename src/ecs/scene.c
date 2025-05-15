@@ -118,6 +118,17 @@ void TW_Scene_Clear( TW_Scene* self )
 {
     for( int index = 0; index < self->size; index++ )
     {
-        TW_Entity_Clear( self->entities[ index ] );
+        if( self->entities[ index ]->destroy == true )
+        {
+            // If Entity wants to be destroyed
+            TW_Entity* target = self->entities[ index ];
+            TW_Scene_RemoveEntity( self, target );
+            TW_Entity_Free( target );
+        }
+        else
+        {
+            // Otherwise clear it
+            TW_Entity_Clear( self->entities[ index ] );
+        }
     }
 }
