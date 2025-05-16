@@ -64,9 +64,9 @@ TW_Component* TW_Component_Create( int type, void* value ){
             component->player->parent = component;
             break;
 
-        case TW_C_SPELL:
-            component->spell = value;
-            component->spell->parent = component;
+        case TW_C_PROJECTILE:
+            component->projectile = value;
+            component->projectile->parent = component;
 
         default:
             break;
@@ -225,8 +225,8 @@ void TW_Component_Free( TW_Component* self )
             TW_Player_Free( self->player );
             break;
 
-        case TW_C_SPELL:
-            TW_Spell_Free( self->spell );
+        case TW_C_PROJECTILE:
+            TW_Projectile_Free( self->projectile );
 
         default:
             break;
