@@ -1,4 +1,5 @@
 #include "gamestate.h"
+#include "maths.h"
 
  
 static TW_GameState* gameState = NULL;
@@ -16,6 +17,23 @@ void TW_GameState_Create()
     gameState->frameCap = 0;
     gameState->ticksPerFrame = 0;
     gameState->paused = false;
+    // This needs to be changed
+    gameState->screenSize = TW_Vector2_Create( 1280, 768 );
+}
+
+
+// Free resources used by the game state.
+void TW_GameState_Free()
+{
+    gameState->frame = 0;
+    gameState->ms = 0;
+    gameState->previous = 0;
+    gameState->now = 0;
+    gameState->deltaTime = 0.0;
+    gameState->paused = false;
+    TW_Vector2_Free( gameState->screenSize );
+    gameState->screenSize = NULL;
+    free( gameState );
 }
 
 
@@ -104,14 +122,8 @@ void TW_GameState_Resume()
 }
 
 
-// Free resources used by the game state.
-void TW_GameState_Free()
+// Get Screen Size
+TW_Vector2* TW_GameState_GetScreenSize()
 {
-    gameState->frame = 0;
-    gameState->ms = 0;
-    gameState->previous = 0;
-    gameState->now = 0;
-    gameState->deltaTime = 0.0;
-    gameState->paused = false;
-    free( gameState );
+    return gameState->screenSize;
 }

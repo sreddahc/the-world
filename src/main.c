@@ -213,7 +213,7 @@ int main( int argc, char* args[] )
             // Run physics engine
             TW_Scene_RunPhysics( sceneMain );
 
-            // Run logic again ?!? (this should be fixed... might need to be done by adding listeners to the input handlers)
+            // Run logic engine
             TW_Scene_RunLogic( sceneMain );
 
             // Draw the scene
