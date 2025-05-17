@@ -10,25 +10,26 @@ typedef struct TW_Listener TW_Listener;
 
 
 /**
- * TW_L_MouseMove - Mouse-down listener object.
+ * \brief Mouse-down listener object.
  * 
- * Elements:
- * - bool               - eventExists           - `true` if listener object recorded events, `false` otherwise
+ * \param eventExists `bool` – `true` if listener recorded an event, `false` otherwise
+ * \param button `Uint8` – The button on the mosue to listen for
  */
 typedef struct TW_L_MouseDown {
     bool eventExists;
+    Uint8 button;
 } TW_L_MouseDown;
 
 
 // Function definitions
 
 /**
- * TW_L_MouseDown_Create - Creates a listener object that checks for mouse-down events.
+ * \brief Creates a listener that checks when a mouse button receives a mouse-down event.
  * 
  * Returns:
  * - TW_L_MouseDown*    - The mouse-down listener
  */
-TW_L_MouseDown* TW_L_MouseDown_Create();
+TW_L_MouseDown* TW_L_MouseDown_Create( Uint8 button );
 
 
 /**

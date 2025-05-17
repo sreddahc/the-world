@@ -26,64 +26,78 @@ void TW_Player_Think( TW_Entity* entity )
     if( entity != NULL )
     {
         // Components required for thinking
-        TW_Component* pPlayer = TW_Entity_GetComponent( entity, TW_C_PLAYER );
-        TW_Component* pTransform = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
-        TW_Component* pVelocity = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
+        TW_Component* cPlayer = TW_Entity_GetComponent( entity, TW_C_PLAYER );
+        TW_Component* cTransform = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
+        TW_Component* cVelocity = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
 
         // Input
-        if( pVelocity != NULL )
+        if( cVelocity != NULL )
         {
             if( TW_InputHandler_CheckKeyDown( SDLK_a ) )
             {
-                pVelocity->velocity->speed->x = -5;
-                pTransform->transform->flip = SDL_FLIP_HORIZONTAL;
+                cVelocity->velocity->speed->x = -5;
+                cTransform->transform->flip = SDL_FLIP_HORIZONTAL;
             }
 
             if( TW_InputHandler_CheckKeyDown( SDLK_d ) )
             {
-                pVelocity->velocity->speed->x = 5;
-                pTransform->transform->flip = SDL_FLIP_NONE;
+                cVelocity->velocity->speed->x = 5;
+                cTransform->transform->flip = SDL_FLIP_NONE;
             }
 
             if( TW_InputHandler_CheckKeyUp( SDLK_a ) || TW_InputHandler_CheckKeyUp( SDLK_d ) )
             {
-                pVelocity->velocity->speed->x = 0;
+                cVelocity->velocity->speed->x = 0;
             }
 
             if( TW_InputHandler_CheckKeyDown( SDLK_SPACE) )
             {
-                if( pPlayer->player->jumping == false && pPlayer->player->onGround == true )
+                if( cPlayer->player->jumping == false && cPlayer->player->onGround == true )
                 {
-                    pVelocity->velocity->speed->y = -8;
-                    pPlayer->player->jumping = true;
-                    pPlayer->player->onGround = false;
+                    cVelocity->velocity->speed->y = -8;
+                    cPlayer->player->jumping = true;
+                    cPlayer->player->onGround = false;
                 }
             }
 
             if( TW_InputHandler_CheckKeyUp( SDLK_LSHIFT ) )
             {
-                TW_Projectile_Generate( pPlayer->parent->parent, entity );
+                TW_Projectile_Generate( cPlayer->parent->parent, entity );
             }
 
-            // Texture
-            if( pPlayer->player->jumping )
+            // FOR TESTING ONLY →
+
+            if( TW_InputHandler_CheckMouseDown( 1 ) )
             {
-                pPlayer->player->textureWalking->animation->hidden = true;
-                pPlayer->player->textureIdle->sprite->hidden = false;
-                pPlayer->player->textureIdle->sprite->currentSprite = 0;
+                int x = 0;
+                int y = 0;
+                SDL_GetMouseState( &x, &y );
+                cTransform->transform->position->x = x;
+                cTransform->transform->position->y = y;
+                cVelocity->velocity->speed->y = 0;
+            }
+
+            // FOR TESTING ONLY ←
+
+            // Texture
+            if( cPlayer->player->jumping )
+            {
+                cPlayer->player->textureWalking->animation->hidden = true;
+                cPlayer->player->textureIdle->sprite->hidden = false;
+                cPlayer->player->textureIdle->sprite->currentSprite = 0;
             }
             else
             {
-                if( pVelocity->velocity->speed->x == 0 )
+                if( cVelocity->velocity->speed->x == 0 )
                 {
-                    pPlayer->player->textureWalking->animation->hidden = true;
-                    pPlayer->player->textureIdle->sprite->hidden = false;
-                    pPlayer->player->textureIdle->sprite->currentSprite = 1;
+                    cPlayer->player->textureWalking->animation->hidden = true;
+                    cPlayer->player->textureIdle->sprite->hidden = false;
+                    cPlayer->player->textureIdle->sprite->currentSprite = 1;
                 }
                 else
                 {
-                    pPlayer->player->textureWalking->animation->hidden = false;
-                    pPlayer->player->textureIdle->sprite->hidden = true;
+                    cPlayer->player->textureWalking->animation->hidden = false;
+                    cPlayer->player->textureIdle->sprite->hidden = true;
                 }
             }
         }

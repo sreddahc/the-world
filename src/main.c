@@ -127,7 +127,7 @@ int main( int argc, char* args[] )
         TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYUP, TW_L_KeyUp_Create( SDLK_d ) ) );
         TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYUP, TW_L_KeyUp_Create( SDLK_SPACE ) ) );
         TW_InputHandler_AddListener( TW_Listener_Add( TW_L_KEYUP, TW_L_KeyUp_Create( SDLK_LSHIFT ) ) );
-        TW_InputHandler_AddListener( TW_Listener_Add( TW_L_MOUSEDOWN, TW_L_MouseDown_Create() ) );
+        TW_InputHandler_AddListener( TW_Listener_Add( TW_L_MOUSEDOWN, TW_L_MouseDown_Create( 1 ) ) ); // Primary button
         TW_InputHandler_AddListener( TW_Listener_Add( TW_L_MOUSEMOVE, TW_L_MouseMove_Create() ) );
         TW_InputHandler_AddListener( TW_Listener_Add( TW_L_MOUSEUP, TW_L_MouseUp_Create() ) );
         TW_InputHandler_AddListener( TW_Listener_Add( TW_L_QUIT, TW_L_Quit_Create() ) );

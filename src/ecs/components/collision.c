@@ -126,6 +126,7 @@ void TW_Collision_Run( TW_Collision* self )
                     TW_Component* target = TW_Entity_GetComponent( scene->entities[ index ], TW_C_COLLISION );
                     if( target != NULL )
                     {
+                        // Check if collision has already been resolved.
                         bool alreadyObserved = false;
                         for( int j = 0; j < target->collision->collisionSize; j++ )
                         {
@@ -295,13 +296,18 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
 
                 // Player and Platform logic goes here... this needs to be its own component
                 TW_Component* cPlatform = TW_Entity_GetComponent( eFixed, TW_C_PLATFORM );
-                TW_Component* cPlayer= TW_Entity_GetComponent( eMove, TW_C_PLAYER );
+                TW_Component* cPlayer = TW_Entity_GetComponent( eMove, TW_C_PLAYER );
                 if( cPlatform != NULL && cPlayer != NULL )
                 {
                     if( collisionSide == TW_RELPOS_TOP )
                     {
                         cPlayer->player->onGround = true;
                         cPlayer->player->jumping = false;
+                        vMove->velocity->speed->y = 0;
+                    }
+                    if( collisionSide == TW_RELPOS_BOTTOM )
+                    {
+                        xDiff = 0;
                         vMove->velocity->speed->y = 0;
                     }
                     if( cPlayer->player->onGround == true )
@@ -320,10 +326,8 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                         yDiff = 0;
                     }
                 }
-                
                 tMove->transform->position->x += ( moveRelDirectionX * xDiff );
                 tMove->transform->position->y += ( moveRelDirectionY * yDiff );
-                // vMove->velocity->speed->y = 0;
             }
         }
     }
