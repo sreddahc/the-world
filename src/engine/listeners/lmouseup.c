@@ -1,11 +1,12 @@
 #include "../listener.h"
 
 
-// Creates a listener object that checks for mouse-up events.
-TW_L_MouseUp* TW_L_MouseUp_Create()
+// Creates a listener that checks mouse-up events for a button.
+TW_L_MouseUp* TW_L_MouseUp_Create( Uint8 button )
 {
     TW_L_MouseUp* listener = malloc( sizeof( TW_L_MouseUp ) );
     listener->eventExists = false;
+    listener->button = button;
     return listener;
 }
 
@@ -14,6 +15,7 @@ TW_L_MouseUp* TW_L_MouseUp_Create()
 void TW_L_MouseUp_Free( TW_L_MouseUp* self )
 {
     self->eventExists = false;
+    self->button = 0;
     free( self );
 }
 
@@ -23,7 +25,10 @@ void TW_L_MouseUp_Check( TW_L_MouseUp* self, SDL_Event event )
 {
     if( event.type == SDL_MOUSEBUTTONUP )
     {
-        self->eventExists = true;
+        if( event.button.button == self->button )
+        {
+            self->eventExists = true;
+        }
     }
 }
 

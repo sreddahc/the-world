@@ -1,7 +1,7 @@
 #include "../listener.h"
 
 
-// Creates a listener that checks when a mouse button receives a mouse-down event
+// Creates a listener that checks mouse-down events for a button.
 TW_L_MouseDown* TW_L_MouseDown_Create( Uint8 button )
 {
     TW_L_MouseDown* listener = malloc( sizeof( TW_L_MouseDown ) );
