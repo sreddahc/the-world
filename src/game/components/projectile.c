@@ -6,8 +6,8 @@ TW_Projectile* TW_Projectile_Create()
 {
     TW_Projectile* projectile = malloc( sizeof( TW_Projectile ) );
     projectile->parent = NULL;
-    projectile->textureImpact = NULL;
-    projectile->textureShoot = NULL;
+    projectile->textureDestroy = NULL;
+    projectile->textureProjectile = NULL;
     return projectile;
 }
 
@@ -16,8 +16,8 @@ TW_Projectile* TW_Projectile_Create()
 void TW_Projectile_Free( TW_Projectile* self )
 {
     self->parent = NULL;
-    self->textureImpact = NULL;
-    self->textureShoot = NULL;
+    self->textureDestroy = NULL;
+    self->textureProjectile = NULL;
     free( self );
 }
 
@@ -27,43 +27,40 @@ void TW_Projectile_Think( TW_Entity* entity )
     if( entity != NULL )
     {
         TW_Component* cCollision = TW_Entity_GetComponent( entity, TW_C_COLLISION );
-        TW_Component* vCollision = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
-        TW_Component* sCollision = TW_Entity_GetComponent( entity, TW_C_PROJECTILE );
+        TW_Component* cVelocity = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
+        TW_Component* cProjectile = TW_Entity_GetComponent( entity, TW_C_PROJECTILE );
 
-        // Projectile
-        if( cCollision != NULL )
+        // Shoot Projectile
+        if( cCollision != NULL && cVelocity != NULL && cProjectile != NULL )
         {
-            if( vCollision != NULL && sCollision != NULL )
+            for( int index = 0; index < cCollision->collision->collisionSize; index++ )
             {
-                for( int index = 0; index < cCollision->collision->collisionSize; index++ )
+                TW_Entity* targetEntity = cCollision->collision->collisions[ index ];
+                TW_Component* obstacle = NULL;
+                if( targetEntity != NULL )
                 {
-                    TW_Entity* targetEntity = cCollision->collision->collisions[ index ];
-                    TW_Component* obstacle = NULL;
-                    if( targetEntity != NULL )
-                    {
-                        obstacle = TW_Entity_GetComponent( targetEntity, TW_C_PLATFORM );
-                    }
-                    if( obstacle != NULL )
-                    {
-                        // Change from collision projectile to impact
-                        cCollision->destroy = true;
-                        vCollision->velocity->speed->x = 0;
-                        vCollision->velocity->speed->y = 0;
-                        vCollision->velocity->acceleration->x = 0;
-                        vCollision->velocity->acceleration->y = 0;
-                        sCollision->projectile->textureShoot->animation->hidden = true;
-                        sCollision->projectile->textureImpact->animation->hidden = false;
-                    }
+                    obstacle = TW_Entity_GetComponent( targetEntity, TW_C_PLATFORM );
+                }
+                if( obstacle != NULL )
+                {
+                    // Set projectile on path to destruction
+                    cCollision->destroy = true;
+                    cVelocity->velocity->speed->x = 0;
+                    cVelocity->velocity->speed->y = 0;
+                    cVelocity->velocity->acceleration->x = 0;
+                    cVelocity->velocity->acceleration->y = 0;
+                    cProjectile->projectile->textureProjectile->animation->hidden = true;
+                    cProjectile->projectile->textureDestroy->animation->hidden = false;
                 }
             }
         }
-        // Impact
+        // Destroy Projectile
         else
         {
             TW_Component* aCollision = TW_Entity_GetComponent( entity, TW_C_ANIMATION );
             if( aCollision != NULL )
             {
-                if( sCollision->projectile->textureImpact->animation->currentFrame == sCollision->projectile->textureImpact->animation->animationSize - 1 )
+                if( cProjectile->projectile->textureDestroy->animation->currentFrame == cProjectile->projectile->textureDestroy->animation->animationSize - 1 )
                 {
                     TW_Projectile_Destroy( entity );
                 }
@@ -90,7 +87,7 @@ void TW_Projectile_Generate( TW_Scene* scene, TW_Entity* caster )
         TW_Sprite* oShoot = TW_Sprite_Create( "src/assets/images/sprites/magic.png", 32, 32 );
         TW_Animation* aShoot = TW_Animation_Create( oShoot, 3, (int[]){ 0, 1, 2 } );
         TW_Component* cShoot = TW_Component_Create( TW_C_ANIMATION, aShoot );
-        oProjectile->textureShoot = cShoot;
+        oProjectile->textureProjectile = cShoot;
         TW_Entity_AddComponent( entity, cShoot );
 
         TW_Sprite* oImpact = TW_Sprite_Create( "src/assets/images/sprites/magic.png", 32, 32 );
@@ -98,7 +95,7 @@ void TW_Projectile_Generate( TW_Scene* scene, TW_Entity* caster )
         aImpact->loop = false;
         aImpact->hidden = true;
         TW_Component* cImpact = TW_Component_Create( TW_C_ANIMATION, aImpact );
-        oProjectile->textureImpact = cImpact;
+        oProjectile->textureDestroy = cImpact;
         TW_Entity_AddComponent( entity, cImpact );
 
         TW_Transform* oTransform = TW_Transform_Create( tCaster->transform->position->x, tCaster->transform->position->y, 0.0, 1.0 );

@@ -15,8 +15,8 @@ typedef struct TW_Component TW_Component;
  */
 typedef struct TW_Projectile {
     TW_Component* parent;
-    TW_Component* textureImpact;
-    TW_Component* textureShoot;
+    TW_Component* textureDestroy;
+    TW_Component* textureProjectile;
 } TW_Projectile;
 
 
