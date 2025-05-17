@@ -141,12 +141,17 @@ bool TW_InputHandler_CheckKeyUp( SDL_Keycode key )
 
 
 // Check if a mouse-down event was registered.
-bool TW_InputHandler_CheckMouseDown()
+bool TW_InputHandler_CheckMouseDown( Uint8 button )
 {
-    TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_MOUSEDOWN );
-    if( listener != NULL )
+    for( int index = 0; index < inputHandler->size; index++ )
     {
-        return listener->mouseDown->eventExists;
+        if( inputHandler->listeners[ index ]->type == TW_L_MOUSEDOWN )
+        {
+            if( inputHandler->listeners[ index ]->mouseDown->button == button )
+            {
+                return inputHandler->listeners[ index ]->mouseDown->eventExists;
+            }
+        }
     }
     return false;
 }
@@ -165,12 +170,17 @@ bool TW_InputHandler_CheckMouseMove()
 
 
 // Check if a mouse-up event was registered.
-bool TW_InputHandler_CheckMouseUp()
+bool TW_InputHandler_CheckMouseUp( Uint8 button )
 {
-    TW_Listener* listener = TW_InputHandler_GetListenerType( TW_L_MOUSEUP );
-    if( listener != NULL )
+    for(  int index = 0; index < inputHandler->size; index++ )
     {
-        return listener->mouseDown->eventExists;
+        if( inputHandler->listeners[ index ]->type == TW_L_MOUSEUP )
+        {
+            if( inputHandler->listeners[ index ]->mouseUp->button == button )
+            {
+                return inputHandler->listeners[ index ]->mouseUp->eventExists;
+            }
+        }
     }
     return false;
 }

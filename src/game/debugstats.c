@@ -11,14 +11,14 @@ static char deltaTimeStatus[50] = "Delta Time: 0.00000 ms";
 // The think function for the mouse debug component
 void TW_DebugStats_Mouse_Think( TW_Entity* entity )
 {
-    if( TW_InputHandler_CheckMouseMove() == true || TW_InputHandler_CheckMouseDown() || TW_InputHandler_CheckMouseUp() )
+    if( TW_InputHandler_CheckMouseMove() == true || TW_InputHandler_CheckMouseDown( 1 ) || TW_InputHandler_CheckMouseUp( 1 ) )
     {
         int x = 0;
         int y = 0;
         SDL_GetMouseState( &x, &y );
         snprintf( mouseStatus, 50, "Mouse Position: X=%d, Y=%d", x, y );
 
-        if( TW_InputHandler_CheckMouseDown() == true )
+        if( TW_InputHandler_CheckMouseDown( 1 ) == true )
         {
             strcat(mouseStatus, " - KEYDOWN");
         }

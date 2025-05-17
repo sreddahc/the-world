@@ -1,11 +1,12 @@
 #include "../listener.h"
 
 
-// Creates a listener object that checks for mouse-down events.
-TW_L_MouseDown* TW_L_MouseDown_Create()
+// Creates a listener that checks mouse-down events for a button.
+TW_L_MouseDown* TW_L_MouseDown_Create( Uint8 button )
 {
     TW_L_MouseDown* listener = malloc( sizeof( TW_L_MouseDown ) );
     listener->eventExists = false;
+    listener->button = button;
     return listener;
 }
 
@@ -14,6 +15,7 @@ TW_L_MouseDown* TW_L_MouseDown_Create()
 void TW_L_MouseDown_Free( TW_L_MouseDown* self )
 {
     self->eventExists = false;
+    self->button = 0;
     free( self );
 }
 
@@ -23,7 +25,10 @@ void TW_L_MouseDown_Check( TW_L_MouseDown* self, SDL_Event event )
 {
     if( event.type == SDL_MOUSEBUTTONDOWN )
     {
-        self->eventExists = true;
+        if( event.button.button == self->button )
+        {
+            self->eventExists = true;
+        }
     }
 }
 

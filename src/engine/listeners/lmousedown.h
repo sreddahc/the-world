@@ -10,50 +10,49 @@ typedef struct TW_Listener TW_Listener;
 
 
 /**
- * TW_L_MouseMove - Mouse-down listener object.
+ * \brief Mouse-down listener object.
  * 
- * Elements:
- * - bool               - eventExists           - `true` if listener object recorded events, `false` otherwise
+ * \param eventExists `bool` – `true` if listener recorded an event, `false` otherwise
+ * \param button `Uint8` – The button on the mosue to listen for
  */
 typedef struct TW_L_MouseDown {
     bool eventExists;
+    Uint8 button;
 } TW_L_MouseDown;
 
 
 // Function definitions
 
 /**
- * TW_L_MouseDown_Create - Creates a listener object that checks for mouse-down events.
+ * \brief Creates a listener that checks mouse-up events for a button.
  * 
- * Returns:
- * - TW_L_MouseDown*    - The mouse-down listener
+ * \param button `Uint8` – Check for mouse-down events on this button.
+ * 
+ * \returns `TW_L_MouseDown*` – The mouse-down listener
  */
-TW_L_MouseDown* TW_L_MouseDown_Create();
+TW_L_MouseDown* TW_L_MouseDown_Create( Uint8 button );
 
 
 /**
- * TW_L_MouseDown_Free - Frees the resources used by a mouse-down listener object.
+ * \brief Frees the resources used by a mouse-down listener object.
  * 
- * Args:
- * - TW_L_MouseDown*    - self              - The mouse-down listener to free
+ * \param self `TW_L_MouseDown*` – The mouse-down listener to free
  */
 void TW_L_MouseDown_Free( TW_L_MouseDown* self );
 
 
 /**
- * TW_L_MouseDown_Check - If a mouse-down event has been registered - update the listener object.
+ * \brief If a mouse-down event has been registered - update the listener object.
  * 
- * Args:
- * - TW_L_MouseDown*    - self              - The mouse-down listener object to check
- * - SDL_Event          - event             - The event to check against
+ * \param self `TW_L_MouseDown*` – The mouse-down listener object to check
+ * \param event `SDL_Event` – The event to check against
  */
 void TW_L_MouseDown_Check( TW_L_MouseDown* self, SDL_Event event );
 
 
 /**
- * TW_L_MouseDown_Clear - Clear the mouse-down listener object so no events are registered.
+ * \brief Clear the mouse-down listener object so no events are registered.
  * 
- * Args:
- * - TW_L_MouseDown*    - self              - The mouse-down listener to clear
+ * \param self `TW_L_MouseDown*` – The mouse-down listener to clear
  */
 void TW_L_MouseDown_Clear( TW_L_MouseDown* self );

@@ -111,12 +111,13 @@ bool TW_InputHandler_CheckKeyUp( SDL_Keycode key );
 
 
 /**
- * TW_InputHandler_CheckMouseDown - Check if a mouse-down event was registered.
+ * \brief Check if a mouse-down event was registered.
  * 
- * Returns:
- * - bool                   - `true` if mouse-down event was registered, `false` otherwise
+ * \param button `Uint8` - The button to check for
+ * 
+ * \returns `bool` –`true` if mouse-down event was registered, `false` otherwise
  */
-bool TW_InputHandler_CheckMouseDown();
+bool TW_InputHandler_CheckMouseDown( Uint8 button );
 
 
 /**
@@ -129,12 +130,13 @@ bool TW_InputHandler_CheckMouseMove();
 
 
 /**
- * TW_InputHandler_CheckMouseUp - Check if a mouse-up event was registered.
+ * \brief Check if a mouse-up event was registered.
  * 
- * Returns:
- * - bool                   - `true` if mouse-up event was registered, `false` otherwise
+ * \param button `Uint8` – The button to check for
+ * 
+ * \returns `bool` – `true` if mouse-up event was registered, `false` otherwise
  */
-bool TW_InputHandler_CheckMouseUp();
+bool TW_InputHandler_CheckMouseUp( Uint8 button );
 
 
 /**

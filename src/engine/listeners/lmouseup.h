@@ -10,50 +10,49 @@ typedef struct TW_Listener TW_Listener;
 
 
 /**
- * TW_L_MouseMove - Mouse-up listener object.
+ * \brief Mouse-up listener object.
  * 
- * Elements:
- * - bool               - eventExists           - `true` if listener object recorded events, `false` otherwise
+ * \param eventExists `bool` – `true` listener observes an event, otherwise `false`
+ * \param button `Uint8` – The button to listen for
  */
 typedef struct TW_L_MouseUp {
     bool eventExists;
+    Uint8 button;
 } TW_L_MouseUp;
 
 
 // Function definitions
 
 /**
- * TW_L_MouseUp_Create - Creates a listener object that checks for mouse-up events.
+ * \brief Creates a listener that checks mouse-up events for a button.
  * 
- * Returns:
- * - TW_L_MouseUp*    - The mouse-up listener
+ * \param button `Uint8` – The button to create a listener event for
+ * 
+ * \returns `TW_L_MouseUp*` – The mouse-up listener
  */
-TW_L_MouseUp* TW_L_MouseUp_Create();
+TW_L_MouseUp* TW_L_MouseUp_Create( Uint8 button );
 
 
 /**
- * TW_L_MouseUp_Free - Frees the resources used by a mouse-up listener object.
+ * \brief Frees the resources used by a mouse-up listener object.
  * 
- * Args:
- * - TW_L_MouseUp*    - self              - The mouse-up listener to free
+ * \param self `TW_L_MouseUp*` – The mouse-up listener to free
  */
 void TW_L_MouseUp_Free( TW_L_MouseUp* self );
 
 
 /**
- * TW_L_MouseUp_Check - If a mouse-up event has been registered - update the listener object.
+ * \brief If a mouse-up event has been registered - update the listener object.
  * 
- * Args:
- * - TW_L_MouseUp*    - self              - The mouse-up listener object to check
- * - SDL_Event          - event             - The event to check against
+ * \param self `TW_L_MouseUp*` – The mouse-up listener object to check
+ * \param event `SDL_Event` – The event to check against
  */
 void TW_L_MouseUp_Check( TW_L_MouseUp* self, SDL_Event event );
 
 
 /**
- * TW_L_MouseUp_Clear - Clear the mouse-up listener object so no events are registered.
+ * \brief Clear the mouse-up listener object so no events are registered.
  * 
- * Args:
- * - TW_L_MouseUp*    - self              - The mouse-up listener to clear
+ * \param self `TW_L_MouseUp*` – The mouse-up listener to clear
  */
 void TW_L_MouseUp_Clear( TW_L_MouseUp* self );
