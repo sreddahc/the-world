@@ -57,10 +57,31 @@ void TW_Projectile_Think( TW_Entity* entity )
         // Destroy Projectile
         else
         {
-            TW_Component* aCollision = TW_Entity_GetComponent( entity, TW_C_ANIMATION );
-            if( aCollision != NULL )
+            if( cProjectile->projectile->textureDestroy != NULL )
             {
                 if( cProjectile->projectile->textureDestroy->animation->currentFrame == cProjectile->projectile->textureDestroy->animation->animationSize - 1 )
+                {
+                    TW_Projectile_Destroy( entity );
+                }
+            }
+            else
+            {
+                TW_Projectile_Destroy( entity );
+            }
+        }
+        TW_Component* cTransform = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
+        if( cTransform != NULL )
+        {
+            TW_Vector2* screenSize = TW_GameState_GetScreenSize();
+            if ( screenSize != NULL )
+            {
+                if
+                (
+                    cTransform->transform->position->x < 0 ||
+                    cTransform->transform->position->x > screenSize->x ||
+                    cTransform->transform->position->y < 0 ||
+                    cTransform->transform->position->y > screenSize->y
+                )
                 {
                     TW_Projectile_Destroy( entity );
                 }

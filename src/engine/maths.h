@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdlib.h>
-
+#include <stdbool.h>
 
 // Type definitions
 
@@ -104,7 +104,6 @@ void TW_FVector2_Set( TW_FVector2* self, float x, float y );
 void TW_FVector2_Free( TW_FVector2* self );
 
 
-// Given 2 vectors, work out the mid point given a y or x value.
 /**
  * \brief Given 2 points, find another point along that line.
  * 
