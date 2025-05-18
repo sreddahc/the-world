@@ -70,3 +70,16 @@ int TW_Vector2_GetPoint( int x1, int y1, int x2, int y2, enum TW_Axis find, int 
         return (int)( (float)point * a + b );
     }
 }
+
+
+// int TW_Support( TW_Vector2* direction, TW_Vector2* vector );
+
+int TW_M_Max( int a, int b )
+{
+    return b > a ? b : a;
+}
+
+int TW_M_Min( int a, int b )
+{
+    return b > a ? b : a;
+}

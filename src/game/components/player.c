@@ -75,6 +75,7 @@ void TW_Player_Think( TW_Entity* entity )
                 cTransform->transform->position->x = x;
                 cTransform->transform->position->y = y;
                 cVelocity->velocity->speed->y = 0;
+                cPlayer->player->jumping = false;
             }
 
             // FOR TESTING ONLY ←

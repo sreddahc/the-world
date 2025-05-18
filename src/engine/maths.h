@@ -17,11 +17,11 @@ enum TW_Axis {
 /**
  * \brief A representation of position using flags.
  */
-enum TW_PositionFlags {
-    TW_RELPOS_TOP = 0x1,
-    TW_RELPOS_BOTTOM = 0x2,
-    TW_RELPOS_LEFT = 0x4,
-    TW_RELPOS_RIGHT = 0x8
+enum TW_Direction {
+    TW_DIR_UP = 0x1,
+    TW_DIR_DOWN = 0x2,
+    TW_DIR_LEFT = 0x4,
+    TW_DIR_RIGHT = 0x8
 };
 
 
@@ -117,3 +117,34 @@ void TW_FVector2_Free( TW_FVector2* self );
  * \returns `int` – Y if `point` is X or X if `point` is Y
  */
 int TW_Vector2_GetPoint( int x1, int y1, int x2, int y2, enum TW_Axis find, int point );
+
+
+// /**
+//  * \brief Find the point furtherest in a direction for a given vector.
+//  * 
+//  * Direction
+//  * Vector
+//  * 
+//  */
+// int TW_Support( TW_Vector2* direction, TW_Vector2* vector );
+
+/**
+ * \brief Given 2 integers, return the larger of the 2
+ * 
+ * \param a `int`
+ * \param b `int`
+ * 
+ * \returns `int` – The larger value between `a` and `b`. `a` if the same value.
+ */
+int TW_M_Max( int a, int b );
+
+
+/**
+ * \brief Given 2 integers, return the smaller of the 2
+ * 
+ * \param a `int`
+ * \param b `int`
+ * 
+ * \returns `int` – The smaller value between `a` and `b`. `a` if the same value.
+ */
+int TW_M_Min( int a, int b );
