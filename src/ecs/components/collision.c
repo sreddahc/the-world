@@ -302,23 +302,23 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                 int Ay = 0;
                 int Bx = 0;
                 int By = 0;
-                if( sideA == TW_DIR_RIGHT )
+                if( ( sideA & TW_DIR_RIGHT ) == TW_DIR_RIGHT )
                 {
                     Ax = cA->collision->oldPosition->x + cA->collision->position->x + cA->collision->size->x;
                     Bx = cB->collision->oldPosition->x + cB->collision->position->x;    // Inferred
                 }
-                else if ( sideA == TW_DIR_LEFT )
+                else if ( ( sideA & TW_DIR_LEFT ) == TW_DIR_LEFT )
                 {
                     Ax = cA->collision->oldPosition->x + cA->collision->position->x;
                     Bx = cB->collision->oldPosition->x + cB->collision->position->x + cB->collision->size->x; // Inferred
                 }
 
-                if( sideA == TW_DIR_DOWN )
+                if( ( sideA & TW_DIR_DOWN ) == TW_DIR_DOWN )
                 {
                     Ay = cA->collision->oldPosition->y + cA->collision->position->y + cA->collision->size->y;
                     By = cB->collision->oldPosition->y + cB->collision->position->y;    // Inferred
                 }
-                else if( sideA == TW_DIR_UP )
+                else if( ( sideA & TW_DIR_UP ) == TW_DIR_UP )
                 {
                     Ay = cA->collision->oldPosition->y + cA->collision->position->y;
                     By = cB->collision->oldPosition->y + cB->collision->position->y + cB->collision->size->y; // Inferred
@@ -360,6 +360,22 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                 }
 
                 // Establish exact side of collision for each of A and B
+                enum TW_Direction collisionSideA = sideA;
+                enum TW_Direction collisionSideB = sideB;
+                int inner1X = TW_M_Max( tA->transform->position->x + cA->collision->position->x, tB->transform->position->x + cB->collision->position->x );
+                int inner1Y = TW_M_Max( tA->transform->position->y + cA->collision->position->y, tB->transform->position->y + cB->collision->position->y );
+                int inner2X = TW_M_Min( tA->transform->position->x + cA->collision->position->x + cA->collision->size->x, tB->transform->position->x + cB->collision->position->x + cB->collision->size->x);
+                int inner2Y = TW_M_Min( tA->transform->position->y + cA->collision->position->y + cA->collision->size->y, tB->transform->position->y + cB->collision->position->y + cB->collision->size->y);
+                if( abs( inner2X - inner1X ) > abs( inner2Y - inner1Y ) )
+                {
+                    collisionSideA &= ( TW_DIR_UP | TW_DIR_DOWN );
+                    collisionSideB &= ( TW_DIR_UP | TW_DIR_DOWN );
+                }
+                else
+                {
+                    collisionSideA &= ( TW_DIR_LEFT | TW_DIR_RIGHT );
+                    collisionSideB &= ( TW_DIR_LEFT | TW_DIR_RIGHT );
+                }
 
                 // Calculate new position of each object at time
                 float moveAx = (float)tA->transform->position->x;
@@ -370,23 +386,13 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                 {
                     moveAx = (float)cA->collision->oldPosition->x + dirAx * time;
                     moveAy = (float)cA->collision->oldPosition->y + dirAy * time;
-                    // // if distance moved is negligible... ignore
-                    // if( fabsf( moveAx - (float)tA->transform->position->x ) < 1 )
-                    // {
-                    //     moveAx = (float)tA->transform->position->x;
-                    // }
-                    // if( fabsf( moveAy - (float)tA->transform->position->y ) < 1 )
-                    // {
-                    //     moveAy = (float)tA->transform->position->y;
-                    // }
 
                     // // Strip this logic out into a new step vvv
                     TW_Component* player = TW_Entity_GetComponent( eA, TW_C_PLAYER );
-                    if( player != NULL && sideA == TW_DIR_DOWN )
+                    if( ( player != NULL ) && ( collisionSideA == TW_DIR_DOWN ) )
                     {
                         player->player->jumping = false;
                         player->player->onGround = true;
-                        moveAx = (float)tA->transform->position->x + vA->velocity->acceleration->x;
                     }
                     // // Strip this logic out into a new step ^^^
                 }
@@ -394,22 +400,13 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                 {
                     moveBx = (float)cB->collision->oldPosition->x + dirBx * time;
                     moveBx = (float)cB->collision->oldPosition->y + dirBy * time;
-                    // if( fabsf( moveBx - (float)tB->transform->position->x ) < 1 )
-                    // {
-                    //     moveBx = (float)tB->transform->position->x;
-                    // }
-                    // if( fabsf( moveBy - (float)tB->transform->position->y ) < 1 )
-                    // {
-                    //     moveBy = (float)tB->transform->position->y;
-                    // }
 
                     // // Strip this logic out into a new step vvv
                     TW_Component* player = TW_Entity_GetComponent( eA, TW_C_PLAYER );
-                    if( player != NULL && sideB == TW_DIR_DOWN )
+                    if( ( player != NULL ) && ( collisionSideB == TW_DIR_DOWN ) )
                     {
                         player->player->jumping = false;
                         player->player->onGround = true;
-                        moveBx = (float)tB->transform->position->x + vB->velocity->acceleration->x;
                     }
                     // // Strip this logic out into a new step ^^^
                 }
