@@ -307,7 +307,7 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                     Ax = cA->collision->oldPosition->x + cA->collision->position->x + cA->collision->size->x;
                     Bx = cB->collision->oldPosition->x + cB->collision->position->x;    // Inferred
                 }
-                else
+                else if ( sideA == TW_DIR_LEFT )
                 {
                     Ax = cA->collision->oldPosition->x + cA->collision->position->x;
                     Bx = cB->collision->oldPosition->x + cB->collision->position->x + cB->collision->size->x; // Inferred
@@ -318,7 +318,7 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                     Ay = cA->collision->oldPosition->y + cA->collision->position->y + cA->collision->size->y;
                     By = cB->collision->oldPosition->y + cB->collision->position->y;    // Inferred
                 }
-                else
+                else if( sideA == TW_DIR_UP )
                 {
                     Ay = cA->collision->oldPosition->y + cA->collision->position->y;
                     By = cB->collision->oldPosition->y + cB->collision->position->y + cB->collision->size->y; // Inferred
@@ -359,17 +359,78 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                     }
                 }
 
-                // Calculate position of each object at time
+                // Establish exact side of collision for each of A and B
+
+                // Calculate new position of each object at time
+                float moveAx = (float)tA->transform->position->x;
+                float moveAy = (float)tA->transform->position->y;
+                float moveBx = (float)tB->transform->position->x;
+                float moveBy = (float)tB->transform->position->y;
                 if( cA->collision->fixed == false )
                 {
-                    tA->transform->position->x = cA->collision->oldPosition->x + dirAx * time;
-                    tA->transform->position->y = cA->collision->oldPosition->y + dirAy * time;
+                    moveAx = (float)cA->collision->oldPosition->x + dirAx * time;
+                    moveAy = (float)cA->collision->oldPosition->y + dirAy * time;
+                    // // if distance moved is negligible... ignore
+                    // if( fabsf( moveAx - (float)tA->transform->position->x ) < 1 )
+                    // {
+                    //     moveAx = (float)tA->transform->position->x;
+                    // }
+                    // if( fabsf( moveAy - (float)tA->transform->position->y ) < 1 )
+                    // {
+                    //     moveAy = (float)tA->transform->position->y;
+                    // }
+
+                    // // Strip this logic out into a new step vvv
+                    TW_Component* player = TW_Entity_GetComponent( eA, TW_C_PLAYER );
+                    if( player != NULL && sideA == TW_DIR_DOWN )
+                    {
+                        player->player->jumping = false;
+                        player->player->onGround = true;
+                        moveAx = (float)tA->transform->position->x + vA->velocity->acceleration->x;
+                    }
+                    // // Strip this logic out into a new step ^^^
                 }
                 if( cB->collision->fixed == false )
                 {
-                    tB->transform->position->x = cB->collision->oldPosition->x + dirBx * time;
-                    tB->transform->position->y = cB->collision->oldPosition->y + dirBy * time;
+                    moveBx = (float)cB->collision->oldPosition->x + dirBx * time;
+                    moveBx = (float)cB->collision->oldPosition->y + dirBy * time;
+                    // if( fabsf( moveBx - (float)tB->transform->position->x ) < 1 )
+                    // {
+                    //     moveBx = (float)tB->transform->position->x;
+                    // }
+                    // if( fabsf( moveBy - (float)tB->transform->position->y ) < 1 )
+                    // {
+                    //     moveBy = (float)tB->transform->position->y;
+                    // }
+
+                    // // Strip this logic out into a new step vvv
+                    TW_Component* player = TW_Entity_GetComponent( eA, TW_C_PLAYER );
+                    if( player != NULL && sideB == TW_DIR_DOWN )
+                    {
+                        player->player->jumping = false;
+                        player->player->onGround = true;
+                        moveBx = (float)tB->transform->position->x + vB->velocity->acceleration->x;
+                    }
+                    // // Strip this logic out into a new step ^^^
                 }
+
+                // Update positions
+                tA->transform->position->x = (int)moveAx;
+                tA->transform->position->y = (int)moveAy;
+                tB->transform->position->x = (int)moveBx;
+                tB->transform->position->y = (int)moveBy;
+
+                // Reset Gravity
+
+                if( ( sideA == TW_DIR_DOWN || TW_DIR_UP ) && cA->collision->fixed == false && vA != NULL )
+                {
+                    vA->velocity->speed->y = 0;
+                }
+                if( ( sideB == TW_DIR_DOWN || TW_DIR_UP ) && cB->collision->fixed == false && vB != NULL )
+                {
+                    vB->velocity->speed->y = 0;
+                }
+
             }
         }
     }
