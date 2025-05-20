@@ -114,15 +114,6 @@ void TW_Collision_ClearCollisions( TW_Collision* self );
 /**
  * \brief Attempt to resolve the physics of 2 entities which have physics.
  * 
- * \param entity1 (TW_Entity*) Collision is occurring between this entity and entity2
- * \param entity2 (TW_Entity*) Collision is occurring between this entity and entity1
- */
-void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 );
-
-
-/**
- * \brief Attempt to resolve the physics of 2 entities which have physics.
- * 
  * \param eA `TW_Entity*` – Entity A
  * \param eB `TW_Entity*` – Entity B
  */
