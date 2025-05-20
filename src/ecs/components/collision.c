@@ -188,16 +188,10 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                 float dirAy = 0.0;
                 float dirBx = 0.0;
                 float dirBy = 0.0;
-                // if( cA->collision->fixed == false )
-                // {
-                    (float)( dirAx = tA->transform->position->x - cA->collision->oldPosition->x );
-                    (float)( dirAy = tA->transform->position->y - cA->collision->oldPosition->y );
-                // }
-                // if( cB->collision->fixed == false )
-                // {
-                    (float)( dirBx = tB->transform->position->x - cB->collision->oldPosition->x );
-                    (float)( dirBy = tB->transform->position->y - cB->collision->oldPosition->y );
-                // }
+                dirAx = (float)( tA->transform->position->x - cA->collision->oldPosition->x );
+                dirAy = (float)( tA->transform->position->y - cA->collision->oldPosition->y );
+                dirBx = (float)( tB->transform->position->x - cB->collision->oldPosition->x );
+                dirBy = (float)( tB->transform->position->y - cB->collision->oldPosition->y );
 
                 // Determine side of collision
                 enum TW_Direction sideA = 0;
@@ -329,7 +323,7 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                 if( dirAx - dirBx != 0 )
                 {
                     float newTime = (float)( Bx - Ax ) / (float)( dirAx - dirBx );
-                    if( ( time == 0.0 || newTime < time ) && newTime > 0 )
+                    if( newTime > time )
                     {
                         time = newTime;
                     }
@@ -337,7 +331,7 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                 if( dirBx - dirAx != 0 )
                 {
                     float newTime = (float)( Ax - Bx ) / (float)( dirBx - dirAx );
-                    if( ( time == 0.0 || newTime < time ) && newTime > 0 )
+                    if( newTime > time )
                     {
                         time = newTime;
                     }
@@ -345,7 +339,7 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                 if( dirAy - dirBy != 0 )
                 {
                     float newTime = (float)( By - Ay ) / (float)( dirAy - dirBy );
-                    if( ( time == 0.0 || newTime < time ) && newTime > 0 )
+                    if( newTime > time )
                     {
                         time = newTime;
                     }
@@ -353,7 +347,7 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                 if( dirBy - dirAy != 0 )
                 {
                     float newTime = (float)( Ay - By ) / (float)( dirBy - dirAy );
-                    if( ( time == 0.0 || newTime < time ) && newTime > 0 )
+                    if( newTime > time )
                     {
                         time = newTime;
                     }
@@ -384,32 +378,28 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                 float moveBy = (float)tB->transform->position->y;
                 if( cA->collision->fixed == false )
                 {
-                    moveAx = (float)cA->collision->oldPosition->x + dirAx * time;
-                    moveAy = (float)cA->collision->oldPosition->y + dirAy * time;
-
-                    // // Strip this logic out into a new step vvv
-                    TW_Component* player = TW_Entity_GetComponent( eA, TW_C_PLAYER );
-                    if( ( player != NULL ) && ( collisionSideA == TW_DIR_DOWN ) )
+                    if( sideA & ( TW_DIR_LEFT | TW_DIR_RIGHT ) )
                     {
-                        player->player->jumping = false;
-                        player->player->onGround = true;
+                        moveAx = (float)cA->collision->oldPosition->x + dirAx * time;
                     }
-                    // // Strip this logic out into a new step ^^^
+                    if( sideA & ( TW_DIR_UP | TW_DIR_DOWN ) )
+                    {
+                        moveAy = (float)cA->collision->oldPosition->y + dirAy * time;
+                    }
                 }
                 if( cB->collision->fixed == false )
                 {
-                    moveBx = (float)cB->collision->oldPosition->x + dirBx * time;
-                    moveBx = (float)cB->collision->oldPosition->y + dirBy * time;
-
-                    // // Strip this logic out into a new step vvv
-                    TW_Component* player = TW_Entity_GetComponent( eA, TW_C_PLAYER );
-                    if( ( player != NULL ) && ( collisionSideB == TW_DIR_DOWN ) )
+                    if( sideB & ( TW_DIR_LEFT | TW_DIR_RIGHT ) )
                     {
-                        player->player->jumping = false;
-                        player->player->onGround = true;
+                        moveBx = (float)cB->collision->oldPosition->x + dirBx * time;
                     }
-                    // // Strip this logic out into a new step ^^^
+                    if( sideB & ( TW_DIR_UP | TW_DIR_DOWN ) )
+                    {
+                        moveBy = (float)cB->collision->oldPosition->y + dirBy * time;
+                    }
                 }
+
+                // Don't touch entities if distance is within an error...
 
                 // Update positions
                 tA->transform->position->x = (int)moveAx;
@@ -419,11 +409,11 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
 
                 // Reset Gravity
 
-                if( ( sideA == TW_DIR_DOWN || TW_DIR_UP ) && cA->collision->fixed == false && vA != NULL )
+                if( ( sideA & ( TW_DIR_DOWN | TW_DIR_UP ) ) && cA->collision->fixed == false && vA != NULL )
                 {
                     vA->velocity->speed->y = 0;
                 }
-                if( ( sideB == TW_DIR_DOWN || TW_DIR_UP ) && cB->collision->fixed == false && vB != NULL )
+                if( ( sideB & ( TW_DIR_DOWN | TW_DIR_UP ) ) && cB->collision->fixed == false && vB != NULL )
                 {
                     vB->velocity->speed->y = 0;
                 }

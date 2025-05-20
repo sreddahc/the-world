@@ -60,3 +60,13 @@ void TW_Player_Think( TW_Entity* entity );
  * \param y `int` – Position of the player entity on the y axis
  */
 void TW_Scene_GeneratePlayer( TW_Scene* target, int x, int y );
+
+
+/**
+ * \brief Check if player entity is on the ground
+ * 
+ * \param self `TW_Entity*` – The entity to check
+ * 
+ * \returns `bool` – `true` if entity on the ground. `false` otherwise
+ */
+bool TW_Player_OnGround( TW_Entity* self );
