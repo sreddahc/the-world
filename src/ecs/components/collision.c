@@ -399,7 +399,12 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                     }
                 }
 
-                // Don't touch entities if distance is within an error...
+                // // Don't touch entities if distance is within an error...
+                // TW_Collision* player = TW_Entity_GetComponent( eA, TW_C_PLAYER );
+                // if( player == NULL )
+                // {
+                //     player = TW_Entity_GetComponent( eB, TW_C_PLAYER );
+                // }
 
                 // Update positions
                 tA->transform->position->x = (int)moveAx;

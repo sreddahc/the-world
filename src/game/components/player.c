@@ -175,7 +175,7 @@ bool TW_Player_OnGround( TW_Entity* self )
         TW_Component* cPlayer = TW_Entity_GetComponent( self, TW_C_COLLISION );
         if( ( scene != NULL ) && ( pPlayer != NULL ) )
         {
-            // Move collision box down 1 pixel (temporarily)
+            // Temporarily move the collision box down 1 pixel
             cPlayer->collision->position->y += 1;
             for( int index = 0; index < scene->size; index++ )
             {
@@ -199,6 +199,7 @@ bool TW_Player_OnGround( TW_Entity* self )
                     }
                 }
             }
+            // Return collision box back to original location.
             cPlayer->collision->position->y -= 1;
         }
     }
