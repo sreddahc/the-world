@@ -399,17 +399,13 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                     }
                 }
 
-                // Don't touch entities if distance is within an error...
-                // << more logic to go here >>
-
                 // Update positions
                 tA->transform->position->x = (int)moveAx;
                 tA->transform->position->y = (int)moveAy;
                 tB->transform->position->x = (int)moveBx;
                 tB->transform->position->y = (int)moveBy;
 
-                // Reset Gravity
-
+                // Reset gravity
                 if( ( sideA & ( TW_DIR_DOWN | TW_DIR_UP ) ) && cA->collision->fixed == false && vA != NULL )
                 {
                     vA->velocity->speed->y = 0;
@@ -417,6 +413,16 @@ void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
                 if( ( sideB & ( TW_DIR_DOWN | TW_DIR_UP ) ) && cB->collision->fixed == false && vB != NULL )
                 {
                     vB->velocity->speed->y = 0;
+                }
+                
+                // Reset horizontal speed if a wall is hit
+                if( ( sideA & ( TW_DIR_LEFT | TW_DIR_RIGHT ) ) && cA->collision->fixed == false && vA != NULL && !( sideA & TW_DIR_DOWN ) )
+                {
+                    vA->velocity->speed->x = 0;
+                }
+                if( ( sideB & ( TW_DIR_LEFT | TW_DIR_RIGHT ) ) && cB->collision->fixed == false && vB != NULL && !( sideB & TW_DIR_DOWN ) )
+                {
+                    vB->velocity->speed->x = 0;
                 }
 
             }

@@ -37,6 +37,10 @@ void TW_Player_Think( TW_Entity* entity )
             cPlayer->player->jumping = false;
             cPlayer->player->onGround = true;
         }
+        else
+        {
+            cPlayer->player->onGround = false;
+        }
 
         // Input
         if( cVelocity != NULL )
@@ -172,9 +176,8 @@ bool TW_Player_OnGround( TW_Entity* self )
     if( self != NULL )
     {
         TW_Scene* scene = self->parent;
-        TW_Component* pPlayer = TW_Entity_GetComponent( self, TW_C_PLAYER );
         TW_Component* cPlayer = TW_Entity_GetComponent( self, TW_C_COLLISION );
-        if( ( scene != NULL ) && ( pPlayer != NULL ) )
+        if( scene != NULL )
         {
             // Temporarily move the collision box down 1 pixel
             cPlayer->collision->position->y += 1;
