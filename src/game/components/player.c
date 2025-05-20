@@ -65,6 +65,7 @@ void TW_Player_Think( TW_Entity* entity )
                     cVelocity->velocity->speed->y = -8;
                     cPlayer->player->jumping = true;
                     cPlayer->player->onGround = false;
+                    cTransform->transform->position->y -= 1;
                 }
             }
 
