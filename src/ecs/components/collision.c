@@ -135,15 +135,15 @@ void TW_Collision_Run( TW_Collision* self )
                                 alreadyObserved = true;
                             }
                         }
-                        // If it has not, add collision reference to both entities.
+                        // If not, add collision references for both collision components.
                         if( alreadyObserved == false )
                         {
-                            // Add collision references to both entities
                             TW_Collision_AddCollisions( self, scene->entities[ index ] );
                             TW_Collision_AddCollisions( target->collision, entity );
 
-                            // Apply physics to both entities
-                            TW_Collision_Physics( entity, scene->entities[ index ] );
+                            // Attempt to resolve physics for both components
+                            TW_Collision_Resolve( entity, scene->entities[ index ] );
+                            // TW_Collision_Physics( entity, scene->entities[ index ] );
                         }
                     }
                 }
@@ -155,6 +155,277 @@ void TW_Collision_Run( TW_Collision* self )
         {
             collision->collision->oldPosition->x = transform->transform->position->x;
             collision->collision->oldPosition->y = transform->transform->position->y;
+        }
+    }
+}
+
+
+// NOTE: This function replaces TW_Collisions_Physics()
+// Attempt to resolve the physics of 2 entities which have physics.
+void TW_Collision_Resolve( TW_Entity* eA, TW_Entity* eB )
+{
+    // Get required components
+    TW_Component* cA = TW_Entity_GetComponent( eA, TW_C_COLLISION );
+    TW_Component* tA = TW_Entity_GetComponent( eA, TW_C_TRANSFORM );
+    TW_Component* cB = TW_Entity_GetComponent( eB, TW_C_COLLISION );
+    TW_Component* tB = TW_Entity_GetComponent( eB, TW_C_TRANSFORM );
+
+    // Ensure all required components exist
+    if( cA != NULL && tA != NULL && cB != NULL && tB != NULL )
+    {
+        // Get required components
+        TW_Component* vA = TW_Entity_GetComponent( eA, TW_C_VELOCITY );
+        TW_Component* vB = TW_Entity_GetComponent( eB, TW_C_VELOCITY );
+
+        // Both entities must have physics
+        if( ( cA->collision->hasPhysics == true ) && ( cB->collision->hasPhysics == true ) )
+        {
+            // At least one entity must have velocity and not be fixed
+            if( ( vA != NULL && cA->collision->fixed == false ) || ( vB != NULL && cB->collision->fixed == false ) )
+            {
+                // Calculate the direction for each entity
+                float dirAx = 0.0;
+                float dirAy = 0.0;
+                float dirBx = 0.0;
+                float dirBy = 0.0;
+                dirAx = (float)( tA->transform->position->x - cA->collision->oldPosition->x );
+                dirAy = (float)( tA->transform->position->y - cA->collision->oldPosition->y );
+                dirBx = (float)( tB->transform->position->x - cB->collision->oldPosition->x );
+                dirBy = (float)( tB->transform->position->y - cB->collision->oldPosition->y );
+
+                // Determine side of collision
+                enum TW_Direction sideA = 0;
+                enum TW_Direction sideB = 0;
+
+                // X Axis
+                if( dirAx != 0 || dirBx != 0 )
+                {
+                    // Both entities are moving left (one may be static)
+                    if( dirAx <= 0 && dirBx <= 0 )
+                    {
+                        if( dirAx < dirBx ) // <B <<A or B <<A
+                        {
+                            sideA |= TW_DIR_LEFT;
+                            sideB |= TW_DIR_RIGHT;
+                        }
+                        else // <A <<B or A <<B
+                        {
+                            sideA |= TW_DIR_RIGHT;
+                            sideB |= TW_DIR_LEFT;
+                        }
+                    }
+                    // Both entities are moving right (one may be static)
+                    else if( dirAx >= 0 && dirBx >= 0 )
+                    {
+                        if( dirAx > dirBx ) // A>> B> or A>> B
+                        {
+                            sideA |= TW_DIR_RIGHT;
+                            sideB |= TW_DIR_LEFT;
+                        }
+                        else // B>> A> or B>> A
+                        {
+                            sideA |= TW_DIR_LEFT;
+                            sideB |= TW_DIR_RIGHT;
+                        }
+                    }
+                    // Entities are moving towards each other
+                    else
+                    {
+                        if( dirAx < 0 ) // B> <A
+                        {
+                            sideA |= TW_DIR_LEFT;
+                            sideB |= TW_DIR_RIGHT;
+                        }
+                        else // A> <B
+                        {
+                            sideA |= TW_DIR_RIGHT;
+                            sideB |= TW_DIR_LEFT;
+                        }
+                    }
+                }
+
+                // Y Axis
+                if( dirAy != 0 || dirBy != 0 )
+                {
+                    // Both entities are moving up (one may be static)
+                    if( dirAy <= 0 && dirBy <= 0 )
+                    {
+                        if( dirAy < dirBy ) //  ^B
+                        {                   // ^^A
+                            sideA |= TW_DIR_UP;
+                            sideB |= TW_DIR_DOWN;
+                        }
+                        else    //  ^A
+                        {       // ^^B
+                            sideA |= TW_DIR_DOWN;
+                            sideB |= TW_DIR_UP;
+                        }
+                    }
+                    // Both entities are moving down (one may be static)
+                    else if( dirAy >= 0 && dirBy >= 0 )
+                    {
+                        if( dirAy > dirBy ) // vvA
+                        {                   // vB
+                            sideA |= TW_DIR_DOWN;
+                            sideB |= TW_DIR_UP;
+                        }
+                        else    // vvB
+                        {       //  vA
+                            sideA |= TW_DIR_UP;
+                            sideB |= TW_DIR_DOWN;
+                        }
+                    }
+                    // Both entities are moving towards each other
+                    else
+                    {
+                        if( dirAy < 0 ) // vB
+                        {               // ^A
+                            sideA |= TW_DIR_UP;
+                            sideB |= TW_DIR_DOWN;
+                        }
+                        else            // vA
+                        {               // ^B
+                            sideA |= TW_DIR_DOWN;
+                            sideB |= TW_DIR_UP;
+                        }
+                    }
+                }
+
+                // Points of the sides of collision
+                int Ax = 0;
+                int Ay = 0;
+                int Bx = 0;
+                int By = 0;
+                if( ( sideA & TW_DIR_RIGHT ) == TW_DIR_RIGHT )
+                {
+                    Ax = cA->collision->oldPosition->x + cA->collision->position->x + cA->collision->size->x;
+                    Bx = cB->collision->oldPosition->x + cB->collision->position->x;    // Inferred
+                }
+                else if ( ( sideA & TW_DIR_LEFT ) == TW_DIR_LEFT )
+                {
+                    Ax = cA->collision->oldPosition->x + cA->collision->position->x;
+                    Bx = cB->collision->oldPosition->x + cB->collision->position->x + cB->collision->size->x; // Inferred
+                }
+
+                if( ( sideA & TW_DIR_DOWN ) == TW_DIR_DOWN )
+                {
+                    Ay = cA->collision->oldPosition->y + cA->collision->position->y + cA->collision->size->y;
+                    By = cB->collision->oldPosition->y + cB->collision->position->y;    // Inferred
+                }
+                else if( ( sideA & TW_DIR_UP ) == TW_DIR_UP )
+                {
+                    Ay = cA->collision->oldPosition->y + cA->collision->position->y;
+                    By = cB->collision->oldPosition->y + cB->collision->position->y + cB->collision->size->y; // Inferred
+                }
+
+                // Time of collision
+                float time = 0.0;
+                if( dirAx - dirBx != 0 )
+                {
+                    float newTime = (float)( Bx - Ax ) / (float)( dirAx - dirBx );
+                    if( newTime > time )
+                    {
+                        time = newTime;
+                    }
+                }
+                if( dirBx - dirAx != 0 )
+                {
+                    float newTime = (float)( Ax - Bx ) / (float)( dirBx - dirAx );
+                    if( newTime > time )
+                    {
+                        time = newTime;
+                    }
+                }
+                if( dirAy - dirBy != 0 )
+                {
+                    float newTime = (float)( By - Ay ) / (float)( dirAy - dirBy );
+                    if( newTime > time )
+                    {
+                        time = newTime;
+                    }
+                }
+                if( dirBy - dirAy != 0 )
+                {
+                    float newTime = (float)( Ay - By ) / (float)( dirBy - dirAy );
+                    if( newTime > time )
+                    {
+                        time = newTime;
+                    }
+                }
+
+                // Establish exact side of collision for each of A and B
+                enum TW_Direction collisionSideA = sideA;
+                enum TW_Direction collisionSideB = sideB;
+                int inner1X = TW_M_Max( tA->transform->position->x + cA->collision->position->x, tB->transform->position->x + cB->collision->position->x );
+                int inner1Y = TW_M_Max( tA->transform->position->y + cA->collision->position->y, tB->transform->position->y + cB->collision->position->y );
+                int inner2X = TW_M_Min( tA->transform->position->x + cA->collision->position->x + cA->collision->size->x, tB->transform->position->x + cB->collision->position->x + cB->collision->size->x);
+                int inner2Y = TW_M_Min( tA->transform->position->y + cA->collision->position->y + cA->collision->size->y, tB->transform->position->y + cB->collision->position->y + cB->collision->size->y);
+                if( abs( inner2X - inner1X ) > abs( inner2Y - inner1Y ) )
+                {
+                    collisionSideA &= ( TW_DIR_UP | TW_DIR_DOWN );
+                    collisionSideB &= ( TW_DIR_UP | TW_DIR_DOWN );
+                }
+                else
+                {
+                    collisionSideA &= ( TW_DIR_LEFT | TW_DIR_RIGHT );
+                    collisionSideB &= ( TW_DIR_LEFT | TW_DIR_RIGHT );
+                }
+
+                // Calculate new position of each object at time
+                float moveAx = (float)tA->transform->position->x;
+                float moveAy = (float)tA->transform->position->y;
+                float moveBx = (float)tB->transform->position->x;
+                float moveBy = (float)tB->transform->position->y;
+                if( cA->collision->fixed == false )
+                {
+                    if( sideA & ( TW_DIR_LEFT | TW_DIR_RIGHT ) )
+                    {
+                        moveAx = (float)cA->collision->oldPosition->x + dirAx * time;
+                    }
+                    if( sideA & ( TW_DIR_UP | TW_DIR_DOWN ) )
+                    {
+                        moveAy = (float)cA->collision->oldPosition->y + dirAy * time;
+                    }
+                }
+                if( cB->collision->fixed == false )
+                {
+                    if( sideB & ( TW_DIR_LEFT | TW_DIR_RIGHT ) )
+                    {
+                        moveBx = (float)cB->collision->oldPosition->x + dirBx * time;
+                    }
+                    if( sideB & ( TW_DIR_UP | TW_DIR_DOWN ) )
+                    {
+                        moveBy = (float)cB->collision->oldPosition->y + dirBy * time;
+                    }
+                }
+
+                // Update positions
+                tA->transform->position->x = (int)moveAx;
+                tA->transform->position->y = (int)moveAy;
+                tB->transform->position->x = (int)moveBx;
+                tB->transform->position->y = (int)moveBy;
+
+                // Reset gravity
+                if( ( sideA & ( TW_DIR_DOWN | TW_DIR_UP ) ) && cA->collision->fixed == false && vA != NULL )
+                {
+                    vA->velocity->speed->y = 0;
+                }
+                if( ( sideB & ( TW_DIR_DOWN | TW_DIR_UP ) ) && cB->collision->fixed == false && vB != NULL )
+                {
+                    vB->velocity->speed->y = 0;
+                }
+                
+                // Reset horizontal speed if a wall is hit
+                if( ( sideA & ( TW_DIR_LEFT | TW_DIR_RIGHT ) ) && cA->collision->fixed == false && vA != NULL && !( sideA & TW_DIR_DOWN ) )
+                {
+                    vA->velocity->speed->x = 0;
+                }
+                if( ( sideB & ( TW_DIR_LEFT | TW_DIR_RIGHT ) ) && cB->collision->fixed == false && vB != NULL && !( sideB & TW_DIR_DOWN ) )
+                {
+                    vB->velocity->speed->x = 0;
+                }
+
+            }
         }
     }
 }
@@ -213,7 +484,7 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                 float moveOldCentreY = (float)cMove->collision->oldPosition->y + (float)cMove->collision->position->y + ( (float)cMove->collision->size->y / 2 );
 
                 // Establish move entities position relative to fixed entity
-                enum TW_PositionFlags collisionSide = 0;
+                enum TW_Direction collisionSide = 0;
                 int moveRelDirectionX = 1;
                 int moveRelDirectionY = 1;
                 
@@ -225,25 +496,25 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
 
                 if( moveOldCentreX <= fixedCentreX )
                 {
-                    collisionSide |= TW_RELPOS_LEFT;
+                    collisionSide |= TW_DIR_LEFT;
                     moveRelDirectionX = -1;
                     innerX2 = tMove->transform->position->x + cMove->collision->position->x + cMove->collision->size->x;
                 }
                 else
                 {
-                    collisionSide |= TW_RELPOS_RIGHT;
+                    collisionSide |= TW_DIR_RIGHT;
                     innerX1 = tMove->transform->position->x + cMove->collision->position->x;
                 }
                 
                 if( moveOldCentreY <= fixedCentreY )
                 {
-                    collisionSide |= TW_RELPOS_TOP;
+                    collisionSide |= TW_DIR_UP;
                     moveRelDirectionY = -1;
                     innerY2 = tMove->transform->position->y + cMove->collision->position->y + cMove->collision->size->y;
                 }
                 else
                 {
-                    collisionSide |= TW_RELPOS_BOTTOM;
+                    collisionSide |= TW_DIR_DOWN;
                     innerY1 = tMove->transform->position->y + cMove->collision->position->y;
                 }
                 
@@ -253,7 +524,7 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                 if( innerX2 - innerX1 >= innerY2 - innerY1 )
                 {
                     // kick in Y direction
-                    collisionSide &= TW_RELPOS_TOP | TW_RELPOS_BOTTOM;
+                    collisionSide &= TW_DIR_UP | TW_DIR_DOWN;
                     yDiff = innerY2 - innerY1;
                     int offsetX = TW_Vector2_GetPoint(
                         moveOldCentreX,
@@ -274,7 +545,7 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                 }
                 else
                 {
-                    collisionSide &= TW_RELPOS_LEFT | TW_RELPOS_RIGHT;
+                    collisionSide &= TW_DIR_LEFT | TW_DIR_RIGHT;
                     xDiff = innerX2 - innerX1;
                     int offsetY = TW_Vector2_GetPoint(
                         moveOldCentreX,
@@ -299,13 +570,13 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                 TW_Component* cPlayer = TW_Entity_GetComponent( eMove, TW_C_PLAYER );
                 if( cPlatform != NULL && cPlayer != NULL )
                 {
-                    if( collisionSide == TW_RELPOS_TOP )
+                    if( collisionSide == TW_DIR_UP )
                     {
                         cPlayer->player->onGround = true;
                         cPlayer->player->jumping = false;
                         vMove->velocity->speed->y = 0;
                     }
-                    if( collisionSide == TW_RELPOS_BOTTOM )
+                    if( collisionSide == TW_DIR_DOWN )
                     {
                         xDiff = 0;
                         vMove->velocity->speed->y = 0;
@@ -315,12 +586,12 @@ void TW_Collision_Physics( TW_Entity* entity1, TW_Entity* entity2 )
                         xDiff = 0;
                         yDiff = ( tMove->transform->position->y + cMove->collision->position->y + cMove->collision->size->y ) - ( tFixed->transform->position->y + cFixed->collision->position->y );
                     }
-                    if( collisionSide == TW_RELPOS_LEFT ) 
+                    if( collisionSide == TW_DIR_LEFT ) 
                     {
                         xDiff = ( tMove->transform->position->x + cMove->collision->position->x + cMove->collision->size->x ) - ( tFixed->transform->position->x + cFixed->collision->position->x );
                         yDiff = 0;
                     }
-                    if( collisionSide == TW_RELPOS_RIGHT ) 
+                    if( collisionSide == TW_DIR_RIGHT ) 
                     {
                         xDiff = ( tFixed->transform->position->x + cFixed->collision->position->x + cFixed->collision->size->x ) - ( tMove->transform->position->x + cMove->collision->position->x );
                         yDiff = 0;

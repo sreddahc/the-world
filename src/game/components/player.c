@@ -30,6 +30,18 @@ void TW_Player_Think( TW_Entity* entity )
         TW_Component* cTransform = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
         TW_Component* cVelocity = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
 
+        // Is player on the ground?
+        if( TW_Player_OnGround( entity ) == true )
+        {
+            cVelocity->velocity->speed->y = 0;
+            cPlayer->player->jumping = false;
+            cPlayer->player->onGround = true;
+        }
+        else
+        {
+            cPlayer->player->onGround = false;
+        }
+
         // Input
         if( cVelocity != NULL )
         {
@@ -52,11 +64,12 @@ void TW_Player_Think( TW_Entity* entity )
 
             if( TW_InputHandler_CheckKeyDown( SDLK_SPACE) )
             {
-                if( cPlayer->player->jumping == false && cPlayer->player->onGround == true )
+                if( ( cPlayer->player->jumping == false ) && ( cPlayer->player->onGround == true ) )
                 {
                     cVelocity->velocity->speed->y = -8;
                     cPlayer->player->jumping = true;
                     cPlayer->player->onGround = false;
+                    cTransform->transform->position->y -= 1;
                 }
             }
 
@@ -75,6 +88,7 @@ void TW_Player_Think( TW_Entity* entity )
                 cTransform->transform->position->x = x;
                 cTransform->transform->position->y = y;
                 cVelocity->velocity->speed->y = 0;
+                cPlayer->player->jumping = false;
             }
 
             // FOR TESTING ONLY ←
@@ -152,4 +166,47 @@ void TW_Scene_GeneratePlayer( TW_Scene* target, int x, int y )
     TW_Entity_AddComponent( playerEntity, cPlayerThink );
 
     TW_Scene_AddEntity( target, playerEntity );
+}
+
+
+// Check if player entity is on the ground
+bool TW_Player_OnGround( TW_Entity* self )
+{
+    bool onGround = false;
+    if( self != NULL )
+    {
+        TW_Scene* scene = self->parent;
+        TW_Component* cPlayer = TW_Entity_GetComponent( self, TW_C_COLLISION );
+        if( scene != NULL )
+        {
+            // Temporarily move the collision box down 1 pixel
+            cPlayer->collision->position->y += 1;
+            for( int index = 0; index < scene->size; index++ )
+            {
+                if( scene->entities[ index ] != self )
+                {
+                    if( scene->entities[ index ]->destroy == false )
+                    {
+                        TW_Component* pTarget = TW_Entity_GetComponent( scene->entities[ index ], TW_C_PLATFORM );
+                        if( pTarget != NULL )
+                        {
+                            TW_Component* cTarget = TW_Entity_GetComponent( scene->entities[ index ], TW_C_COLLISION );
+                            if( cTarget != NULL )
+                            {
+                                if( TW_Collision_Check( self, scene->entities[ index ] ) == true )
+                                {
+                                    onGround = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // Return collision box back to original location.
+            cPlayer->collision->position->y -= 1;
+        }
+    }
+
+    return onGround;
 }
