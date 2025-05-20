@@ -69,4 +69,4 @@ void TW_Scene_GeneratePlayer( TW_Scene* target, int x, int y );
  * 
  * \returns `bool` – `true` if entity on the ground. `false` otherwise
  */
-bool TW_Player_OnGround( TW_Entity* self );
+bool TW_Player_OnGroundCheck( TW_Entity* self );

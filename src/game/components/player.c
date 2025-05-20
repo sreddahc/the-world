@@ -26,56 +26,76 @@ void TW_Player_Think( TW_Entity* entity )
     if( entity != NULL )
     {
         // Components required for thinking
-        TW_Component* cPlayer = TW_Entity_GetComponent( entity, TW_C_PLAYER );
-        TW_Component* cTransform = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
-        TW_Component* cVelocity = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
+        TW_Component* pPlayer = TW_Entity_GetComponent( entity, TW_C_PLAYER );
+        TW_Component* tPlayer = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
+        TW_Component* vPlayer = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
+        TW_Component* cPlayer = TW_Entity_GetComponent( entity, TW_C_COLLISION );
 
         // Is player on the ground?
-        if( TW_Player_OnGround( entity ) == true )
+        if( TW_Player_OnGroundCheck( entity ) == true )
         {
-            cVelocity->velocity->speed->y = 0;
-            cPlayer->player->jumping = false;
-            cPlayer->player->onGround = true;
+            vPlayer->velocity->speed->y = 0;
+            pPlayer->player->jumping = false;
+            pPlayer->player->onGround = true;
         }
         else
         {
-            cPlayer->player->onGround = false;
+            pPlayer->player->onGround = false;
+        }
+
+        // Is player outside of the world?
+        // NOTE: This probably deserves its own function.
+        if( tPlayer != NULL && cPlayer != NULL )
+        {
+            TW_Vector2* screenSize = TW_GameState_GetScreenSize();
+            if( screenSize != NULL )
+            {
+                if(
+                    ( tPlayer->transform->position->x + cPlayer->collision->position->x + cPlayer->collision->size->x < 0 ) ||
+                    ( tPlayer->transform->position->y + cPlayer->collision->position->y + cPlayer->collision->size->y < 0 ) ||
+                    ( tPlayer->transform->position->x + cPlayer->collision->position->x > screenSize->x ) ||
+                    ( tPlayer->transform->position->y + cPlayer->collision->position->y > screenSize->y )
+                )
+                {
+                    TW_Transform_SetPosition( tPlayer->transform, 35, 210 );
+                }
+            }
         }
 
         // Input
-        if( cVelocity != NULL )
+        if( vPlayer != NULL )
         {
             if( TW_InputHandler_CheckKeyDown( SDLK_a ) )
             {
-                cVelocity->velocity->speed->x = -5;
-                cTransform->transform->flip = SDL_FLIP_HORIZONTAL;
+                vPlayer->velocity->speed->x = -5;
+                tPlayer->transform->flip = SDL_FLIP_HORIZONTAL;
             }
 
             if( TW_InputHandler_CheckKeyDown( SDLK_d ) )
             {
-                cVelocity->velocity->speed->x = 5;
-                cTransform->transform->flip = SDL_FLIP_NONE;
+                vPlayer->velocity->speed->x = 5;
+                tPlayer->transform->flip = SDL_FLIP_NONE;
             }
 
             if( TW_InputHandler_CheckKeyUp( SDLK_a ) || TW_InputHandler_CheckKeyUp( SDLK_d ) )
             {
-                cVelocity->velocity->speed->x = 0;
+                vPlayer->velocity->speed->x = 0;
             }
 
             if( TW_InputHandler_CheckKeyDown( SDLK_SPACE) )
             {
-                if( ( cPlayer->player->jumping == false ) && ( cPlayer->player->onGround == true ) )
+                if( ( pPlayer->player->jumping == false ) && ( pPlayer->player->onGround == true ) )
                 {
-                    cVelocity->velocity->speed->y = -8;
-                    cPlayer->player->jumping = true;
-                    cPlayer->player->onGround = false;
-                    cTransform->transform->position->y -= 1;
+                    vPlayer->velocity->speed->y = -8;
+                    pPlayer->player->jumping = true;
+                    pPlayer->player->onGround = false;
+                    tPlayer->transform->position->y -= 1;
                 }
             }
 
             if( TW_InputHandler_CheckKeyUp( SDLK_LSHIFT ) )
             {
-                TW_Projectile_Generate( cPlayer->parent->parent, entity );
+                TW_Projectile_Generate( pPlayer->parent->parent, entity );
             }
 
             // FOR TESTING ONLY →
@@ -85,33 +105,33 @@ void TW_Player_Think( TW_Entity* entity )
                 int x = 0;
                 int y = 0;
                 SDL_GetMouseState( &x, &y );
-                cTransform->transform->position->x = x;
-                cTransform->transform->position->y = y;
-                cVelocity->velocity->speed->y = 0;
-                cPlayer->player->jumping = false;
+                tPlayer->transform->position->x = x;
+                tPlayer->transform->position->y = y;
+                vPlayer->velocity->speed->y = 0;
+                pPlayer->player->jumping = false;
             }
 
             // FOR TESTING ONLY ←
 
             // Texture
-            if( cPlayer->player->jumping )
+            if( pPlayer->player->jumping )
             {
-                cPlayer->player->textureWalking->animation->hidden = true;
-                cPlayer->player->textureIdle->sprite->hidden = false;
-                cPlayer->player->textureIdle->sprite->currentSprite = 0;
+                pPlayer->player->textureWalking->animation->hidden = true;
+                pPlayer->player->textureIdle->sprite->hidden = false;
+                pPlayer->player->textureIdle->sprite->currentSprite = 0;
             }
             else
             {
-                if( cVelocity->velocity->speed->x == 0 )
+                if( vPlayer->velocity->speed->x == 0 )
                 {
-                    cPlayer->player->textureWalking->animation->hidden = true;
-                    cPlayer->player->textureIdle->sprite->hidden = false;
-                    cPlayer->player->textureIdle->sprite->currentSprite = 1;
+                    pPlayer->player->textureWalking->animation->hidden = true;
+                    pPlayer->player->textureIdle->sprite->hidden = false;
+                    pPlayer->player->textureIdle->sprite->currentSprite = 1;
                 }
                 else
                 {
-                    cPlayer->player->textureWalking->animation->hidden = false;
-                    cPlayer->player->textureIdle->sprite->hidden = true;
+                    pPlayer->player->textureWalking->animation->hidden = false;
+                    pPlayer->player->textureIdle->sprite->hidden = true;
                 }
             }
         }
@@ -170,7 +190,7 @@ void TW_Scene_GeneratePlayer( TW_Scene* target, int x, int y )
 
 
 // Check if player entity is on the ground
-bool TW_Player_OnGround( TW_Entity* self )
+bool TW_Player_OnGroundCheck( TW_Entity* self )
 {
     bool onGround = false;
     if( self != NULL )
