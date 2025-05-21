@@ -27,6 +27,7 @@ typedef struct TW_Text {
     SDL_Color fontColour;           // Colour of the font. Default = Black
     TTF_Font* fontObject;           // The TTF_Font object required to render the texture
     TW_Texture* texture;            // The TW_Texture. Rendered text is stored here
+    bool hidden;                    // If `true` don't render this texture.
     TW_Component* parent;           // Parent component if it exists, otherwise `NULL`
 } TW_Text;
 
