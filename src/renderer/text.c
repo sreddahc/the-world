@@ -73,6 +73,7 @@ TW_Text* TW_Text_Create( char* textValue, char* fontName, int fontSize, TW_Colou
 
     TW_Text_Update( textObject );
 
+    textObject->hidden = false;
     textObject->parent = NULL;
 
     return textObject;
@@ -97,6 +98,7 @@ void TW_Text_Free( TW_Text* self )
     self->fontColour.g = 0;
     self->fontColour.b = 0;
     self->fontSize = 0;
+    self->hidden = false;
     TW_Texture_Free( self->texture );
     free( self );
 }

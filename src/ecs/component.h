@@ -8,6 +8,7 @@
 #include "../renderer/text.h"
 #include "../renderer/sprite.h"
 #include "../renderer/animation.h"
+#include "../game/components/fountain.h"
 #include "../game/components/platform.h"
 #include "../game/components/player.h"
 #include "../game/components/projectile.h"
@@ -34,6 +35,7 @@ enum TW_ComponentType {
     TW_C_THINK,
     TW_C_VELOCITY,
     // Game components
+    TW_C_FOUNTAIN,
     TW_C_PLATFORM,
     TW_C_PLAYER,
     TW_C_PROJECTILE,
@@ -67,6 +69,7 @@ typedef struct TW_Component {
         TW_Transform* transform;
         TW_Velocity* velocity;
         // Game components
+        TW_Fountain* fountain;
         TW_Platform* platform;
         TW_Player* player;
         TW_Projectile* projectile;

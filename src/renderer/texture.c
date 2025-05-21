@@ -38,6 +38,7 @@ void TW_Colour_Free( TW_Colour* self )
 TW_Texture* TW_Texture_CreateTexture()
 {
     TW_Texture* texture = malloc( sizeof( TW_Texture ) );
+    texture->hidden = false;
     texture->parent = NULL;
     
     return texture;
@@ -139,6 +140,7 @@ void TW_Texture_Free( TW_Texture* self )
     {
         SDL_DestroyTexture(self->texture);
         self->texture = NULL;
+        self->hidden = false;
         self->parent = NULL;
     }
     self->width = 0;

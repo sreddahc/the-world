@@ -53,7 +53,11 @@ TW_Component* TW_Component_Create( int type, void* value ){
             break;
         
         // Game components
-        
+        case TW_C_FOUNTAIN:
+            component->fountain = value;
+            component->fountain->parent = component;
+            break;
+
         case TW_C_PLATFORM:
             component->platform = value;
             component->platform->parent = component;
@@ -98,7 +102,10 @@ void TW_Component_Render( TW_Component* self, TW_Transform* transform )
                 break;
 
             case TW_C_TEXT:
-                TW_Text_Render( self->text, transform );
+                if( self->text->hidden == false )
+                {
+                    TW_Text_Render( self->text, transform );
+                }
                 break;
 
             case TW_C_SPRITE:
@@ -217,6 +224,10 @@ void TW_Component_Free( TW_Component* self )
             break;
 
         // Game components
+        case TW_C_FOUNTAIN:
+            TW_Fountain_Free( self->fountain );
+            break;
+
         case TW_C_PLATFORM:
             TW_Platform_Free( self->platform );
             break;
