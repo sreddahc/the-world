@@ -62,26 +62,33 @@ void TW_Fountain_Generate( TW_Scene* target, enum TW_PowerType type, int x, int 
 
     // Full
     TW_Sprite* spriteFull = TW_Sprite_Create( "src/assets/images/sprites/fountain.png", 32, 32 );
-    int animationFrames[2] = { 0 , 0 };
+    int animationFrames[6] = { 0, 0, 0, 0, 0, 0 };
     switch (type)
     {
         case TW_PWR_MOON:
-            animationFrames[0] = 1;
+            animationFrames[0] = 2;
             animationFrames[1] = 2;
+            animationFrames[2] = 2;
+            animationFrames[3] = 2;
+            animationFrames[4] = 2;
+            animationFrames[5] = 1;
             break;
 
         case TW_PWR_SUN:
             animationFrames[0] = 3;
-            animationFrames[1] = 4;
+            animationFrames[1] = 3;
+            animationFrames[2] = 3;
+            animationFrames[3] = 3;
+            animationFrames[4] = 3;
+            animationFrames[5] = 4;
             break;
 
         default:
             break;
     }
-    TW_Animation* animationFull = TW_Animation_Create( spriteFull, 2, animationFrames );
+    TW_Animation* animationFull = TW_Animation_Create( spriteFull, 6, animationFrames );
     TW_Component* cFull = TW_Component_Create( TW_C_ANIMATION, animationFull );
     TW_Entity_AddComponent( entity, cFull );
-    animationFull->animationSpeed = 120;
     animationFull->hidden = fountain->empty;
 
     TW_Transform* transform = TW_Transform_Create( x, y + 8 , 0.0, 1.0 );
