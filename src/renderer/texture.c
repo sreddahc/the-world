@@ -1,4 +1,6 @@
 #include "texture.h"
+#include "../engine/camera.h"
+#include "../engine/maths.h"
 
 
 // Create a colour object given a red, green and blue value
@@ -39,6 +41,7 @@ TW_Texture* TW_Texture_CreateTexture()
 {
     TW_Texture* texture = malloc( sizeof( TW_Texture ) );
     texture->hidden = false;
+    texture->overlay = false;
     texture->parent = NULL;
     
     return texture;
@@ -111,9 +114,17 @@ void TW_Texture_Render( TW_Texture* self, TW_Transform* transform )
         offset->y = transform->centre->y;
     }
 
+    int cameraOffsetX = 0;
+    int cameraOffsetY = 0;
+    if( self->overlay == false )
+    {
+        cameraOffsetX = TW_Camera_GetOffset( TW_AXIS_X );
+        cameraOffsetY = TW_Camera_GetOffset( TW_AXIS_Y );
+    }
+
     SDL_Rect renderZone = {
-        position->x - offset->x,
-        position->y - offset->y,
+        position->x - offset->x - cameraOffsetX,
+        position->y - offset->y - cameraOffsetY,
         (int)((double)self->crop.w * scale),
         (int)((double)self->crop.h * scale)
     };
@@ -141,6 +152,7 @@ void TW_Texture_Free( TW_Texture* self )
         SDL_DestroyTexture(self->texture);
         self->texture = NULL;
         self->hidden = false;
+        self->overlay = false;
         self->parent = NULL;
     }
     self->width = 0;

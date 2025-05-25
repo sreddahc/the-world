@@ -1,4 +1,5 @@
 #include "gamestate.h"
+#include "level.h"
 #include "maths.h"
 
  
@@ -18,7 +19,8 @@ void TW_GameState_Create()
     gameState->ticksPerFrame = 0;
     gameState->paused = false;
     // This needs to be changed
-    gameState->screenSize = TW_Vector2_Create( 1280, 768 );
+    gameState->screenSize = TW_Vector2_Create( 600, 480 );
+    gameState->level = NULL;
 }
 
 
@@ -33,6 +35,7 @@ void TW_GameState_Free()
     gameState->paused = false;
     TW_Vector2_Free( gameState->screenSize );
     gameState->screenSize = NULL;
+    gameState->level = NULL;
     free( gameState );
 }
 
@@ -122,8 +125,21 @@ void TW_GameState_Resume()
 }
 
 
-// Get Screen Size
+// Get the current screen size.
 TW_Vector2* TW_GameState_GetScreenSize()
 {
     return gameState->screenSize;
+}
+
+
+// Set the current level.
+void TW_GameState_SetLevel( TW_Level* level )
+{
+    gameState->level = level;
+}
+
+// Get the current level.
+TW_Level* TW_GameState_GetLevel()
+{
+    return gameState->level;
 }

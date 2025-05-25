@@ -1,13 +1,17 @@
 #include "renderer/renderer.h"
 #include "engine/timer.h"
+#include "engine/camera.h"
+#include "engine/level.h"
 #include "game/components/player.h"
 #include "game/components/platform.h"
 #include "game/debugstats.h"
 
 // Global variables
 // Screen dimensions
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 768;
+const int SCREEN_WIDTH = 600;
+const int SCREEN_HEIGHT = 480;
+const int LEVEL_WIDTH = 36 * 35;    // NEEDS TO BE UPDATED
+const int LEVEL_HEIGHT = 22 * 35;   // NEEDS TO BE UPDATED
 const int SCREEN_FPS = 60;
 
 // Key press surface constants
@@ -81,6 +85,7 @@ bool init()
                 // Initialise the game timer
                 TW_GameState_Create();
                 TW_GameState_SetFrameLimit( SCREEN_FPS );
+                TW_Camera_Create( NULL, SCREEN_WIDTH, SCREEN_HEIGHT );
 
                 // Initialse input handler
                 TW_InputHandler_Create();
@@ -137,20 +142,22 @@ int main( int argc, char* args[] )
 
         // Background
         TW_Texture* gBackground = TW_Texture_CreateTexture();
-        TW_Texture_LoadImage( gBackground, "src/assets/images/backgrounds/day.png" );
+        TW_Texture_LoadImage( gBackground, "src/assets/images/backgrounds/night.png" );
         TW_Entity* entityBackground = TW_Entity_Create();
         TW_Entity_AddComponent( entityBackground, TW_Component_Create( TW_C_TEXTURE, gBackground ) );
         TW_Scene_AddEntity( sceneMain, entityBackground );
 
         // Title Entity
         TW_Text* gTitle = TW_Text_Create( "PROBS A JANK GAME", NULL, 32, TW_Colour_Create( 0x80, 0x00, 0x80, 0xff ) );
+        gTitle->texture->overlay = true;
         TW_Entity* entityTitle = TW_Entity_Create();
         TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_C_TEXT, gTitle ) );
         TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_C_TRANSFORM, TW_Transform_Create( SCREEN_WIDTH / 2, 30, 0.0, 1.0 ) ) );
         TW_Vector2_Set(TW_Entity_GetComponent( entityTitle, TW_C_TRANSFORM )->transform->centre, gTitle->texture->width / 2, gTitle->texture->height / 2 );
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
-        // Platform Entities
+        TW_Level* currentLevel = TW_Level_Create( sceneMain, LEVEL_WIDTH, LEVEL_HEIGHT );
+        TW_GameState_SetLevel( currentLevel );
 
         int tempLevel[22][36] = {
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -213,6 +220,16 @@ int main( int argc, char* args[] )
                 }
             }
         }
+        // Set target of camera to player
+        for( int index = 0; index < sceneMain->size; index++ )
+        {
+            TW_Component* pPlayer = TW_Entity_GetComponent( sceneMain->entities[ index ], TW_C_PLAYER );
+            if( pPlayer != NULL )
+            {
+                TW_Camera_SetTarget( sceneMain->entities[ index ] );
+                break;
+            }
+        }
 
         // Debug Status
         TW_DebugStats_Create( sceneMain );
@@ -230,17 +247,22 @@ int main( int argc, char* args[] )
                 quit = true;
             }
 
-            // Run physics engine
-            TW_Scene_RunPhysics( sceneMain );
+            TW_Scene* currentScene = TW_Level_GetScene( TW_GameState_GetLevel() );
+            if( currentScene != NULL )
+            {
+                // Run physics engine
+                TW_Scene_RunPhysics( currentScene );
 
-            // Run logic engine
-            TW_Scene_RunLogic( sceneMain );
+                // Run logic engine
+                TW_Scene_RunLogic( currentScene );
 
-            // Draw the scene
-            TW_Scene_Render( sceneMain );
+                // Draw the scene
+                TW_Scene_Render( currentScene );
 
-            // Update screen, clear listeners and limit frame rate (if required).
-            TW_Scene_Clear( sceneMain );
+                // Update screen, clear listeners and limit frame rate (if required).
+                TW_Scene_Clear( currentScene );
+            }
+
             SDL_RenderPresent( TW_GetRenderer() );
             TW_InputHandler_ClearListeners();
             TW_GameState_LimitFrameRate();
