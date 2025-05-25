@@ -246,17 +246,22 @@ int main( int argc, char* args[] )
                 quit = true;
             }
 
-            // Run physics engine
-            TW_Scene_RunPhysics( sceneMain );
+            TW_Scene* currentScene = TW_Level_GetScene( TW_GameState_GetLevel() );
+            if( currentScene != NULL )
+            {
+                // Run physics engine
+                TW_Scene_RunPhysics( currentScene );
 
-            // Run logic engine
-            TW_Scene_RunLogic( sceneMain );
+                // Run logic engine
+                TW_Scene_RunLogic( currentScene );
 
-            // Draw the scene
-            TW_Scene_Render( sceneMain );
+                // Draw the scene
+                TW_Scene_Render( currentScene );
 
-            // Update screen, clear listeners and limit frame rate (if required).
-            TW_Scene_Clear( sceneMain );
+                // Update screen, clear listeners and limit frame rate (if required).
+                TW_Scene_Clear( currentScene );
+            }
+
             SDL_RenderPresent( TW_GetRenderer() );
             TW_InputHandler_ClearListeners();
             TW_GameState_LimitFrameRate();

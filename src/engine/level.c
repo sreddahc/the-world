@@ -38,5 +38,9 @@ void TW_Level_SetScene( TW_Level* self, TW_Scene* scene )
 // Return the scene associated with a level.
 TW_Scene* TW_Level_GetScene( TW_Level* self )
 {
-    return self->scene;
+    if( self != NULL )
+    {
+        return self->scene;
+    }
+    return NULL;
 }
