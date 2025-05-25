@@ -149,6 +149,7 @@ int main( int argc, char* args[] )
 
         // Title Entity
         TW_Text* gTitle = TW_Text_Create( "PROBS A JANK GAME", NULL, 32, TW_Colour_Create( 0x80, 0x00, 0x80, 0xff ) );
+        gTitle->texture->overlay = true;
         TW_Entity* entityTitle = TW_Entity_Create();
         TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_C_TEXT, gTitle ) );
         TW_Entity_AddComponent( entityTitle, TW_Component_Create( TW_C_TRANSFORM, TW_Transform_Create( SCREEN_WIDTH / 2, 30, 0.0, 1.0 ) ) );

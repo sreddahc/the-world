@@ -42,6 +42,7 @@ typedef struct TW_Texture {
     int width;                  // Width of the texture
     int height;                 // Height of the texture
     SDL_Rect crop;              // Crop image to SDL_Rect
+    bool overlay;               // Is the texture an overlay? `true` if so, `false` otherwise
     bool hidden;                // If `true` don't render this texture.
     TW_Component* parent;       // Parent component if it exists, otherwise `NULL`
 } TW_Texture;

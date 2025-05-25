@@ -87,6 +87,7 @@ void TW_DebugStats_Create( TW_Scene* self )
     TW_Entity* entityMouse = TW_Entity_Create();
     TW_Scene_AddEntity( self, entityMouse );
     TW_Text* textMouse = TW_Text_Create( mouseStatus, NULL, 0, NULL );
+    textMouse->texture->overlay = true;
     TW_Component* cTextMouse = TW_Component_Create( TW_C_TEXT, textMouse );
     TW_Entity_AddComponent( entityMouse, cTextMouse );
     TW_Transform* transformMouse = TW_Transform_Create( 5, 5, 0.0, 1.0 );
@@ -100,6 +101,7 @@ void TW_DebugStats_Create( TW_Scene* self )
     TW_Entity* entityTime = TW_Entity_Create();
     TW_Scene_AddEntity( self, entityTime );
     TW_Text* textTime = TW_Text_Create( timerStatus, NULL, 0, NULL );
+    textTime->texture->overlay = true;
     TW_Component* cTextTime = TW_Component_Create( TW_C_TEXT, textTime );
     TW_Entity_AddComponent( entityTime, cTextTime );
     TW_Transform* transformTime = TW_Transform_Create( 5, 25, 0.0, 1.0 );
@@ -113,6 +115,7 @@ void TW_DebugStats_Create( TW_Scene* self )
     TW_Entity* entityFPS = TW_Entity_Create();
     TW_Scene_AddEntity( self, entityFPS );
     TW_Text* textFPS = TW_Text_Create( fpsStatus, NULL, 0, NULL );
+    textFPS->texture->overlay = true;
     TW_Component* cTextFPS = TW_Component_Create( TW_C_TEXT, textFPS );
     TW_Entity_AddComponent( entityFPS, cTextFPS );
     TW_Transform* transformFPS = TW_Transform_Create( 5, 45, 0.0, 1.0 );
@@ -127,6 +130,7 @@ void TW_DebugStats_Create( TW_Scene* self )
     TW_Entity* entityDeltaTime = TW_Entity_Create();
     TW_Scene_AddEntity( self, entityDeltaTime );
     TW_Text* textDeltaTime = TW_Text_Create( deltaTimeStatus, NULL, 0, NULL );
+    textDeltaTime->texture->overlay = true;
     TW_Component* cTextDeltaTime = TW_Component_Create( TW_C_TEXT, textDeltaTime );
     TW_Entity_AddComponent( entityDeltaTime, cTextDeltaTime );
     TW_Transform* transformDeltaTime = TW_Transform_Create( 5, 65, 0.0, 1.0 );
