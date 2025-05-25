@@ -1,4 +1,6 @@
 #include "texture.h"
+#include "../engine/camera.h"
+#include "../engine/maths.h"
 
 
 // Create a colour object given a red, green and blue value
@@ -112,8 +114,8 @@ void TW_Texture_Render( TW_Texture* self, TW_Transform* transform )
     }
 
     SDL_Rect renderZone = {
-        position->x - offset->x,
-        position->y - offset->y,
+        position->x - offset->x - TW_Camera_GetOffset( TW_AXIS_X ),
+        position->y - offset->y - TW_Camera_GetOffset( TW_AXIS_Y ),
         (int)((double)self->crop.w * scale),
         (int)((double)self->crop.h * scale)
     };

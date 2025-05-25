@@ -18,7 +18,7 @@ void TW_GameState_Create()
     gameState->ticksPerFrame = 0;
     gameState->paused = false;
     // This needs to be changed
-    gameState->screenSize = TW_Vector2_Create( 1280, 768 );
+    gameState->screenSize = TW_Vector2_Create( 600, 480 );
 }
 
 

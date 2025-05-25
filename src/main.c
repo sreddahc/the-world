@@ -1,13 +1,14 @@
 #include "renderer/renderer.h"
 #include "engine/timer.h"
+#include "engine/camera.h"
 #include "game/components/player.h"
 #include "game/components/platform.h"
 #include "game/debugstats.h"
 
 // Global variables
 // Screen dimensions
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 768;
+const int SCREEN_WIDTH = 600;
+const int SCREEN_HEIGHT = 480;
 const int LEVEL_WIDTH = 1280;
 const int LEVEL_HEIGHT = 768;
 const int SCREEN_FPS = 60;
@@ -83,6 +84,7 @@ bool init()
                 // Initialise the game timer
                 TW_GameState_Create();
                 TW_GameState_SetFrameLimit( SCREEN_FPS );
+                TW_Camera_Create( NULL, SCREEN_WIDTH, SCREEN_HEIGHT );
 
                 // Initialse input handler
                 TW_InputHandler_Create();
@@ -213,6 +215,16 @@ int main( int argc, char* args[] )
                 {
                     TW_Scene_GeneratePlayer( sceneMain, i * 35, j * 35 );
                 }
+            }
+        }
+        // Set target of camera to player
+        for( int index = 0; index < sceneMain->size; index++ )
+        {
+            TW_Component* pPlayer = TW_Entity_GetComponent( sceneMain->entities[ index ], TW_C_PLAYER );
+            if( pPlayer != NULL )
+            {
+                TW_Camera_SetTarget( sceneMain->entities[ index ] );
+                break;
             }
         }
 

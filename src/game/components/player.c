@@ -29,7 +29,7 @@ void TW_Player_Think( TW_Entity* entity )
         TW_Component* pPlayer = TW_Entity_GetComponent( entity, TW_C_PLAYER );
         TW_Component* tPlayer = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
         TW_Component* vPlayer = TW_Entity_GetComponent( entity, TW_C_VELOCITY );
-        TW_Component* cPlayer = TW_Entity_GetComponent( entity, TW_C_COLLISION );
+        // TW_Component* cPlayer = TW_Entity_GetComponent( entity, TW_C_COLLISION );
 
         // Is player on the ground?
         if( TW_Player_OnGroundCheck( entity ) == true )
@@ -45,22 +45,23 @@ void TW_Player_Think( TW_Entity* entity )
 
         // Is player outside of the world?
         // NOTE: This probably deserves its own function.
-        if( tPlayer != NULL && cPlayer != NULL )
-        {
-            TW_Vector2* screenSize = TW_GameState_GetScreenSize();
-            if( screenSize != NULL )
-            {
-                if(
-                    ( tPlayer->transform->position->x + cPlayer->collision->position->x + cPlayer->collision->size->x < 0 ) ||
-                    ( tPlayer->transform->position->y + cPlayer->collision->position->y + cPlayer->collision->size->y < 0 ) ||
-                    ( tPlayer->transform->position->x + cPlayer->collision->position->x > screenSize->x ) ||
-                    ( tPlayer->transform->position->y + cPlayer->collision->position->y > screenSize->y )
-                )
-                {
-                    TW_Transform_SetPosition( tPlayer->transform, 35, 210 );
-                }
-            }
-        }
+        // THIS NOW NEEDS TO BE PLAYER OUTSIDE OF LEVEL (NOT SCREEN)
+        // if( tPlayer != NULL && cPlayer != NULL )
+        // {
+        //     TW_Vector2* screenSize = TW_GameState_GetScreenSize();
+        //     if( screenSize != NULL )
+        //     {
+        //         if(
+        //             ( tPlayer->transform->position->x + cPlayer->collision->position->x + cPlayer->collision->size->x < 0 ) ||
+        //             ( tPlayer->transform->position->y + cPlayer->collision->position->y + cPlayer->collision->size->y < 0 ) ||
+        //             ( tPlayer->transform->position->x + cPlayer->collision->position->x > screenSize->x ) ||
+        //             ( tPlayer->transform->position->y + cPlayer->collision->position->y > screenSize->y )
+        //         )
+        //         {
+        //             TW_Transform_SetPosition( tPlayer->transform, 35, 210 );
+        //         }
+        //     }
+        // }
 
         // Input
         if( vPlayer != NULL )

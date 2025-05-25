@@ -54,42 +54,34 @@ void TW_Fountain_Generate( TW_Scene* target, enum TW_PowerType type, int x, int 
     // Textures
 
     // Empty
-    TW_Sprite* spriteEmpty = TW_Sprite_Create( "src/assets/images/sprites/fountain.png", 32, 32 );
+    TW_Sprite* spriteEmpty = TW_Sprite_Create( "src/assets/images/sprites/moon_fountain.png", 32, 32 );
     TW_Component* cEmpty = TW_Component_Create( TW_C_SPRITE, spriteEmpty );
     TW_Entity_AddComponent( entity, cEmpty );
     spriteEmpty->hidden = !fountain->empty;
     spriteEmpty->currentSprite = 0;
 
     // Full
-    TW_Sprite* spriteFull = TW_Sprite_Create( "src/assets/images/sprites/fountain.png", 32, 32 );
-    int animationFrames[6] = { 0, 0, 0, 0, 0, 0 };
+    char spritePath[50] = "";
     switch (type)
     {
         case TW_PWR_MOON:
-            animationFrames[0] = 2;
-            animationFrames[1] = 2;
-            animationFrames[2] = 2;
-            animationFrames[3] = 2;
-            animationFrames[4] = 2;
-            animationFrames[5] = 1;
+            strncpy( spritePath, "src/assets/images/sprites/moon_fountain.png", sizeof( spritePath ) );
             break;
 
         case TW_PWR_SUN:
-            animationFrames[0] = 3;
-            animationFrames[1] = 3;
-            animationFrames[2] = 3;
-            animationFrames[3] = 3;
-            animationFrames[4] = 3;
-            animationFrames[5] = 4;
+        strncpy( spritePath, "src/assets/images/sprites/sun_fountain.png", sizeof( spritePath ) );
             break;
 
         default:
             break;
     }
-    TW_Animation* animationFull = TW_Animation_Create( spriteFull, 6, animationFrames );
+    TW_Sprite* spriteFull = TW_Sprite_Create( spritePath, 32, 32 );
+    int animationFrames[8] = { 1, 2, 1, 2, 3, 4, 5, 6 };
+    TW_Animation* animationFull = TW_Animation_Create( spriteFull, 8, animationFrames );
     TW_Component* cFull = TW_Component_Create( TW_C_ANIMATION, animationFull );
     TW_Entity_AddComponent( entity, cFull );
     animationFull->hidden = fountain->empty;
+    animationFull->animationSpeed = 200;
 
     TW_Transform* transform = TW_Transform_Create( x, y + 8 , 0.0, 1.0 );
     TW_Component* cTransform = TW_Component_Create( TW_C_TRANSFORM, transform );
