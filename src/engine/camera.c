@@ -1,4 +1,6 @@
 #include "camera.h"
+#include "gamestate.h"
+#include "level.h"
 #include "../ecs/scene.h"
 #include "maths.h"
 
@@ -49,21 +51,35 @@ int TW_Camera_GetOffset( enum TW_Axis axis )
             if( tTarget != NULL )
             {
                 TW_Vector2* screenSize = TW_GameState_GetScreenSize();
-                if( axis == TW_AXIS_X )
+                TW_Level* currentLevel = TW_GameState_GetLevel();
+                if( screenSize != NULL && currentLevel != NULL )
                 {
-                    int tempOffset = tTarget->transform->position->x - ( screenSize->x / 2 );
-                    if( tempOffset > 0 )
+                    int minOffset = 0;
+                    int maxOffset = 0;
+                    int currentOffset = 0;
+                    if( axis == TW_AXIS_X )
                     {
-                        // if( tempOffset < level_size - screenSize->x)
-                        offset = tempOffset;
+                        minOffset = 0;
+                        maxOffset = currentLevel->size->x - ( screenSize->x );
+                        currentOffset = tTarget->transform->position->x - ( screenSize->x / 2 );
+                        
                     }
-                }
-                else
-                {
-                    int tempOffset = tTarget->transform->position->y - ( screenSize->y / 2 );
-                    if( tempOffset > 0 )
+                    else
                     {
-                        offset = tempOffset;
+                        minOffset = 0;
+                        maxOffset = currentLevel->size->y - ( screenSize->y );
+                        currentOffset = tTarget->transform->position->y - ( screenSize->y / 2 );
+                    }
+                    if( currentOffset > minOffset )
+                    {
+                        if( currentOffset > maxOffset )
+                        {
+                            offset = maxOffset;
+                        }
+                        else
+                        {
+                            offset = currentOffset;
+                        }
                     }
                 }
             }
