@@ -43,9 +43,8 @@ void TW_Player_Think( TW_Entity* entity )
             pPlayer->player->onGround = false;
         }
 
-        // Is player outside of the world?
-        // NOTE: This probably deserves its own function.
         // THIS NOW NEEDS TO BE PLAYER OUTSIDE OF LEVEL (NOT SCREEN)
+        // Is player outside the level?
         // if( tPlayer != NULL && cPlayer != NULL )
         // {
         //     TW_Vector2* screenSize = TW_GameState_GetScreenSize();

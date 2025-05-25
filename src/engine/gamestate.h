@@ -13,6 +13,7 @@
 
 
 typedef struct TW_Vector2 TW_Vector2;
+typedef struct TW_Level TW_Level;
 
 
 typedef struct TW_GameState {
@@ -25,6 +26,7 @@ typedef struct TW_GameState {
     int ticksPerFrame;
     bool paused;
     TW_Vector2* screenSize;
+    TW_Level* level;
 } TW_GameState;
 
 
@@ -108,8 +110,24 @@ void TW_GameState_Resume();
 
 
 /**
- * \brief Get the current screen size
+ * \brief Get the current screen size.
  * 
- * \returns `TW_Vector2*` – pointer to the screen size
+ * \returns `TW_Vector2*` – pointer to the screen size.
  */
 TW_Vector2* TW_GameState_GetScreenSize();
+
+
+/**
+ * \brief Set the current level.
+ * 
+ * \param level `TW_Level*` – The current level.
+ */
+void TW_GameState_SetLevel( TW_Level* level );
+
+
+/**
+ * \brief Get the current level.
+ * 
+ * \returns `TW_Level*` – The current level.
+ */
+TW_Level* TW_GameState_GetLevel();

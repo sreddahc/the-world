@@ -1,6 +1,7 @@
 #include "renderer/renderer.h"
 #include "engine/timer.h"
 #include "engine/camera.h"
+#include "engine/level.h"
 #include "game/components/player.h"
 #include "game/components/platform.h"
 #include "game/debugstats.h"
@@ -9,8 +10,8 @@
 // Screen dimensions
 const int SCREEN_WIDTH = 600;
 const int SCREEN_HEIGHT = 480;
-const int LEVEL_WIDTH = 1280;
-const int LEVEL_HEIGHT = 768;
+const int LEVEL_WIDTH = 36 * 35;    // NEEDS TO BE UPDATED
+const int LEVEL_HEIGHT = 22 * 35;   // NEEDS TO BE UPDATED
 const int SCREEN_FPS = 60;
 
 // Key press surface constants
@@ -154,7 +155,8 @@ int main( int argc, char* args[] )
         TW_Vector2_Set(TW_Entity_GetComponent( entityTitle, TW_C_TRANSFORM )->transform->centre, gTitle->texture->width / 2, gTitle->texture->height / 2 );
         TW_Scene_AddEntity( sceneMain, entityTitle );
 
-        // Platform Entities
+        TW_Level* currentLevel = TW_Level_Create( sceneMain, LEVEL_WIDTH, LEVEL_HEIGHT );
+        TW_GameState_SetLevel( currentLevel );
 
         int tempLevel[22][36] = {
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },

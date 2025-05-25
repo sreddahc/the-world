@@ -54,6 +54,7 @@ int TW_Camera_GetOffset( enum TW_Axis axis )
                     int tempOffset = tTarget->transform->position->x - ( screenSize->x / 2 );
                     if( tempOffset > 0 )
                     {
+                        // if( tempOffset < level_size - screenSize->x)
                         offset = tempOffset;
                     }
                 }

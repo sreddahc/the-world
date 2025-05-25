@@ -11,7 +11,8 @@ enum TW_Axis;
 /**
  * \brief Camera object
  * 
- * params go here!
+ * \param target `TW_Entity*` – The entity for the camera to follow
+ * \param size `TW_Vector2*` – The screen size.
  */
 typedef struct TW_Camera {
     TW_Entity* target;
@@ -25,8 +26,8 @@ typedef struct TW_Camera {
  * \brief Create a camera object.
  * 
  * \param target `TW_Entity*` – The target for the camera to follow. Top-Left of screen if `NULL`.
- * \param x `int` – The width of the screen.
- * \param y `int` – The height of the screen.
+ * \param x `int` – The width of the screen. For screen width set to `-1`.
+ * \param y `int` – The height of the screen. For screen height set to `-1`.
  */
 void TW_Camera_Create( TW_Entity* target, int x, int y );
 
