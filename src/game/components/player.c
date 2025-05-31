@@ -98,15 +98,15 @@ void TW_Player_Think( TW_Entity* entity )
                 }
             }
 
-            // if( TW_InputHandler_CheckKeyUp( SDLK_LSHIFT ) )
-            // {
-            //     TW_Projectile_Generate( pPlayer->parent->parent, entity );
-            // }
-
             if( TW_InputHandler_CheckKeyUp( SDLK_LSHIFT ) )
             {
-                TW_Weapon_Generate( entity, TW_W_SWORD );
+                TW_Projectile_Generate( entity, TW_PT_SPELL );
             }
+
+            // if( TW_InputHandler_CheckKeyUp( SDLK_LSHIFT ) )
+            // {
+            //     TW_Weapon_Generate( entity, TW_W_SWORD );
+            // }
 
             // FOR TESTING ONLY →
 

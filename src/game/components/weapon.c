@@ -5,7 +5,7 @@ TW_Weapon* TW_Weapon_Create( TW_Entity* target, enum TW_WeaponType type )
 {
     TW_Weapon* weapon = malloc( sizeof( TW_Weapon ) );
     weapon->parent = NULL;
-    weapon->target = target;
+    weapon->owner = target;
     weapon->type = type;
     return weapon;
 }
@@ -14,6 +14,7 @@ TW_Weapon* TW_Weapon_Create( TW_Entity* target, enum TW_WeaponType type )
 void TW_Weapon_Free( TW_Weapon* self )
 {
     self->type = 0;
+    self->owner = NULL;
     self->parent = NULL;
     free( self );
 }
@@ -27,9 +28,9 @@ void TW_Weapon_Think( TW_Entity* self )
     TW_Component* wSelf = TW_Entity_GetComponent( self, TW_C_WEAPON );
     if( tSelf != NULL && wSelf != NULL )
     {
-        if( wSelf->weapon->target != NULL )
+        if( wSelf->weapon->owner != NULL )
         {
-            TW_Component* tTarget = TW_Entity_GetComponent( wSelf->weapon->target, TW_C_TRANSFORM );
+            TW_Component* tTarget = TW_Entity_GetComponent( wSelf->weapon->owner, TW_C_TRANSFORM );
             if( tTarget != NULL )
             {
                 int direction = tTarget->transform->flip == SDL_FLIP_HORIZONTAL ? -1 : 1;
@@ -69,7 +70,7 @@ void TW_Weapon_Generate( TW_Entity* target, enum TW_WeaponType type )
         char imagePath[50] = "";
         switch ( type )
         {
-            case TW_W_SWORD:
+            case TW_WT_SWORD:
                 strncpy( imagePath, "src/assets/images/sprites/sword.png", 50 );
                 break;
 

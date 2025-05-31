@@ -4,8 +4,8 @@
 // Type definitions
 
 enum TW_WeaponType {
-    TW_W_PUNCH,
-    TW_W_SWORD,
+    TW_WT_PUNCH,
+    TW_WT_SWORD
 };
 
 
@@ -19,12 +19,12 @@ typedef struct TW_Component TW_Component;
  * 
  * \param parent `TW_Component*` – The parent component of this object.
  * \param type `enum TW_WeaponType` – The type of weapon.
- * \param target `TW_Entity*` – The target entity that owns the weapon object.
+ * \param owner `TW_Entity*` – The target entity that owns the weapon object.
  */
 typedef struct TW_Weapon {
     TW_Component* parent;
     enum TW_WeaponType type;
-    TW_Entity* target;
+    TW_Entity* owner;
 } TW_Weapon;
 
 
