@@ -8,8 +8,8 @@
 
 // Global variables
 // Screen dimensions
-const int SCREEN_WIDTH = 600;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
 const int LEVEL_WIDTH = 36 * 35;    // NEEDS TO BE UPDATED
 const int LEVEL_HEIGHT = 22 * 35;   // NEEDS TO BE UPDATED
 const int SCREEN_FPS = 60;
@@ -26,7 +26,6 @@ enum KeyPressSurfaces
 };
 
 SDL_Window* gWindow = NULL;
-
 
 // Functions
 bool init();

@@ -2,10 +2,12 @@
 
 
 // Create a projectile component object.
-TW_Projectile* TW_Projectile_Create()
+TW_Projectile* TW_Projectile_Create( TW_Entity* target, enum TW_ProjectileType type )
 {
     TW_Projectile* projectile = malloc( sizeof( TW_Projectile ) );
     projectile->parent = NULL;
+    projectile->owner = target;
+    projectile->type = type;
     projectile->textureDestroy = NULL;
     projectile->textureProjectile = NULL;
     return projectile;
@@ -16,6 +18,8 @@ TW_Projectile* TW_Projectile_Create()
 void TW_Projectile_Free( TW_Projectile* self )
 {
     self->parent = NULL;
+    self->owner = NULL;
+    self->type = 0;
     self->textureDestroy = NULL;
     self->textureProjectile = NULL;
     free( self );
@@ -59,7 +63,7 @@ void TW_Projectile_Think( TW_Entity* entity )
         {
             if( cProjectile->projectile->textureDestroy != NULL )
             {
-                if( cProjectile->projectile->textureDestroy->animation->currentFrame == cProjectile->projectile->textureDestroy->animation->animationSize - 1 )
+                if( TW_Animation_LoopOver( cProjectile->projectile->textureDestroy->animation ) == true )
                 {
                     TW_Projectile_Destroy( entity );
                 }
@@ -92,34 +96,50 @@ void TW_Projectile_Think( TW_Entity* entity )
 
 
 // Generates a projectile entity and adds it to target scene.
-void TW_Projectile_Generate( TW_Scene* scene, TW_Entity* caster )
+void TW_Projectile_Generate( TW_Entity* target, enum TW_ProjectileType type )
 {
-    TW_Component* pCaster = TW_Entity_GetComponent( caster, TW_C_PLAYER );
-    TW_Component* tCaster = TW_Entity_GetComponent( caster, TW_C_TRANSFORM );
+    TW_Component* pTarget = TW_Entity_GetComponent( target, TW_C_PLAYER );
+    TW_Component* tTarget = TW_Entity_GetComponent( target, TW_C_TRANSFORM );
 
-    if( pCaster != NULL && tCaster != NULL )
+    if( pTarget != NULL && tTarget != NULL && target->parent != NULL )
     {
         TW_Entity* entity = TW_Entity_Create();
 
-        TW_Projectile* oProjectile = TW_Projectile_Create();
+        TW_Projectile* oProjectile = TW_Projectile_Create( target, type );
         TW_Component* cProjectile = TW_Component_Create( TW_C_PROJECTILE, oProjectile );
         TW_Entity_AddComponent( entity, cProjectile );
 
-        TW_Sprite* oShoot = TW_Sprite_Create( "src/assets/images/sprites/magic.png", 32, 32 );
-        TW_Animation* aShoot = TW_Animation_Create( oShoot, 3, (int[]){ 0, 1, 2 } );
-        TW_Component* cShoot = TW_Component_Create( TW_C_ANIMATION, aShoot );
+        char imagePath[50] = "";
+        switch (type)
+        {
+            case TW_PT_SPELL:
+                strncpy( imagePath, "src/assets/images/sprites/magic.png", 50 );
+                break;
+
+            default:
+                break;
+        }
+        TW_Animation* oShoot = TW_Animation_Create(
+            TW_Sprite_Create( imagePath, 32, 32 ),
+            3,
+            (int[]){ 0, 1, 2 }
+        );
+        TW_Component* cShoot = TW_Component_Create( TW_C_ANIMATION, oShoot );
         oProjectile->textureProjectile = cShoot;
         TW_Entity_AddComponent( entity, cShoot );
 
-        TW_Sprite* oImpact = TW_Sprite_Create( "src/assets/images/sprites/magic.png", 32, 32 );
-        TW_Animation* aImpact = TW_Animation_Create( oImpact, 6, (int[]){ 3, 4, 5, 6, 7, 8 } );
-        aImpact->loop = false;
-        aImpact->hidden = true;
-        TW_Component* cImpact = TW_Component_Create( TW_C_ANIMATION, aImpact );
+        TW_Animation* oImpact = TW_Animation_Create( 
+            TW_Sprite_Create( imagePath, 32, 32 ),
+            6,
+            (int[]){ 3, 4, 5, 6, 7, 8 }
+        );
+        oImpact->loop = false;
+        oImpact->hidden = true;
+        TW_Component* cImpact = TW_Component_Create( TW_C_ANIMATION, oImpact );
         oProjectile->textureDestroy = cImpact;
         TW_Entity_AddComponent( entity, cImpact );
 
-        TW_Transform* oTransform = TW_Transform_Create( tCaster->transform->position->x, tCaster->transform->position->y, 0.0, 1.0 );
+        TW_Transform* oTransform = TW_Transform_Create( tTarget->transform->position->x, tTarget->transform->position->y, 0.0, 1.0 );
         TW_Component* cTransform = TW_Component_Create( TW_C_TRANSFORM, oTransform );
         TW_Entity_AddComponent( entity, cTransform );
 
@@ -131,12 +151,12 @@ void TW_Projectile_Generate( TW_Scene* scene, TW_Entity* caster )
         TW_Component* cThink = TW_Component_Create( TW_C_THINK, oThink );
         TW_Entity_AddComponent( entity, cThink );
 
-        int casterDirection = tCaster->transform->flip == SDL_FLIP_HORIZONTAL ? -1 : 1;
+        int casterDirection = tTarget->transform->flip == SDL_FLIP_HORIZONTAL ? -1 : 1;
         TW_Velocity* oVelocity = TW_Velocity_Create( casterDirection * 20, 0, 0, 0 );
         TW_Component* cVelocity = TW_Component_Create( TW_C_VELOCITY, oVelocity );
         TW_Entity_AddComponent( entity, cVelocity );
 
-        TW_Scene_AddEntity( scene, entity );
+        TW_Scene_AddEntity( target->parent, entity );
     }
 }
 

@@ -50,36 +50,35 @@ int TW_Camera_GetOffset( enum TW_Axis axis )
             TW_Component* tTarget = TW_Entity_GetComponent( gameCamera->target, TW_C_TRANSFORM );
             if( tTarget != NULL )
             {
-                TW_Vector2* screenSize = TW_GameState_GetScreenSize();
                 TW_Level* currentLevel = TW_GameState_GetLevel();
-                if( screenSize != NULL && currentLevel != NULL )
+                if( gameCamera->size != NULL && currentLevel != NULL )
                 {
-                    int minOffset = 0;
-                    int maxOffset = 0;
-                    int currentOffset = 0;
+                    int cameraMin = 0;
+                    int cameraMax = 0;
+                    int entityPos = 0;
                     if( axis == TW_AXIS_X )
                     {
-                        minOffset = 0;
-                        maxOffset = currentLevel->size->x - ( screenSize->x );
-                        currentOffset = tTarget->transform->position->x - ( screenSize->x / 2 );
-                        
+                        cameraMin = 0;
+                        cameraMax = currentLevel->size->x - ( gameCamera->size->x );
+                        entityPos = tTarget->transform->position->x - ( gameCamera->size->x / 2 );
                     }
                     else
                     {
-                        minOffset = 0;
-                        maxOffset = currentLevel->size->y - ( screenSize->y );
-                        currentOffset = tTarget->transform->position->y - ( screenSize->y / 2 );
+                        cameraMin = 0;
+                        cameraMax = currentLevel->size->y - ( gameCamera->size->y );
+                        entityPos = tTarget->transform->position->y - ( gameCamera->size->y / 2 );
                     }
-                    if( currentOffset > minOffset )
+                    if( entityPos < cameraMin )
                     {
-                        if( currentOffset > maxOffset )
-                        {
-                            offset = maxOffset;
-                        }
-                        else
-                        {
-                            offset = currentOffset;
-                        }
+                        offset = 0;
+                    }
+                    else if( entityPos > cameraMax )
+                    {
+                        offset = cameraMax;
+                    }
+                    else
+                    {
+                        offset = entityPos;
                     }
                 }
             }

@@ -71,6 +71,12 @@ TW_Component* TW_Component_Create( int type, void* value ){
         case TW_C_PROJECTILE:
             component->projectile = value;
             component->projectile->parent = component;
+            break;
+
+        case TW_C_WEAPON:
+            component->weapon = value;
+            component->weapon->parent = component;
+            break;
 
         default:
             break;
@@ -238,6 +244,11 @@ void TW_Component_Free( TW_Component* self )
 
         case TW_C_PROJECTILE:
             TW_Projectile_Free( self->projectile );
+            break;
+
+        case TW_C_WEAPON:
+            TW_Weapon_Free( self->weapon );
+            break;
 
         default:
             break;

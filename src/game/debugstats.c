@@ -110,7 +110,7 @@ void TW_DebugStats_Create( TW_Scene* self )
     TW_Think* thinkTime = TW_Think_Create( TW_DebugStats_Time_Think );
     TW_Component* cThinkTime = TW_Component_Create( TW_C_THINK, thinkTime );
     TW_Entity_AddComponent( entityTime, cThinkTime );
-    
+
     // FPS
     TW_Entity* entityFPS = TW_Entity_Create();
     TW_Scene_AddEntity( self, entityFPS );
@@ -124,7 +124,6 @@ void TW_DebugStats_Create( TW_Scene* self )
     TW_Think* thinkFPS = TW_Think_Create( TW_DebugStats_FPS_Think );
     TW_Component* cThinkFPS = TW_Component_Create( TW_C_THINK, thinkFPS );
     TW_Entity_AddComponent( entityFPS, cThinkFPS );
-    
 
     // Delta Time
     TW_Entity* entityDeltaTime = TW_Entity_Create();
