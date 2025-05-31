@@ -59,7 +59,7 @@ void TW_Projectile_Think( TW_Entity* entity )
         {
             if( cProjectile->projectile->textureDestroy != NULL )
             {
-                if( cProjectile->projectile->textureDestroy->animation->currentFrame == cProjectile->projectile->textureDestroy->animation->animationSize - 1 )
+                if( TW_Animation_LoopOver( cProjectile->projectile->textureDestroy->animation ) == true )
                 {
                     TW_Projectile_Destroy( entity );
                 }
@@ -105,17 +105,23 @@ void TW_Projectile_Generate( TW_Scene* scene, TW_Entity* caster )
         TW_Component* cProjectile = TW_Component_Create( TW_C_PROJECTILE, oProjectile );
         TW_Entity_AddComponent( entity, cProjectile );
 
-        TW_Sprite* oShoot = TW_Sprite_Create( "src/assets/images/sprites/magic.png", 32, 32 );
-        TW_Animation* aShoot = TW_Animation_Create( oShoot, 3, (int[]){ 0, 1, 2 } );
-        TW_Component* cShoot = TW_Component_Create( TW_C_ANIMATION, aShoot );
+        TW_Animation* oShoot = TW_Animation_Create(
+            TW_Sprite_Create( "src/assets/images/sprites/magic.png", 32, 32 ),
+            3,
+            (int[]){ 0, 1, 2 }
+        );
+        TW_Component* cShoot = TW_Component_Create( TW_C_ANIMATION, oShoot );
         oProjectile->textureProjectile = cShoot;
         TW_Entity_AddComponent( entity, cShoot );
 
-        TW_Sprite* oImpact = TW_Sprite_Create( "src/assets/images/sprites/magic.png", 32, 32 );
-        TW_Animation* aImpact = TW_Animation_Create( oImpact, 6, (int[]){ 3, 4, 5, 6, 7, 8 } );
-        aImpact->loop = false;
-        aImpact->hidden = true;
-        TW_Component* cImpact = TW_Component_Create( TW_C_ANIMATION, aImpact );
+        TW_Animation* oImpact = TW_Animation_Create( 
+            TW_Sprite_Create( "src/assets/images/sprites/magic.png", 32, 32 ),
+            6,
+            (int[]){ 3, 4, 5, 6, 7, 8 }
+        );
+        oImpact->loop = false;
+        oImpact->hidden = true;
+        TW_Component* cImpact = TW_Component_Create( TW_C_ANIMATION, oImpact );
         oProjectile->textureDestroy = cImpact;
         TW_Entity_AddComponent( entity, cImpact );
 

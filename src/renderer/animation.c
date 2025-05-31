@@ -77,3 +77,21 @@ void TW_Animation_Render( TW_Animation* self, TW_Transform* transform )
         }
     }
 }
+
+
+// Checks whether a loop has finished for a given animation.
+bool TW_Animation_LoopOver( TW_Animation* self )
+{
+    if( self->loop == true )
+    {
+        return false;
+    }
+    else
+    {
+        if( self->currentFrame == self->animationSize - 1 )
+        {
+            return true;
+        }
+    }
+    return false;
+}

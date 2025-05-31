@@ -12,6 +12,7 @@
 #include "../game/components/platform.h"
 #include "../game/components/player.h"
 #include "../game/components/projectile.h"
+#include "../game/components/weapon.h"
 
 
 // Type definitions
@@ -39,6 +40,7 @@ enum TW_ComponentType {
     TW_C_PLATFORM,
     TW_C_PLAYER,
     TW_C_PROJECTILE,
+    TW_C_WEAPON,
     // Metadata
     TW_C_TOTAL
 };
@@ -73,6 +75,7 @@ typedef struct TW_Component {
         TW_Platform* platform;
         TW_Player* player;
         TW_Projectile* projectile;
+        TW_Weapon* weapon;
     };
 } TW_Component;
 

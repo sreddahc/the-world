@@ -68,3 +68,15 @@ void TW_Animation_Free( TW_Animation* self );
  * \param transform `TW_Transform*` – Transform object for position, properties, etc...
  */
 void TW_Animation_Render( TW_Animation* self, TW_Transform* transform );
+
+
+/**
+ * \brief Checks whether a loop has finished for a given animation.
+ * 
+ * \param self `TW_Animation*` –  The animation object to check.
+ * 
+ * \returns `bool` – `true` if animation over. `false` if not.
+ * 
+ * \note If looping is enabled then this function will never return `true`.
+ */
+bool TW_Animation_LoopOver( TW_Animation* self );
