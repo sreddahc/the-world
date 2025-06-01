@@ -47,7 +47,7 @@ void TW_Player_Think( TW_Entity* entity )
         // Is player outside the level?
         if( tPlayer != NULL && cPlayer != NULL )
         {
-            if( TW_Level_ContainsEntity( TW_GameState_GetLevel(), entity, true ) == true )
+            if( TW_Level_ContainsEntity( TW_GameState_GetLevel(), entity, false ) == true )
             {
                 TW_Transform_SetPosition( tPlayer->transform, 35, 210 );
             }
@@ -84,30 +84,30 @@ void TW_Player_Think( TW_Entity* entity )
                 }
             }
 
-            if( TW_InputHandler_CheckKeyUp( SDLK_LSHIFT ) )
-            {
-                TW_Projectile_Generate( entity, TW_PT_FIREBALL );
-            }
-
             // if( TW_InputHandler_CheckKeyUp( SDLK_LSHIFT ) )
             // {
-            //     TW_Weapon_Generate( entity, TW_WT_SWORD );
+            //     TW_Projectile_Generate( entity, TW_PT_FIREBALL );
             // }
 
-            // FOR TESTING ONLY →
-
-            if( TW_InputHandler_CheckMouseDown( 1 ) )
+            if( TW_InputHandler_CheckKeyUp( SDLK_LSHIFT ) )
             {
-                int x = 0;
-                int y = 0;
-                SDL_GetMouseState( &x, &y );
-                tPlayer->transform->position->x = x;
-                tPlayer->transform->position->y = y;
-                vPlayer->velocity->speed->y = 0;
-                pPlayer->player->jumping = false;
+                TW_Weapon_Generate( entity, TW_WT_SWORD );
             }
 
-            // FOR TESTING ONLY ←
+            // // FOR TESTING ONLY →
+
+            // if( TW_InputHandler_CheckMouseDown( 1 ) )
+            // {
+            //     int x = 0;
+            //     int y = 0;
+            //     SDL_GetMouseState( &x, &y );
+            //     tPlayer->transform->position->x = x;
+            //     tPlayer->transform->position->y = y;
+            //     vPlayer->velocity->speed->y = 0;
+            //     pPlayer->player->jumping = false;
+            // }
+
+            // // FOR TESTING ONLY ←
 
             // Texture
             if( pPlayer->player->jumping )
