@@ -1,4 +1,5 @@
 #include "../../ecs/scene.h"
+#include "../../engine/level.h"
 
 
 // Create a projectile component object.
@@ -73,23 +74,9 @@ void TW_Projectile_Think( TW_Entity* entity )
                 TW_Projectile_Destroy( entity );
             }
         }
-        TW_Component* cTransform = TW_Entity_GetComponent( entity, TW_C_TRANSFORM );
-        if( cTransform != NULL )
+        if( TW_Level_ContainsEntity( TW_GameState_GetLevel(), entity, true ) == true )
         {
-            TW_Vector2* screenSize = TW_GameState_GetScreenSize();
-            if ( screenSize != NULL )
-            {
-                if
-                (
-                    cTransform->transform->position->x < 0 ||
-                    cTransform->transform->position->x > screenSize->x ||
-                    cTransform->transform->position->y < 0 ||
-                    cTransform->transform->position->y > screenSize->y
-                )
-                {
-                    TW_Projectile_Destroy( entity );
-                }
-            }
+            TW_Projectile_Destroy( entity );
         }
     }
 }
@@ -110,10 +97,42 @@ void TW_Projectile_Generate( TW_Entity* target, enum TW_ProjectileType type )
         TW_Entity_AddComponent( entity, cProjectile );
 
         char imagePath[50] = "";
+        int shootSize = 0;
+        int shootFrames[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        int impactSize = 0;
+        int impactFrames[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
         switch (type)
         {
+            case TW_PT_FIREBALL:
+                strncpy( imagePath, "src/assets/images/sprites/fireball.png", 50 );
+                shootSize = 6;
+                shootFrames[0] = 0;
+                shootFrames[1] = 1;
+                shootFrames[2] = 2;
+                shootFrames[3] = 3;
+                shootFrames[4] = 4;
+                shootFrames[5] = 5;
+                impactSize = 4;
+                impactFrames[0] = 6;
+                impactFrames[1] = 7;
+                impactFrames[2] = 8;
+                impactFrames[3] = 9;
+                break;
+
             case TW_PT_SPELL:
                 strncpy( imagePath, "src/assets/images/sprites/magic.png", 50 );
+                shootSize = 3;
+                shootFrames[0] = 0;
+                shootFrames[1] = 1;
+                shootFrames[2] = 2;
+                impactSize = 6;
+                impactFrames[0] = 3;
+                impactFrames[1] = 4;
+                impactFrames[2] = 5;
+                impactFrames[3] = 6;
+                impactFrames[4] = 7;
+                impactFrames[5] = 8;
                 break;
 
             default:
@@ -121,8 +140,8 @@ void TW_Projectile_Generate( TW_Entity* target, enum TW_ProjectileType type )
         }
         TW_Animation* oShoot = TW_Animation_Create(
             TW_Sprite_Create( imagePath, 32, 32 ),
-            3,
-            (int[]){ 0, 1, 2 }
+            shootSize,
+            shootFrames
         );
         TW_Component* cShoot = TW_Component_Create( TW_C_ANIMATION, oShoot );
         oProjectile->textureProjectile = cShoot;
@@ -130,8 +149,8 @@ void TW_Projectile_Generate( TW_Entity* target, enum TW_ProjectileType type )
 
         TW_Animation* oImpact = TW_Animation_Create( 
             TW_Sprite_Create( imagePath, 32, 32 ),
-            6,
-            (int[]){ 3, 4, 5, 6, 7, 8 }
+            impactSize,
+            impactFrames
         );
         oImpact->loop = false;
         oImpact->hidden = true;
@@ -140,6 +159,7 @@ void TW_Projectile_Generate( TW_Entity* target, enum TW_ProjectileType type )
         TW_Entity_AddComponent( entity, cImpact );
 
         TW_Transform* oTransform = TW_Transform_Create( tTarget->transform->position->x, tTarget->transform->position->y, 0.0, 1.0 );
+        oTransform->flip = tTarget->transform->flip;
         TW_Component* cTransform = TW_Component_Create( TW_C_TRANSFORM, oTransform );
         TW_Entity_AddComponent( entity, cTransform );
 

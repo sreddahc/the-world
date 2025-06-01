@@ -1,10 +1,13 @@
 #pragma once
 
+#include <stdbool.h>
+
 
 // Type definitions
 
 typedef struct TW_Vector2 TW_Vector2;
 typedef struct TW_Scene TW_Scene;
+typedef struct TW_Entity TW_Entity;
 
 
 /**
@@ -71,5 +74,18 @@ void TW_Level_SetScene( TW_Level* self, TW_Scene* scene );
  * \returns `TW_Scene*` – The level's scene.
  */
 TW_Scene* TW_Level_GetScene( TW_Level* self );
+
+
+/**
+ * \brief Checks if a level contains an entity.
+ * 
+ * \param self `TW_Level*` – The level to check.
+ * \param entity `TW_Entity*` – The entity to check against the level.
+ * \param checkTexture `bool` – If `true` checks the texture position rather than the collision position.
+ * 
+ * \returns `bool` – `true` if entity is inside level. `false` otherwise.
+ */
+bool TW_Level_ContainsEntity( TW_Level* self, TW_Entity* entity, bool checkTexture );
+
 
 //  void TW_Level_LoadFromFile( char* file );

@@ -47,23 +47,9 @@ void TW_Player_Think( TW_Entity* entity )
         // Is player outside the level?
         if( tPlayer != NULL && cPlayer != NULL )
         {
-            TW_Level* currentLevel = TW_GameState_GetLevel();
-            TW_Vector2* screenSize = NULL;
-            if( currentLevel != NULL )
+            if( TW_Level_ContainsEntity( TW_GameState_GetLevel(), entity, false ) == true )
             {
-                screenSize = currentLevel->size;
-            }
-            if( screenSize != NULL )
-            {
-                if(
-                    ( tPlayer->transform->position->x + cPlayer->collision->position->x + cPlayer->collision->size->x < 0 ) ||
-                    ( tPlayer->transform->position->y + cPlayer->collision->position->y + cPlayer->collision->size->y < 0 ) ||
-                    ( tPlayer->transform->position->x + cPlayer->collision->position->x > screenSize->x ) ||
-                    ( tPlayer->transform->position->y + cPlayer->collision->position->y > screenSize->y )
-                )
-                {
-                    TW_Transform_SetPosition( tPlayer->transform, 35, 210 );
-                }
+                TW_Transform_SetPosition( tPlayer->transform, 35, 210 );
             }
         }
 
@@ -100,7 +86,7 @@ void TW_Player_Think( TW_Entity* entity )
 
             // if( TW_InputHandler_CheckKeyUp( SDLK_LSHIFT ) )
             // {
-            //     TW_Projectile_Generate( entity, TW_PT_SPELL );
+            //     TW_Projectile_Generate( entity, TW_PT_FIREBALL );
             // }
 
             if( TW_InputHandler_CheckKeyUp( SDLK_LSHIFT ) )
@@ -108,20 +94,20 @@ void TW_Player_Think( TW_Entity* entity )
                 TW_Weapon_Generate( entity, TW_WT_SWORD );
             }
 
-            // FOR TESTING ONLY →
+            // // FOR TESTING ONLY →
 
-            if( TW_InputHandler_CheckMouseDown( 1 ) )
-            {
-                int x = 0;
-                int y = 0;
-                SDL_GetMouseState( &x, &y );
-                tPlayer->transform->position->x = x;
-                tPlayer->transform->position->y = y;
-                vPlayer->velocity->speed->y = 0;
-                pPlayer->player->jumping = false;
-            }
+            // if( TW_InputHandler_CheckMouseDown( 1 ) )
+            // {
+            //     int x = 0;
+            //     int y = 0;
+            //     SDL_GetMouseState( &x, &y );
+            //     tPlayer->transform->position->x = x;
+            //     tPlayer->transform->position->y = y;
+            //     vPlayer->velocity->speed->y = 0;
+            //     pPlayer->player->jumping = false;
+            // }
 
-            // FOR TESTING ONLY ←
+            // // FOR TESTING ONLY ←
 
             // Texture
             if( pPlayer->player->jumping )
