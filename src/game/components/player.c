@@ -47,23 +47,9 @@ void TW_Player_Think( TW_Entity* entity )
         // Is player outside the level?
         if( tPlayer != NULL && cPlayer != NULL )
         {
-            TW_Level* currentLevel = TW_GameState_GetLevel();
-            TW_Vector2* screenSize = NULL;
-            if( currentLevel != NULL )
+            if( TW_Level_ContainsEntity( TW_GameState_GetLevel(), entity, true ) == true )
             {
-                screenSize = currentLevel->size;
-            }
-            if( screenSize != NULL )
-            {
-                if(
-                    ( tPlayer->transform->position->x + cPlayer->collision->position->x + cPlayer->collision->size->x < 0 ) ||
-                    ( tPlayer->transform->position->y + cPlayer->collision->position->y + cPlayer->collision->size->y < 0 ) ||
-                    ( tPlayer->transform->position->x + cPlayer->collision->position->x > screenSize->x ) ||
-                    ( tPlayer->transform->position->y + cPlayer->collision->position->y > screenSize->y )
-                )
-                {
-                    TW_Transform_SetPosition( tPlayer->transform, 35, 210 );
-                }
+                TW_Transform_SetPosition( tPlayer->transform, 35, 210 );
             }
         }
 
