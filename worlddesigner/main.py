@@ -2,6 +2,7 @@
 
 import click
 from worlddesigner.load import load
+from worlddesigner.new import new
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 
@@ -13,6 +14,7 @@ def main():
     pass
 
 main.add_command(load)
+main.add_command(new)
 
 if __name__ == "__main__":
     main()

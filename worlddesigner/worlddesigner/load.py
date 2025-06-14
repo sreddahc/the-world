@@ -1,13 +1,14 @@
 import click
 
+
 @click.command()
 @click.argument(
     "file",
     type=click.Path(exists=True, file_okay=True, dir_okay=False, writable=True, readable=True),
 )
-def load(file):
+def load(file: str):
     """
-    Load a level FILE.
+    Load an existing level FILE.
     """
-    print("test")
+    print(file)
     pass
