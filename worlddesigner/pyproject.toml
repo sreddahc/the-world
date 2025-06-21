@@ -7,4 +7,5 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "click>=8.2.1",
+    "wxpython>=4.2.3",
 ]
